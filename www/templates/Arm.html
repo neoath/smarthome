@@ -1,0 +1,31 @@
+        <ion-view title="Arm" ng-controller="Arm">
+            <ion-content class="padding-vertical">
+                <div ng-repeat="sensor in sensors">
+                    <div class="col-lg-33" on-hold="userHold(sensor)">
+                        <div class="card">
+                            <div class="item item-avatar">
+                                <img src="img/{{sensor.sensortype}}.jpg" />
+                                <h2>{{ sensor.sensorname }}</h2>
+                                <p>{{sensor.lastLogin}} <span ng-show="sensor.lastLogin == 'Online'" class="balanced">&bull;</span></p>
+                            </div>
+                            <div ng-show="sensor.location == true" class="item item-image">
+                                <div id="map_{{sensor.id}}" style="height: 150px;" data-tap-disabled="true">
+                                    <img src="img/{{sensor.sensortype}}.jpg" style="margin-top: -78px;"/>
+                                </div>
+                            </div>
+                            <ul class="list">
+                                <li class="item item-toggle">
+                                    Arm/Disarm
+                                    <label class="toggle toggle-balanced">
+                                        <input type="checkbox" ng-checked="sensor.enabled == 'true'">
+                                        <div class="track">
+                                            <div class="handle"></div>
+                                        </div>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>

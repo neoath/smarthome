@@ -1,0 +1,61 @@
+        <ion-view title="OverAll" ng-controller="OverViewCtrl">
+            <ion-content class="padding">
+                <div class="card">
+                  <div class="item item-text-wrap">
+                    Status Info.
+                  </div>
+                </div>   
+
+                <wrap-owlcarousel class="owl-carousel padding"
+                                  data-options="{
+                            autoPlay: false,
+                            slideSpeed : 300,
+                            paginationSpeed : 400,
+                            items: 3,
+                            itemsDesktop: [1199,3],
+                            itemsTablet: [768,2]                                                                                  ,
+                            itemsMobile: [479,1],
+                            navigation: true,
+                        }">
+                    <div class="owl-item">
+                        <img src="img/room1.jpg" />
+                    </div>
+                    <div class="owl-item">
+                        <img src="img/room2.jpg" />
+                    </div>
+                    <div class="owl-item">
+                        <img src="img/room1.jpg" />
+                    </div>
+                    <div class="owl-item">
+                        <img src="img/room2.jpg" />
+                    </div>
+                </wrap-owlcarousel>
+
+
+                <div class="card">
+                  <div class="item item-text-wrap">
+                    Advertisement
+                  </div>
+                </div>   
+
+                <div class="clearfix"></div>
+                <div class="padding">
+                    <div class="item item-divider">
+                        Featured Devices
+                    </div>
+                </div>
+                <div ng-repeat="detector in detectors">
+                    <div class="col-lg-50 padding-horizontal">
+                        <div class="item item-icon-left" >
+                            <i class="icon" ng-class="detector.icon"></i>
+                            {{ detector.name }}
+                            <span class="item-note" >
+                                {{ detector.status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>  
+                <div class="clearfix"></div>
+            </ion-content>
+        </ion-view>

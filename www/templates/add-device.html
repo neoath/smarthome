@@ -1,0 +1,35 @@
+        <ion-view title="Add New Device" ng-controller="addDevice">
+            <ion-content>
+                <form name="addSensorForm" ng-init="setFormScope(this)" data-ng-submit="deviceSubmit()">
+                    <div class="list" style="background:#ffffff;">
+                        <div class="item item-divider">
+                            Basic Info
+                        </div>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Name</span>
+                            <input type="text" placeholder="Name" ng-model="newdevice.name">
+                        </label>
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                Select Sensor Type
+                            </div>
+                            <select ng-model="newdevice.sensorSelect" ng-options="o.sensortype as o.sensorname for o in sensors"></select>
+                        </label>
+                        <div class="item item-divider">
+                            GateWay Info
+                        </div>
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                Select GateWay
+                            </div>
+                            <select ng-model="newdevice.gatewaySelect" ng-options="o.id as o.gatewayname for o in gateways"></select>
+                        </label>
+                    </div>
+                    <div class="padding">
+                        <button class="button button-balanced">
+                            Add Device
+                        </button>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>

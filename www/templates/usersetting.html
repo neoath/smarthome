@@ -1,0 +1,29 @@
+        <ion-view title="User" ng-controller="usersetting">
+            <ion-content>
+                <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+                    <div class="list">
+                        <div class="item item-divider">
+                            Manage
+                        </div>
+                        <li class="item" on-tap="pageJump('app.userinfo')">
+                            Info Manage
+                        </li>
+                        <li class="item " on-tap="pageJump('app.subusers')">
+                            Sub User
+                        </li>
+                        <div class="item item-divider">
+                            Others
+                        </div>
+                        <li class="item ">
+                            Version
+                        </li>
+                        <li class="item ">
+                            Update
+                        </li>
+                        <li class="item ">
+                            Help
+                        </li>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>

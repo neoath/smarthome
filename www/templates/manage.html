@@ -1,0 +1,14 @@
+        <ion-view title="Manage" ng-controller="manage">
+            <ion-content>
+                <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+                    <div class="list">
+                        <li class="item" on-tap="pageJump('app.gatewaymanage')">
+                            GateWay Device Bindings
+                        </li>
+                        <li class="item ">
+                            GateWay Network Setup
+                        </li>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>
