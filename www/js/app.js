@@ -56,7 +56,7 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
       }
     })  
     .state('app.dashboard', {
-      url: "/dashboard",abstract: true,
+      url: "/dashboard",
       views: {
         'menuContent' :{
           templateUrl: "templates/dashboard.html"

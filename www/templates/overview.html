@@ -44,7 +44,50 @@
                         Featured Devices
                     </div>
                 </div>
-                <div ng-repeat="detector in detectors">
+
+                    <div class="col-lg-50 padding-horizontal">
+                        <div style="width:100%;height:80px;text-align: center;line-height:5;">
+                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;"
+                            on-tap="deviceTap('app.device', detectors, 'MEG')" id="megnetDevices" >
+                                <i class="icon ion-magnet" style="left: 21px;"></i>
+                            </div>
+                            <div style="width:60%;height:100%;float:left;padding: 0px 72px;">
+                                <div class="item item-icon-left" style="width:100%;height:100%;float:left;padding-left: 0px;" id="infraDevices">
+                                    <i class="icon ion-wifi" style="padding-left: 23px;left: initial;"></i>
+                                </div>
+                            </div>
+                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;" id="smokeDevices">
+                                <i class="icon ion-flame" style="left: 21px;"></i>
+                            </div>
+                        </div>
+                        <div style="height:20px"></div>
+                        <div style="width:100%;height:80px;text-align: center;line-height:5;">
+                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;" id="gasDevices">
+                                <i class="icon ion-bonfire" style="left: 21px;"></i>
+                            </div>
+                            <div style="width:60%;height:100%;float:left;padding: 0px 72px;"></div>
+                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;" id="eKeyDevices">
+                                <i class="icon ion-locked" style="left: 21px;"></i>
+                            </div>
+                        </div>
+                        <div style="height:20px"></div>
+                        <div style="width:100%;height:80px;text-align: center;line-height:5;">
+                            <div class="item item-icon-left" 
+                            style="width:20%;height:100%;float:left;"on-tap="pageJump('app.camera')" id="cameraDevices" >
+                                <i class="icon ion-videocamera" style="left: 21px;"></i>
+                            </div>
+                            <div style="width:60%;height:100%;float:left;padding: 0px 72px;">
+                                <div class="item item-icon-left" style="width:100%;height:100%;float:left;padding-left: 0px;">
+                                    <i class="icon ion-wifi" style="padding-left: 23px;left: initial;"></i>
+                                </div>
+                            </div>
+                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;">
+                                <i class="icon ion-wifi" style="left: 21px;"></i>
+                            </div>
+                        </div>                                                
+                    </div>
+
+<!--                 <div ng-repeat="detector in detectors">
                     <div class="col-lg-50 padding-horizontal">
                         <div class="item item-icon-left" >
                             <i class="icon" ng-class="detector.icon"></i>
@@ -54,8 +97,10 @@
                             </span>
                         </div>
                     </div>
-                </div>
-                <div class="clearfix"></div>  
+                </div> -->
+
+
+                <div class="clearfix"></div>    
                 <div class="clearfix"></div>
             </ion-content>
         </ion-view>
