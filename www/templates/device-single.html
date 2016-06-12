@@ -1,15 +1,15 @@
-        <ion-view title="{{detectorType}}" ng-controller="OverViewCtrl">
+        <ion-view title="{{detectorsVM.detectorType}}" ng-controller="OverViewCtrl">
             <ion-content class="padding">
                 <div ng-if="detectors.length === 0">
                     <h5 class="text-center">No Devices to Show</h5>
                 </div>
 
-                <div ng-repeat="device in detectors | filter: { device.detectorType: detectorType}">
+                <div ng-repeat="device in detectorsVM.detectors | filter: { detectorType: detectorsVM.detectorType}">
                     <div ng-if="device.id != null">
                         <div class="list">
                             <div class="item item-icon-left">
                                 <i class="icon" ng-class="device.icon"></i>
-                                {{device.name}}
+                                {{device.name}} :{{device.detectorType}}
                                 <span class="item-note">
                                     {{device.status}}
                                 </span>

@@ -41,6 +41,7 @@ angular.module('starter.controllers', [])
   };
 })
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
+
   $scope.users = [
 		{ username: 'Admin', email: 'admin@test.domain', location: true, id: 'admin', avatar: 'img/men.jpg', enabled: 'true', lastLogin: 'Online' },
 		{ username: 'Stacy S', email: 'stacy@test.domain', location: true, id: 'stacy', avatar: 'img/girl.jpg', enabled: 'true', lastLogin: 'Last login: 01/09/2014' },
@@ -76,6 +77,30 @@ angular.module('starter.controllers', [])
 		{ id: '6', name: 'Open Garage Doors', type: "toggle", featured: false },
 		{ id: '7', name: 'Arm Securuty', type: "toggle", featured: false },
 	];
+
+  $scope.detectorsVM = {
+    detectorType:"",
+    detectors:[
+                { id: '1', name: 'Door Magnet1', icon: 'ion-magnet', status: 'unarmed', detectorType: 'MEG'},
+                { id: '2', name: 'Infra Sensor1', icon: 'ion-wifi', status: 'unarmed', detectorType: 'INF'},
+                { id: '3', name: 'Smoke Sensor1', icon: 'ion-flame', status: 'unarmed', detectorType: 'SMK'},
+                { id: '4', name: 'Smoke Sensor2', icon: 'ion-flame', status: 'unarmed', detectorType: 'SMK'},
+                { id: '5', name: 'Gas Sensor1', icon: 'ion-bonfire', status: 'unarmed', detectorType: 'GAS'},
+                { id: '6', name: 'Gas Sensor2', icon: 'ion-bonfire', status: 'unarmed', detectorType: 'GAS'},
+              ],
+    detectorList:[
+                  { id: '1', name: 'Door Magnet', icon: 'ion-magnet', status: 'unarmed', detectorType: 'MEG'},
+                  { id: '2', name: 'Infra Sensor', icon: 'ion-wifi', status: 'unarmed', detectorType: 'INF'},
+                  { id: '3', name: 'Smoke Sensor', icon: 'ion-flame', status: 'unarmed', detectorType: 'SMK'},
+                  { id: '4', name: 'Gas Sensor', icon: 'ion-bonfire', status: 'unarmed', detectorType: 'GAS'},
+                  { id: '5', name: 'House Security', icon: 'ion-locked', status: 'unarmed', detectorType: 'SEC'},
+                  { id: '6', name: 'Video Camera', icon: 'ion-videocamera', status: 'unarmed', detectorType: 'CAM'},
+                ]};
+
+  $scope.OverViewVM = {
+    OverStatus:"normal"
+  }
+
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
 	};
@@ -368,28 +393,13 @@ angular.module('starter.controllers', [])
 })
 
 .controller('OverViewCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
-  $scope.detectorType = "";
-  $scope.detectorList = [
-    { id: '1', name: 'Door Magnet', icon: 'ion-magnet', status: 'unarmed', detectorType: 'MEG'},
-    { id: '2', name: 'Infra Sensor', icon: 'ion-wifi', status: 'unarmed', detectorType: 'INF'},
-    { id: '3', name: 'Smoke Sensor', icon: 'ion-flame', status: 'unarmed', detectorType: 'SMK'},
-    { id: '4', name: 'Gas Sensor', icon: 'ion-bonfire', status: 'unarmed', detectorType: 'GAS'},
-    { id: '5', name: 'House Security', icon: 'ion-locked', status: 'unarmed', detectorType: 'SEC'},
-    { id: '6', name: 'Video Camera', icon: 'ion-videocamera', status: 'unarmed', detectorType: 'CAM'},
-  ];
-  $scope.detectors = [
-    { id: '1', name: 'Door Magnet1', icon: 'ion-magnet', status: 'unarmed', detectorType: 'MEG'},
-    { id: '2', name: 'Infra Sensor1', icon: 'ion-wifi', status: 'unarmed', detectorType: 'INF'},
-    { id: '3', name: 'Smoke Sensor1', icon: 'ion-flame', status: 'unarmed', detectorType: 'SMK'},
-    { id: '4', name: 'Gas Sensor1', icon: 'ion-bonfire', status: 'unarmed', detectorType: 'GAS'},
-  ];
 
   $scope.toggleLeft = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
   $scope.deviceTap = function(route, detectors, detType) {
-    $scope.detectors = detectors;
-    $scope.detectorType = detType;
+    $scope.detectorsVM.detectors = detectors;
+    $scope.detectorsVM.detectorType = detType;
     $state.go(route);
   };
   $scope.pageJump = function(route) {
