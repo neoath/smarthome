@@ -42,6 +42,9 @@ angular.module('starter.controllers', [])
 })
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
 
+  $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', EmergMan2Phone: '13609876541', Addr: '浦东新区耀华路120弄121号102' };
+  $scope.subUsers = [{Id:1,Name:'AdminSub1'},{Id:2,Name:'AdminSub2'},{Id:3,Name:'AdminSub3'}];
+
   $scope.users = [
 		{ username: 'Admin', email: 'admin@test.domain', location: true, id: 'admin', avatar: 'img/men.jpg', enabled: 'true', lastLogin: 'Online' },
 		{ username: 'Stacy S', email: 'stacy@test.domain', location: true, id: 'stacy', avatar: 'img/girl.jpg', enabled: 'true', lastLogin: 'Last login: 01/09/2014' },
@@ -89,17 +92,34 @@ angular.module('starter.controllers', [])
                 { id: '6', name: 'Gas Sensor2', icon: 'ion-bonfire', status: 'unarmed', detectorType: 'GAS'},
               ],
     detectorList:[
-                  { id: '1', name: 'Door Magnet', icon: 'ion-magnet', status: 'unarmed', detectorType: 'MEG'},
-                  { id: '2', name: 'Infra Sensor', icon: 'ion-wifi', status: 'unarmed', detectorType: 'INF'},
-                  { id: '3', name: 'Smoke Sensor', icon: 'ion-flame', status: 'unarmed', detectorType: 'SMK'},
-                  { id: '4', name: 'Gas Sensor', icon: 'ion-bonfire', status: 'unarmed', detectorType: 'GAS'},
-                  { id: '5', name: 'House Security', icon: 'ion-locked', status: 'unarmed', detectorType: 'SEC'},
-                  { id: '6', name: 'Video Camera', icon: 'ion-videocamera', status: 'unarmed', detectorType: 'CAM'},
-                ]};
+                  { id: '1', name: '门磁', icon: 'ion-magnet', detectorType: 'MEG'},
+                  { id: '2', name: '红外探测', icon: 'ion-wifi', detectorType: 'INF'},
+                  { id: '3', name: '烟雾探测', icon: 'ion-flame',  detectorType: 'SMK'},
+                  { id: '4', name: '燃气探测', icon: 'ion-bonfire',  detectorType: 'GAS'},
+                  { id: '5', name: '电子钥匙', icon: 'ion-locked',  detectorType: 'SEC'},
+                  { id: '6', name: '摄像监控', icon: 'ion-videocamera', detectorType: 'CAM'},
+   ]};
 
   $scope.OverViewVM = {
     OverStatus:"normal"
-  }
+  };
+
+  $scope.ArmVM = { checked: true };
+//
+  $scope.Gateways = [
+    { gatewayname: 'GateWay1', id: 'gw1'},
+    { gatewayname: 'GateWay2', id: 'gw2'},
+    { gatewayname: 'GateWay3', id: 'gw3'},
+  ];  
+
+
+
+
+
+
+
+  //
+
 
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
@@ -163,11 +183,8 @@ angular.module('starter.controllers', [])
       id : "",
       name : "",
       icon : "",
-      status: "",
-      color: "",
-      userSelect : "",
-      actionSelect : "",
-      locationSelect : ""
+      sensorSelect : "",
+      gatewaySelect : ""
     };
     $scope.newdevice = defaultForm;
   };
@@ -245,30 +262,24 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('addUser', function($scope) {
+.controller('updateUser', function($scope) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
+    // this.formScope = $scope.user
   }
-  $scope.newuser = {};
+  $scope.newuser = $scope.user;
   $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
+    if(!$scope.newuser.Name) {
       alert('Username required');
       return;
     }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
+    // if(!$scope.newuser.avatar) {
+    //   $scope.newuser.avatar = 'img/noavatar.png';
+    // }
+    // $scope.newuser.lastLogin = 'Last login: never';
+    // $scope.newuser.id = $scope.users.length + 1;
+    $scope.user = $scope.newuser;
     this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
   };
 })
 
@@ -392,7 +403,23 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('OverViewCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
+.controller('OverViewCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
+
+  $scope.DataReq = function(){
+    $http({
+        url:'http://139.196.13.82/xinlai/account/detail?cust_id=740089105671409664',
+        method:"POST",
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: {
+       'email': 'root@qq.com','password': '123456'
+        }
+      }).success(function(){
+                var sss = data;
+
+            });;
+  }
 
   $scope.toggleLeft = function() {
     $ionicSideMenuDelegate.toggleLeft();
@@ -423,65 +450,25 @@ angular.module('starter.controllers', [])
     ionic.EventController.trigger("resize", "", true, false);
   }, 1500);  
 })
-.controller('Arm', function($scope, $ionicActionSheet) {
-  $scope.sensors = [
-    { sensorname: 'Door Magnet', email: 'admin@test.domain', location: true, id: 'admin', avatar: 'img/men.jpg', enabled: 'true', lastLogin: 'Online',sensortype:'doormagnet' },
-    { sensorname: 'Infra Sensor', email: 'stacy@test.domain', location: true, id: 'stacy', avatar: 'img/girl.jpg', enabled: 'true', lastLogin: 'Online',sensortype:'infrasensor' },
-    { sensorname: 'Smoke Sensor', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,sensortype:'smokesensor'},
-    { sensorname: 'Gas Sensor', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,sensortype:'gassensor'},
-    { sensorname: 'E-Key', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,sensortype:'ekey'},
-    { sensorname: 'Camera', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'false', lastLogin: 'Online' ,sensortype:'camera'},
-  ]; 
-  $scope.gateways = [
-    { gatewayname: 'GateWay1', id: 'gw1'},
-    { gatewayname: 'GateWay2', id: 'gw2'},
-    { gatewayname: 'GateWay3', id: 'gw3'},
-  ];     
-  //ionic.DomUtil.ready(addMaps);
-  // var adminLat = new google.maps.LatLng(43.07493,-89.381388);
-  // var userLat = new google.maps.LatLng(45.07493,-88.381388);
-  // var mapOptions = {
-  //   center: adminLat,
-  //   zoom: 16,
-  //   draggable: false,
-  //   scrollwheel: false,
-  //   mapTypeId: google.maps.MapTypeId.ROADMAP
-  // };
-  // var mapOptions2 = {
-  //   center: userLat,
-  //   zoom: 11,
-  //   draggable: false,
-  //   scrollwheel: false,
-  //   mapTypeId: google.maps.MapTypeId.ROADMAP
-  // };
-  // function addMaps () {
-  //   var map = new google.maps.Map(document.getElementById("map_admin"),
-  //   mapOptions);
-  //   $scope.map = map;
-  //   var map2 = new google.maps.Map(document.getElementById("map_stacy"),
-  //   mapOptions2);
-  //   $scope.map2 = map2;
-  // };
-  $scope.userHold = function(user) {
-    var hideSheet = $ionicActionSheet.show({
-      buttons: [
-        { text: 'Sample Button' }
-      ],
-      destructiveText: 'Delete',
-      titleText: 'Modify a User',
-      cancelText: 'Cancel',
-      cancel: function() {
-      },
-      buttonClicked: function(index) {
-        return true;
-      },
-      destructiveButtonClicked: function(index) {
-        $scope.sensors.splice($scope.sensors.indexOf(user), 1);
-        return true;
-      }
-    });
-  }
+.controller('Arm', function($scope) {
+  $scope.pushNotificationChange = function() {
+    console.log('Push Notification Change', $scope.ArmVM.checked);
+  };
 })
+.controller('subUserCtrl', function($scope,$state) {
+
+  $scope.delete = function(item){
+    //删除子账号业务
+  }
+  $scope.edit = function(item){
+    //编辑子账号业务
+  }  
+
+  $scope.pageJump = function(route) {
+    $state.go(route);
+  };  
+})
+  
 
 .directive('wrapOwlcarousel', function () {
     return {

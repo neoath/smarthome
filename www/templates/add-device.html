@@ -1,33 +1,37 @@
-        <ion-view title="Add New Device" ng-controller="addDevice">
+        <ion-view title="添加设备" ng-controller="addDevice">
             <ion-content>
                 <form name="addSensorForm" ng-init="setFormScope(this)" data-ng-submit="deviceSubmit()">
                     <div class="list" style="background:#ffffff;">
                         <div class="item item-divider">
-                            Basic Info
+                            基本信息
                         </div>
                         <label class="item item-input item-stacked-label">
-                            <span class="input-label">Name</span>
+                            <span class="input-label">设备名称</span>
                             <input type="text" placeholder="Name" ng-model="newdevice.name">
                         </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">设备ID</span>
+                            <input type="text" placeholder="id" ng-model="newdevice.id">
+                        </label>                        
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                Select Sensor Type
+                                设备类型
                             </div>
-                            <select ng-model="newdevice.sensorSelect" ng-options="o.sensortype as o.sensorname for o in sensors"></select>
+                            <select ng-model="newdevice.sensorSelect" ng-options="o.detectorType as o.name for o in detectorsVM.detectorList"></select>
                         </label>
                         <div class="item item-divider">
-                            GateWay Info
+                            主机信息
                         </div>
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                Select GateWay
+                                选择主机
                             </div>
-                            <select ng-model="newdevice.gatewaySelect" ng-options="o.id as o.gatewayname for o in gateways"></select>
+                            <select ng-model="newdevice.gatewaySelect" ng-options="o.id as o.gatewayname for o in Gateways"></select>
                         </label>
                     </div>
                     <div class="padding">
                         <button class="button button-balanced">
-                            Add Device
+                            添加设备
                         </button>
                     </div>
                 </form>

@@ -1,27 +1,27 @@
-        <ion-view title="User" ng-controller="usersetting">
+        <ion-view title="用户" ng-controller="usersetting">
             <ion-content>
                 <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
                     <div class="list">
                         <div class="item item-divider">
-                            Manage
+                            设置
                         </div>
                         <li class="item" on-tap="pageJump('app.userinfo')">
-                            Info Manage
+                            个人信息
                         </li>
                         <li class="item " on-tap="pageJump('app.subusers')">
-                            Sub User
+                            子账号
                         </li>
                         <div class="item item-divider">
-                            Others
+                            其他
                         </div>
                         <li class="item ">
-                            Version
+                            密码修改
+                        </li>                        
+                        <li class="item ">
+                            版本更新信息
                         </li>
                         <li class="item ">
-                            Update
-                        </li>
-                        <li class="item ">
-                            Help
+                            帮助
                         </li>
                     </div>
                 </form>

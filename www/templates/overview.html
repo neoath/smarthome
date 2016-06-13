@@ -1,9 +1,9 @@
-        <ion-view title="OverAll" ng-controller="OverViewCtrl">
+        <ion-view title="首页" ng-controller="OverViewCtrl" ng-init="DataReq()">
             <ion-content class="padding">
                 <div class="card">
                   <div class="item item-text-wrap calm-bg">
                     <i class="icon ion-medkit"></i>
-                    Devices Status
+                    安防状况
                     <span class="item-note">
                        {{OverViewVM.OverStatus}}
                     </span>
@@ -38,24 +38,24 @@
 
                 <div class="card">
                   <div class="item item-text-wrap">
-                    Location & Weather
+                    位置&天气
                   </div>
                 </div>   
                 <div class="card">
                   <div class="item item-text-wrap">
-                    Ad.
+                    广告
                   </div>
                 </div>                   
 
                 <div class="clearfix"></div>
                 <div class="card">
                   <div class="item item-text-wrap">
-                    Current Gateway
+                    当前主机
                   </div>
                 </div>                  
                 <div class="padding">
                     <div class="item item-divider">
-                        Featured Devices
+                        设备
                     </div>
                 </div>
 
