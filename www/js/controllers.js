@@ -403,22 +403,59 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('OverViewCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
-
+.controller('OverViewCtrl', function($q,$scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
   $scope.DataReq = function(){
-    $http({
-        url:'http://139.196.13.82/xinlai/account/detail?cust_id=740089105671409664',
-        method:"POST",
-        headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: {
-       'email': 'root@qq.com','password': '123456'
-        }
-      }).success(function(){
-                var sss = data;
+    var newuuid = UUID.prototype.createUUID();
+    var aesKey = "XinLaiWitHome___";
+    var newAesKey = null;
+    var aesEncrypt = function(data, keyStr, ivStr) {
+                var sendData = CryptoJS.enc.Utf8.parse(data);
+                var key = CryptoJS.enc.Utf8.parse(keyStr);
+                var iv  = CryptoJS.enc.Utf8.parse(ivStr);
+                var encrypted = CryptoJS.AES.encrypt(sendData, key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Iso10126});
+                //return CryptoJS.enc.Base64.stringify(encrypted.toString(CryptoJS.enc.Utf8));
+                return CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
+    };
+    var aesDecrypt = function(data, keyStr, ivStr) {
+    var key = CryptoJS.enc.Utf8.parse(keyStr);
+                var iv  = CryptoJS.enc.Utf8.parse(ivStr);
+                //解密的是基于BASE64的数据，此处data是BASE64数据
+                var decrypted = CryptoJS.AES.decrypt(data, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Iso10126});
+                return decrypted.toString(CryptoJS.enc.Utf8);
+    };
+      var code = aesEncrypt(newuuid, aesKey, aesKey);    
+    
+    var headers = {
+      'Access-Control-Allow-Origin' : '*',
+      'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+  };
+    var requestData = {
+      cust_id : 740089105671409664
+    };
 
-            });;
+    var req = {
+      method: 'POST',
+      url: 'http://139.196.13.82/xinlai/account/detail?req_no=' + code,
+      headers: headers
+    };
+
+// //if it is a GET request set the parameters like this
+//   req.params = requestData;
+//if it is a POST request set the parameters like this 
+      req.data = requestData;
+
+    var deferred = $q.defer();
+    $http(req).then(function(response) {
+      var ssss = response;
+      
+      
+        deferred.resolve();
+    }, function(error) {
+        deferred.reject();
+    });
+
   }
 
   $scope.toggleLeft = function() {
