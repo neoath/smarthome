@@ -100,6 +100,10 @@ angular.module('starter.controllers', [])
                   { id: '6', name: '摄像监控', icon: 'ion-videocamera', detectorType: 'CAM'},
    ]};
 
+   $scope.detectorVM = {
+    detector:""
+   };
+
   $scope.OverViewVM = {
     OverStatus:"normal"
   };
@@ -309,7 +313,7 @@ angular.module('starter.controllers', [])
     $scope.newuser = defaultForm;
   };
 })
-.controller('manage', function($scope,$state) {
+.controller('settings', function($scope,$state) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
@@ -405,46 +409,23 @@ angular.module('starter.controllers', [])
 
 .controller('OverViewCtrl', function($q,$scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
   $scope.DataReq = function(){
-    var newuuid = UUID.prototype.createUUID();
-    var aesKey = "XinLaiWitHome___";
-    var newAesKey = null;
-    var aesEncrypt = function(data, keyStr, ivStr) {
-                var sendData = CryptoJS.enc.Utf8.parse(data);
-                var key = CryptoJS.enc.Utf8.parse(keyStr);
-                var iv  = CryptoJS.enc.Utf8.parse(ivStr);
-                var encrypted = CryptoJS.AES.encrypt(sendData, key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Iso10126});
-                //return CryptoJS.enc.Base64.stringify(encrypted.toString(CryptoJS.enc.Utf8));
-                return CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
-    };
-    var aesDecrypt = function(data, keyStr, ivStr) {
-    var key = CryptoJS.enc.Utf8.parse(keyStr);
-                var iv  = CryptoJS.enc.Utf8.parse(ivStr);
-                //解密的是基于BASE64的数据，此处data是BASE64数据
-                var decrypted = CryptoJS.AES.decrypt(data, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Iso10126});
-                return decrypted.toString(CryptoJS.enc.Utf8);
-    };
-      var code = aesEncrypt(newuuid, aesKey, aesKey);    
-    
-    var headers = {
-      'Access-Control-Allow-Origin' : '*',
-      'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
-				'Content-Type': 'application/json',
-				'Accept': 'application/json'
-  };
-    var requestData = {
-      cust_id : 740089105671409664
-    };
+ 
+    var code = getReqNo();
+    var reqParam = {
+      headers:{'Access-Control-Allow-Origin' : '*','Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT','Content-Type': 'application/json','Accept': 'application/json'},
+      code: code,
+      url: 'http://139.196.13.82/xinlai/account/detail?req_no=' + code,
+      requestData: {cust_id : 740089105671409664},
+      method: 'POST',
+
+      };
 
     var req = {
-      method: 'POST',
-      url: 'http://139.196.13.82/xinlai/account/detail?req_no=' + code,
-      headers: headers
+      method: reqParam.method,
+      url: reqParam.url,
+      headers: reqParam.headers
     };
-
-// //if it is a GET request set the parameters like this
-//   req.params = requestData;
-//if it is a POST request set the parameters like this 
-      req.data = requestData;
+    req.data = reqParam.requestData;
 
     var deferred = $q.defer();
     $http(req).then(function(response) {
@@ -455,17 +436,20 @@ angular.module('starter.controllers', [])
     }, function(error) {
         deferred.reject();
     });
-
   }
 
   $scope.toggleLeft = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
-  $scope.deviceTap = function(route, detectors, detType) {
+  $scope.deviceTypeTap = function(route, detectors, detType) {
     $scope.detectorsVM.detectors = detectors;
     $scope.detectorsVM.detectorType = detType;
     $state.go(route);
   };
+  $scope.deviceTap = function(route, detector) {
+    $scope.detectorVM.detector = detector;
+    $state.go(route);
+  };  
   $scope.pageJump = function(route) {
     $state.go(route);
   };    
@@ -505,8 +489,29 @@ angular.module('starter.controllers', [])
     $state.go(route);
   };  
 })
-  
+.controller('PasswordCtrl', function($scope) {
+  $scope.setFormScope = function(scope){
+    this.formScope = scope;
+  }
+  $scope.codeform = {};
+  $scope.validateMessage = function() {
+    if(!$scope.codeform.code) {
+      alert('code required');
+      return;
+    }
+    $scope.locations.push($scope.codeform);
+    this.formScope.addLocationForm.$setPristine();
+    var defaultForm = {
+      code : ""
+    };
+    $scope.codeform = defaultForm;
+  };
+})  
+.controller('VersionCtrl', function($scope){ 
+})
 
+.controller('HelpCtrl', function($scope){ 
+})
 .directive('wrapOwlcarousel', function () {
     return {
         restrict: 'E',
@@ -517,3 +522,25 @@ angular.module('starter.controllers', [])
     };
 })
 ;
+
+
+function getReqNo(){
+    var newuuid = UUID.prototype.createUUID();
+    var aesKey = "XinLaiWitHome___";
+    var newAesKey = null;
+    var aesEncrypt = function(data, keyStr, ivStr) {
+                var sendData = CryptoJS.enc.Utf8.parse(data);
+                var key = CryptoJS.enc.Utf8.parse(keyStr);
+                var iv  = CryptoJS.enc.Utf8.parse(ivStr);
+                var encrypted = CryptoJS.AES.encrypt(sendData, key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Iso10126});
+                return CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
+    };
+    var aesDecrypt = function(data, keyStr, ivStr) {
+      var key = CryptoJS.enc.Utf8.parse(keyStr);
+      var iv  = CryptoJS.enc.Utf8.parse(ivStr);
+      var decrypted = CryptoJS.AES.decrypt(data, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Iso10126});
+      return decrypted.toString(CryptoJS.enc.Utf8);
+    };
+    var code = aesEncrypt(newuuid, aesKey, aesKey);   
+    return code;
+}

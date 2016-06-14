@@ -95,6 +95,14 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })  
+  .state('app.deviceType', {
+      url: "/deviceType",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/deviceType.html"
+        }
+      }
+    })  
 	.state('app.device', {
       url: "/device",
       views: {
@@ -136,11 +144,11 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })  
-  .state('app.manage', {
-      url: "/manage",
+  .state('app.settings', {
+      url: "/settings",
       views: {
         'menuContent' :{
-          templateUrl: "templates/manage.html"
+          templateUrl: "templates/settings.html"
         }
       }
     })
@@ -188,6 +196,38 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         } 
       } 
     })
+
+  .state('app.changepassword', { 
+    url: '/changepassword', 
+    views: { 
+        'menuContent': { 
+             templateUrl: 'templates/changepassword.html', 
+             //绑定controller 
+             //controller: 'VibrationCtrl' 
+        } 
+      } 
+    }) 
+
+  .state('app.version', { 
+    url: '/version', 
+    views: { 
+        'menuContent': { 
+             templateUrl: 'templates/version.html', 
+             //绑定controller 
+             //controller: 'VibrationCtrl' 
+        } 
+      } 
+    }) 
+  .state('app.help', { 
+    url: '/help', 
+    views: { 
+        'menuContent': { 
+             templateUrl: 'templates/help.html', 
+             //绑定controller 
+             //controller: 'VibrationCtrl' 
+        } 
+      } 
+    })         
   ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/overview');
