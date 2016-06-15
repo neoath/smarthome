@@ -22,7 +22,7 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider,$httpProvider) {
   $stateProvider
 
     .state('app', {
@@ -231,4 +231,5 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
   ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/overview');
+  $httpProvider.defaults.headers.post['Content-Type'] = 'text/plain;charset=UTF-8';
 });

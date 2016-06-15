@@ -412,20 +412,16 @@ angular.module('starter.controllers', [])
  
     var code = getReqNo();
     var reqParam = {
-      headers:{'Access-Control-Allow-Origin' : '*','Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT','Content-Type': 'application/json','Accept': 'application/json'},
       code: code,
       url: 'http://139.196.13.82/xinlai/account/detail?req_no=' + code,
-      requestData: {cust_id : 740089105671409664},
+      requestData: '{"cust_id":740089105671409664}',
       method: 'POST',
-
       };
-
     var req = {
       method: reqParam.method,
       url: reqParam.url,
-      headers: reqParam.headers
+      data: reqParam.requestData
     };
-    req.data = reqParam.requestData;
 
     var deferred = $q.defer();
     $http(req).then(function(response) {
