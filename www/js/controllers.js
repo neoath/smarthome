@@ -263,6 +263,53 @@ angular.module('starter.controllers', [])
   };
 })
 
+.controller('register', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http) {
+
+  $scope.setFormScope = function(scope){
+    this.formScope = scope;
+  }
+  $scope.registerData = {};
+
+  $scope.submit = function() {
+    var code = getReqNo();
+
+    if(!$scope.registerData.mobileNo) {
+      alert('mobileNo required');
+      return;
+    }
+    if(!$scope.registerData.code) {
+      alert('code required');
+      return;
+    }
+
+    var requestData = {
+      phone: $scope.registerData.mobileNo,
+      login_pwd: $scope.registerData.password,
+      sms_captcha: $scope.registerData.code,
+    };
+
+    var requestParam = {
+      code: code,
+      url: 'http://139.196.13.82/xinlai/account/register?req_no=' + code,
+      Data: JSON.stringify(requestData),
+      method: 'POST',
+      };
+      
+    var request = {
+      method: requestParam.method,
+      url: requestParam.url,
+      data: requestParam.Data
+    };
+    
+    $http(request).then(function(response) {
+      var ssss = response;
+      console.log(ssss);
+      $state.go('app.overview');
+    }, function(error) {
+    });
+  }
+})
+
 .controller('updateUser', function($scope,$q,$http) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
@@ -422,44 +469,6 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('register', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http) {
-  $scope.submit = function() {
-    var code = getReqNo();
-
-    //$scope.registerData = {};
-
-    var requestData = {
-      phone: $scope.registerData.mobileNo,
-      login_pwd: '96E79218965EB72C92A549DD5A330112',
-      sms_captcha: $scope.registerData.code,
-    };
-
-  // var requestData = {
-  //     phone: '13523474665',
-  //     login_pwd: '96E79218965EB72C92A549DD5A330112',
-  //     sms_captcha: '8888',
-  //   };
-
-    var requestParam = {
-      code: code,
-      url: 'http://139.196.13.82/xinlai/account/register?req_no=' + code,
-      Data: JSON.stringify(requestData),
-      method: 'POST',
-      };
-      
-    var request = {
-      method: requestParam.method,
-      url: requestParam.url,
-      data: requestParam.Data
-    };
-    
-    $http(request).then(function(response) {
-      var ssss = response;
-      console.log(ssss);
-    }, function(error) {
-    });
-  }
-})
 
 
 .controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http) {
