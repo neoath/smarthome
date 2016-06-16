@@ -1,4 +1,4 @@
-        <ion-view title="首页" ng-controller="OverViewCtrl" ng-init="DataReq()">
+        <ion-view title="首页" ng-controller="OverViewCtrl" ng-init="DataReq()" >
             <ion-content class="padding">
                 <div class="card">
                   <div class="item item-text-wrap calm-bg">
@@ -53,64 +53,70 @@
                     当前主机
                   </div>
                 </div>                  
-                <div class="padding">
-                    <div class="item item-divider">
-                        设备
-                    </div>
-                </div>
 
-                    <div class="col-lg-50 padding-horizontal">
-                        <div style="width:100%;height:80px;text-align: center;line-height:5;">
-                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;"
-
-                            on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'MEG')" id="megnetDevices" >
-                                <i class="icon ion-magnet" style="left: 21px;"></i>
-                            </div>
-                            <div style="width:60%;height:100%;float:left;padding: 0px 72px;">
-                                <div class="item item-icon-left" style="width:100%;height:100%;float:left;padding-left: 0px;"
-
-                                on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'INF')" id="infraDevices">
-                                    <i class="icon ion-wifi" style="padding-left: 23px;left: initial;"></i>
+                    <div class="padding-horizontal">
+                        <div class="blockLine">
+                            <div class="item blockLine-left" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'MEG')" id="megnetDevices" >
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-magnet blockLine-Icon"></i>
                                 </div>
+                                <div class="blockLine-Desc">门磁</div>
                             </div>
-                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;"
-
-                            on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'SMK')" id="smokeDevices">
-                                <i class="icon ion-flame" style="left: 21px;"></i>
+                            <div class="item blockLine-middle" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'INF')" id="infraDevices">
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-wifi blockLine-Icon" ></i>
+                                </div>
+                                <div class="blockLine-Desc">红外探测</div>                                
+                            </div>
+                            <div class="item blockLine-right" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'SMK')" id="smokeDevices">
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-flame blockLine-Icon"></i>
+                                </div>
+                                <div class="blockLine-Desc">烟雾探测</div>                                  
                             </div>
                         </div>
-                        <div style="height:20px"></div>
-                        <div style="width:100%;height:80px;text-align: center;line-height:5;">
-                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;"
-
-                            on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'GAS')" id="gasDevices">
-                                <i class="icon ion-bonfire" style="left: 21px;"></i>
-                            </div>
-                            <div style="width:60%;height:100%;float:left;padding: 0px 72px;"></div>
-                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;"
-
-                            on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'SEC')" id="eKeyDevices">
-                                <i class="icon ion-locked" style="left: 21px;"></i>
-                            </div>
-                        </div>
-                        <div style="height:20px"></div>
-                        <div style="width:100%;height:80px;text-align: center;line-height:5;">
-                            <div class="item item-icon-left" 
-                            style="width:20%;height:100%;float:left;"on-tap="pageJump('app.camera')"
-
-                            on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'CAM')" id="cameraDevices" >
-                                <i class="icon ion-videocamera" style="left: 21px;"></i>
-                            </div>
-                            <div style="width:60%;height:100%;float:left;padding: 0px 72px;">
-                                <div class="item item-icon-left" style="width:100%;height:100%;float:left;padding-left: 0px;">
-                                    <i class="icon ion-wifi" style="padding-left: 23px;left: initial;"></i>
+                        <div class="blockLine">
+                            <div class="item blockLine-left" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'GAS')" id="gasDevices">
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-bonfire blockLine-Icon"></i>
                                 </div>
+                                <div class="blockLine-Desc">燃气探测</div>
                             </div>
-                            <div class="item item-icon-left" style="width:20%;height:100%;float:left;">
-                                <i class="icon ion-wifi" style="left: 21px;"></i>
+                            <div class="item blockLine-middle" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'SEC')" id="eKeyDevices">
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-locked blockLine-Icon"></i>
+                                </div>
+                                <div class="blockLine-Desc">电子钥匙</div>                                  
                             </div>
-                        </div>                                                
+                            <div class="item blockLine-right" on-tap="pageJump('app.camera')" id="cameraDevices">
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-videocamera blockLine-Icon"></i>
+                                </div>
+                                <div class="blockLine-Desc">视频监控</div>                                
+                            </div>                            
+                        </div>                        
+                        <div class="blockLine">
+                            <div class="item blockLine-left" >
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-flame blockLine-Icon" ></i>
+                                </div>
+                                <div class="blockLine-Desc">Reserved</div>
+                            </div>
+                            <div class="item blockLine-middle" >
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-flame blockLine-Icon" ></i>
+                                </div>
+                                <div class="blockLine-Desc">Reserved</div>                                
+                            </div>
+                            <div class="item blockLine-right" >
+                                <div class="blockLine-IconParent">
+                                    <i class="icon ion-flame blockLine-Icon"></i>
+                                </div>
+                                <div class="blockLine-Desc">Reserved</div>                                  
+                            </div>
+                        </div>                                               
                     </div>
+
 
 <!--                 <div ng-repeat="detector in detectors">
                     <div class="col-lg-50 padding-horizontal">

@@ -1,0 +1,21 @@
+.blockLine{
+  width:100%;height:110px;text-align: center;line-height:5;
+}
+.blockLine-left{
+  width:33%;height:100%;float:left;padding:0px;
+}
+.blockLine-middle{
+  width:33%;height:100%;float:left;padding:0px;
+}
+.blockLine-right{
+  width:33%;height:100%;float:left;padding:0px;
+}
+.blockLine-IconParent{
+  width:100%;height:70%;padding-top: 16px;
+}
+.blockLine-Icon{
+  left:0px;font-size:40px;vertical-align: top;
+}
+.blockLine-Desc{
+  width:100%;height:30%;margin-top: -24px;font-size: 14px;
+}

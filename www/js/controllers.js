@@ -428,18 +428,9 @@ angular.module('starter.controllers', [])
 .controller('OverViewCtrl', function($q,$scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
   $scope.DataReq = function(){
  
-    var code = getReqNo();
-    var reqParam = {
-      code: code,
-      url: 'http://139.196.13.82/xinlai/account/detail?req_no=' + code,
-      requestData: '{"cust_id":740089105671409664}',
-      method: 'POST',
-      };
-    var req = {
-      method: reqParam.method,
-      url: reqParam.url,
-      data: reqParam.requestData
-    };
+    var apibranch = '/account/detail';
+    var reqd = '{"cust_id":"740089105671409664"}';
+    var req = httpReqGen(apibranch,reqd);
 
     var deferred = $q.defer();
     $http(req).then(function(response) {
@@ -521,22 +512,54 @@ angular.module('starter.controllers', [])
     $state.go(route);
   };  
 })
-.controller('PasswordCtrl', function($scope) {
+.controller('PasswordCtrl', function($scope,$q,$state,$http) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
   $scope.codeform = {};
-  $scope.validateMessage = function() {
-    if(!$scope.codeform.code) {
-      alert('code required');
+  $scope.changePW = function() {
+    if(!$scope.codeform.oldPW || !$scope.codeform.newPW || !$scope.codeform.confirmPW) {
+      alert('请填写');
       return;
     }
-    $scope.locations.push($scope.codeform);
-    this.formScope.addLocationForm.$setPristine();
-    var defaultForm = {
-      code : ""
+    if($scope.codeform.newPW != $scope.codeform.confirmPW) {
+      alert('新密码输入不一致');
+      return;
+    }    
+    var apibranch = '/account/updatepwd';
+
+    var oldpw = hex_md5($scope.codeform.oldPW).toUpperCase();
+    var newpw = hex_md5($scope.codeform.newPW).toUpperCase();
+    var id = "740089105671409664";
+    var reqobj = {
+      "cust_id":id,
+      "old_pwd":oldpw,
+      "new_pwd":newpw
     };
-    $scope.codeform = defaultForm;
+    var reqstr = JSON.stringify(reqobj);
+    var req = httpReqGen(apibranch,reqstr);
+
+    var deferred = $q.defer();
+    $http(req).then(function(response) {
+      var resData = "";
+      if(response.status == 200){
+        var resData = $.parseJSON(response.data.result);
+        if(resData.code == "0000"){
+          alert('密码已修改');
+          $state.go("app.usersetting");           
+        }
+        else{
+          alert('密码修改失败');
+        }
+      }
+      else
+        alert('密码修改失败');
+      deferred.resolve();
+    }, function(error) {
+        deferred.reject();
+    });
+
+
   };
 })  
 .controller('VersionCtrl', function($scope){ 
@@ -575,4 +598,21 @@ function getReqNo(){
     };
     var code = aesEncrypt(newuuid, aesKey, aesKey);   
     return code;
+}
+
+function httpReqGen(apibranch,reqData){
+
+    var code = getReqNo();
+    var urlp = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
+    var reqParam = {
+      code: code,
+      url: urlp,
+      requestData: reqData,
+      method: 'POST',
+      };
+    return req = {
+      method: reqParam.method,
+      url: reqParam.url,
+      data: reqParam.requestData
+    };  
 }
