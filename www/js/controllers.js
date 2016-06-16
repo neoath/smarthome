@@ -263,7 +263,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('updateUser', function($scope) {
+.controller('updateUser', function($scope,$q,$http) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
     // this.formScope = $scope.user
@@ -274,13 +274,31 @@ angular.module('starter.controllers', [])
       alert('Username required');
       return;
     }
-    // if(!$scope.newuser.avatar) {
-    //   $scope.newuser.avatar = 'img/noavatar.png';
-    // }
-    // $scope.newuser.lastLogin = 'Last login: never';
-    // $scope.newuser.id = $scope.users.length + 1;
-    $scope.user = $scope.newuser;
-    this.formScope.addUserForm.$setPristine();
+    var userid = $scope.user.cust_id;
+    var code = getReqNo();
+    var requestdata = '{"cust_id":"' + $scope.newuser.Id + '", "tel":"' +$scope.newuser.Tel +'", "email": "' + $scope.newuser.Email + '", "address": "' + $scope.newuser.Addr +'"}';
+    var reqParam = {
+      code: code,
+      url: 'http://139.196.13.82/xinlai/account/upgrade?req_no=' + code,
+      requestData: requestdata,
+      method: 'POST',
+      };
+    var req = {
+      method: reqParam.method,
+      url: reqParam.url,
+      data: reqParam.requestData
+    };
+
+    var deferred = $q.defer();
+    $http(req).then(function(response) {
+      var resData = "";
+      if(response.status == 200){
+        alert('User Info updated!');
+      }
+        deferred.resolve();
+    }, function(error) {
+        deferred.reject();
+    });
   };
 })
 
@@ -463,6 +481,26 @@ angular.module('starter.controllers', [])
     var deferred = $q.defer();
     $http(req).then(function(response) {
       var ssss = response;
+      var resData = "";
+      if(response.status == 200){
+        var resData = $.parseJSON(response.data.result);
+        var objectData = resData.data;
+        $scope.newuser = $scope.user;
+        
+        $scope.newuser.Id = objectData.cust_id;
+        $scope.newuser.Name = objectData.name;
+        $scope.newuser.Email = objectData.email;
+        $scope.newuser.Phone = objectData.phone;
+        $scope.newuser.Tel = objectData.tel;
+        $scope.newuser.EmergMan1 = "";
+        $scope.newuser.EmergMan1Phone ="";
+        $scope.newuser.EmergMan2 = "";
+        $scope.newuser.EmergMan2Phone = "";
+        $scope.newuser.Addr = objectData.address;
+        
+        $scope.user = $scope.newuser;
+        
+      }
         deferred.resolve();
     }, function(error) {
         deferred.reject();
