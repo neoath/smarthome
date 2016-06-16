@@ -1,45 +1,51 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  // Form data for the login modal
-  $scope.loginData = {};
-
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
-
-  // Open the login modal
+.controller('login', function($scope, $ionicSlideBoxDelegate, $timeout, $ionicLoading, $ionicPopup) {
   $scope.login = function() {
-    $scope.modal.show();
-  };
-
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
+    $ionicLoading.show({
+      template: 'Logging in...'
+    });
+    $timeout( function() {
+      $ionicLoading.show({
+        template: 'Success'
+      });
+    }, 1600);
+    $timeout( function() {
+      $ionicLoading.hide();
+      $ionicSlideBoxDelegate.next();
+    }, 2000);
+  }
+  $scope.nextSlide = function() {
+    $ionicSlideBoxDelegate.next();
+  }
+  $scope.prevSlide = function() {
+    $ionicSlideBoxDelegate.previous();
+  }
+  $scope.showRegister = function() {
+    $scope.data = {}
+    var myPopup = $ionicPopup.show({
+      template: '<input type="email" ng-model="data.email">',
+      title: 'Enter Your Email Address',
+      subTitle: 'You will be notified once approved',
+      scope: $scope,
+      buttons: [
+        { text: 'Cancel' },
+        {
+         text: '<b>Submit</b>',
+         type: 'button-balanced',
+         onTap: function(e) {
+           if (!$scope.data.email) {
+           e.preventDefault();
+           } else {
+           return $scope.data.email;
+           }
+         }
+        },
+      ]
+    });
   };
 })
+
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
 
   $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', EmergMan2Phone: '13609876541', Addr: '浦东新区耀华路120弄121号102' };
@@ -115,15 +121,6 @@ angular.module('starter.controllers', [])
     { gatewayname: 'GateWay2', id: 'gw2'},
     { gatewayname: 'GateWay3', id: 'gw3'},
   ];  
-
-
-
-
-
-
-
-  //
-
 
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
@@ -264,6 +261,53 @@ angular.module('starter.controllers', [])
     };
     $scope.newuser = defaultForm;
   };
+})
+
+.controller('register', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http) {
+
+  $scope.setFormScope = function(scope){
+    this.formScope = scope;
+  }
+  $scope.registerData = {};
+
+  $scope.submit = function() {
+    var code = getReqNo();
+
+    if(!$scope.registerData.mobileNo) {
+      alert('mobileNo required');
+      return;
+    }
+    if(!$scope.registerData.code) {
+      alert('code required');
+      return;
+    }
+
+    var requestData = {
+      phone: $scope.registerData.mobileNo,
+      login_pwd: $scope.registerData.password,
+      sms_captcha: $scope.registerData.code,
+    };
+
+    var requestParam = {
+      code: code,
+      url: 'http://139.196.13.82/xinlai/account/register?req_no=' + code,
+      Data: JSON.stringify(requestData),
+      method: 'POST',
+      };
+      
+    var request = {
+      method: requestParam.method,
+      url: requestParam.url,
+      data: requestParam.Data
+    };
+    
+    $http(request).then(function(response) {
+      var ssss = response;
+      console.log(ssss);
+      $state.go('app.overview');
+    }, function(error) {
+    });
+  }
 })
 
 .controller('updateUser', function($scope,$q,$http) {
@@ -425,7 +469,9 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('OverViewCtrl', function($q,$scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
+
+
+.controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http) {
   $scope.DataReq = function(){
  
     var apibranch = '/account/detail';
@@ -434,6 +480,7 @@ angular.module('starter.controllers', [])
 
     var deferred = $q.defer();
     $http(req).then(function(response) {
+      var ssss = response;
       var resData = "";
       if(response.status == 200){
         var resData = $.parseJSON(response.data.result);
@@ -454,7 +501,6 @@ angular.module('starter.controllers', [])
         $scope.user = $scope.newuser;
         
       }
-      
         deferred.resolve();
     }, function(error) {
         deferred.reject();
@@ -494,6 +540,7 @@ angular.module('starter.controllers', [])
     ionic.EventController.trigger("resize", "", true, false);
   }, 1500);  
 })
+
 .controller('Arm', function($scope) {
   $scope.pushNotificationChange = function() {
     console.log('Push Notification Change', $scope.ArmVM.checked);
@@ -512,7 +559,7 @@ angular.module('starter.controllers', [])
     $state.go(route);
   };  
 })
-.controller('PasswordCtrl', function($scope,$q,$state,$http) {
+.controller('PasswordCtrl', function($scope) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
@@ -562,6 +609,7 @@ angular.module('starter.controllers', [])
 
   };
 })  
+
 .controller('VersionCtrl', function($scope){ 
 })
 

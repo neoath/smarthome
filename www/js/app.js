@@ -13,7 +13,6 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
@@ -227,7 +226,23 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
              //controller: 'VibrationCtrl' 
         } 
       } 
-    })         
+    })       
+    .state('app.login', { 
+    url: '/login', 
+    views: { 
+        'menuContent': { 
+             templateUrl: 'templates/login.html', 
+        } 
+      } 
+    })      
+    .state('app.register', { 
+    url: '/register', 
+    views: { 
+        'menuContent': { 
+             templateUrl: 'templates/register.html', 
+        } 
+      } 
+    })    
   ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/overview');

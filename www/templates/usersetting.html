@@ -1,29 +1,33 @@
-        <ion-view title="用户" ng-controller="usersetting">
-            <ion-content>
-                <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
-                    <div class="list">
-                        <div class="item item-divider">
-                            设置
-                        </div>
-                        <li class="item" on-tap="pageJump('app.userinfo')">
-                            个人信息
-                        </li>
-                        <li class="item " on-tap="pageJump('app.subusers')">
-                            子账号
-                        </li>
-                        <div class="item item-divider">
-                            其他
-                        </div>
-                        <li class="item " on-tap="pageJump('app.changepassword')">
-                            密码修改
-                        </li>                        
-                        <li class="item " on-tap="pageJump('app.version')">
-                            版本更新信息
-                        </li>
-                        <li class="item " on-tap="pageJump('app.help')">
-                            帮助
-                        </li>
-                    </div>
-                </form>
-            </ion-content>
-        </ion-view>
+<ion-view title="用户" ng-controller="usersetting">
+    <ion-content>
+        <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+            <div class="list">
+                <div class="item item-divider">
+                    设置
+                </div>
+                <li class="item" on-tap="pageJump('app.userinfo')">
+                    个人信息
+                </li>
+                <li class="item " on-tap="pageJump('app.subusers')">
+                    子账号
+                </li>
+                <div class="item item-divider">
+                    其他
+                </div>
+                <li class="item " on-tap="pageJump('app.changepassword')">
+                    密码修改
+                </li>                        
+                <li class="item " on-tap="pageJump('app.version')">
+                    版本更新信息
+                </li>
+                <li class="item " on-tap="pageJump('app.help')">
+                    帮助
+                </li>
+            </div>
+        </form>
+        <label class="item">
+        <button class="button button-block button-positive" type="submit" on-tap="pageJump('app.login')">退出</button>
+    </label>
+    </ion-content>
+</ion-view>
+
