@@ -47,7 +47,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
-
+  $scope.global = { cust_id : 0 };
   $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', EmergMan2Phone: '13609876541', Addr: '浦东新区耀华路120弄121号102' };
   $scope.subUsers = [{Id:1,Name:'AdminSub1'},{Id:2,Name:'AdminSub2'},{Id:3,Name:'AdminSub3'}];
 
@@ -191,7 +191,6 @@ angular.module('starter.controllers', [])
   };
 })
 
-
 .controller('Dashboard', function($scope, $interval) {
   var maximum = 150;
   $scope.data = [[]];
@@ -277,6 +276,10 @@ angular.module('starter.controllers', [])
       alert('mobileNo required');
       return;
     }
+    if(!$scope.registerData.password) {
+      alert('password required');
+      return;
+    }
     if(!$scope.registerData.code) {
       alert('code required');
       return;
@@ -284,27 +287,23 @@ angular.module('starter.controllers', [])
 
     var requestData = {
       phone: $scope.registerData.mobileNo,
-      login_pwd: $scope.registerData.password,
+      login_pwd: hex_md5($scope.registerData.password).toLocaleUpperCase(),
       sms_captcha: $scope.registerData.code,
     };
 
-    var requestParam = {
-      code: code,
-      url: 'http://139.196.13.82/xinlai/account/register?req_no=' + code,
-      Data: JSON.stringify(requestData),
-      method: 'POST',
-      };
-      
-    var request = {
-      method: requestParam.method,
-      url: requestParam.url,
-      data: requestParam.Data
-    };
-    
+    var apibranch = '/account/register';
+    var request = httpReqGen(apibranch,requestData);
+
     $http(request).then(function(response) {
-      var ssss = response;
-      console.log(ssss);
-      $state.go('app.overview');
+      console.log(response);
+      var result = $.parseJSON(response.data.result);
+      if (result.code == 0000){
+        $scope.global.cust_id = result.data.cust_id;
+        console.log(result.data.cust_id);
+        $state.go('app.userinfo');
+      } else {
+        alert(result.msg);
+      }
     }, function(error) {
     });
   }
@@ -313,7 +312,6 @@ angular.module('starter.controllers', [])
 .controller('updateUser', function($scope,$q,$http) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
-    // this.formScope = $scope.user
   }
   $scope.newuser = $scope.user;
   $scope.userSubmit = function() {
@@ -375,6 +373,7 @@ angular.module('starter.controllers', [])
     $scope.newuser = defaultForm;
   };
 })
+
 .controller('settings', function($scope,$state) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
@@ -404,6 +403,7 @@ angular.module('starter.controllers', [])
     $scope.newuser = defaultForm;
   };
 })
+
 .controller('addGateWay', function($scope) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
@@ -468,8 +468,6 @@ angular.module('starter.controllers', [])
     $cordovaVibration.vibrate(1000); 
   };
 })
-
-
 
 .controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http) {
   $scope.DataReq = function(){
@@ -544,8 +542,10 @@ angular.module('starter.controllers', [])
 .controller('Arm', function($scope) {
   $scope.pushNotificationChange = function() {
     console.log('Push Notification Change', $scope.ArmVM.checked);
+    console.log($scope.global.cust_id);
   };
 })
+
 .controller('subUserCtrl', function($scope,$state) {
 
   $scope.delete = function(item){
@@ -559,6 +559,7 @@ angular.module('starter.controllers', [])
     $state.go(route);
   };  
 })
+
 .controller('PasswordCtrl', function($scope) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
@@ -615,6 +616,7 @@ angular.module('starter.controllers', [])
 
 .controller('HelpCtrl', function($scope){ 
 })
+
 .directive('wrapOwlcarousel', function () {
     return {
         restrict: 'E',
@@ -625,7 +627,6 @@ angular.module('starter.controllers', [])
     };
 })
 ;
-
 
 function getReqNo(){
     var newuuid = UUID.prototype.createUUID();
