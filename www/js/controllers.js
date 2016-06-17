@@ -4,7 +4,9 @@ angular.module('starter.controllers', [])
 //数据
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
   $scope.global = { cust_id : 0 };
-  $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', EmergMan2Phone: '13609876541', Addr: '浦东新区耀华路120弄121号102' };
+  $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', 
+                  EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', 
+                  EmergMan2Phone: '13609876541', address: '浦东新区耀华路120弄121号102' };
   $scope.subUsers = [{Id:1,Name:'AdminSub1'},{Id:2,Name:'AdminSub2'},{Id:3,Name:'AdminSub3'}];
 
   $scope.users = [
@@ -126,7 +128,9 @@ angular.module('starter.controllers', [])
     var apibranch = '/account/detail';
     var reqd = {"cust_id":"740089105671409664"};
     var req = httpReqGen(apibranch,reqd);
-    var userinfoReq = $q.defer();
+    console.log($scope.global.cust_id);
+
+    var deferred = $q.defer();
     $http(req).then(function(response) {
       var ssss = response;
       var resData = "";
@@ -147,7 +151,6 @@ angular.module('starter.controllers', [])
         $scope.newuser.Addr = objectData.address;
         
         $scope.user = $scope.newuser;
-        
       }
         userinfoReq.resolve();
     }, function(error) {
@@ -299,7 +302,7 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //用户 app.usersetting usersetting.html
-.controller('usersetting', function($scope,$state) {
+.controller('usersetting', function($scope, $state) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
@@ -330,29 +333,30 @@ angular.module('starter.controllers', [])
 })
 /////////////////////////////////////////////////       
 //个人信息 app.userinfo userinfo.html
-.controller('updateUser', function($scope,$q,$http,$state) {
+.controller('updateUser', function($scope, $q, $http, $state) {
+  if (!$scope.global.cust_id){
+        $state.go('app.login');
+  }
 
   var requestData = {
       cust_id: $scope.global.cust_id,
     };
   console.log(requestData);
-
-  var apibranch = '/account/detail ';
+  var apibranch = '/account/detail';
   var request = httpReqGen(apibranch,requestData);
 
   $http(request).then(function(response) {
       console.log(response);
+      var result = $.parseJSON(response.data.result);
+      if (result.code == 0000){
+          var data = result.data;
+          console.log(data);
+      } else {
+        alert(result.msg);
+      }
     }, function(error) {
       console.log(error);
     });
-
-  $http.get("http://data2.unitoon.cn/impactcrusher/getrealdata?id=1013")
-       .success(function(response) 
-           {
-              console.log(response);
-              // $scope.user = response;
-              // console.log($scope.user);
-           });
 
   $scope.setFormScope = function(scope){
     this.formScope = scope;
@@ -394,7 +398,7 @@ angular.module('starter.controllers', [])
   };
 })
 //子账号 app.subusers subusers.html
-.controller('subUserCtrl', function($scope,$state) {
+.controller('subUserCtrl', function($scope, $state, $http) {
 
   $scope.delete = function(item){
     //删除子账号业务
@@ -483,8 +487,6 @@ angular.module('starter.controllers', [])
     }, function(error) {
         deferred.reject();
     });
-
-
   };
 })  
 /////////////////////////////////////////////////
@@ -791,22 +793,21 @@ angular.module('starter.controllers', [])
   }
 })
 //登录
-.controller('login', function($scope, $ionicSlideBoxDelegate, $timeout, $ionicLoading,$state, $ionicPopup, $http) {
+.controller('login', function($scope, $ionicSlideBoxDelegate, $timeout, $ionicLoading, $ionicPopup, $http, $state) {
   $scope.loginData = {};
   $scope.login = function() {
     if(!$scope.loginData.username) {
-      alert('username required');
+      alert('请输入用户名。');
       return;
     }
     if(!$scope.loginData.password) {
-      alert('password required');
+      alert('请输入密码。');
       return;
     }
     var requestData = {
       phone: $scope.loginData.username,
       login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
     };
-    console.log(requestData);
 
   var apibranch = '/account/login';
   var request = httpReqGen(apibranch,requestData);
@@ -816,14 +817,12 @@ angular.module('starter.controllers', [])
       var result = $.parseJSON(response.data.result);
       if (result.code == 0000){
         $scope.global.cust_id = result.data.cust_id;
-        console.log(result.data.cust_id);
         $state.go('app.overview');
       } else {
         alert(result.msg);
       }
     }, function(error) {
       console.log(error);
-      alert(error);
     });
   }
   $scope.nextSlide = function() {
@@ -848,7 +847,6 @@ angular.module('starter.controllers', [])
 })
 ;
 
-
 function getReqNo(){
     var newuuid = UUID.prototype.createUUID();
     var aesKey = "XinLaiWitHome___";
@@ -871,7 +869,6 @@ function getReqNo(){
 }
 
 function httpReqGen(apibranch,reqData){
-
     var code = getReqNo();
     var urlp = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
     var reqParam = {
