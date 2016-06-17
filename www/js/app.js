@@ -62,11 +62,11 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     }) 
-  .state('app.addDevice', {
-      url: "/add-device",
+  .state('app.addNode', {
+      url: "/add-node",
       views: {
         'menuContent' :{
-          templateUrl: "templates/add-device.html"
+          templateUrl: "templates/add-node.html"
         }
       }
     })       
@@ -95,19 +95,19 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
       }
     })    
 
-  .state('app.deviceType', {
-      url: "/deviceType",
+  .state('app.nodeType', {
+      url: "/nodeType",
       views: {
         'menuContent' :{
-          templateUrl: "templates/deviceType.html"
+          templateUrl: "templates/nodeType.html"
         }
       }
     })  
-	.state('app.device', {
-      url: "/device",
+	.state('app.node', {
+      url: "/node",
       views: {
         'menuContent' :{
-          templateUrl: "templates/device-single.html"
+          templateUrl: "templates/node-single.html"
         }
       }
     })
