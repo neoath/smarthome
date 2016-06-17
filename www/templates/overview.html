@@ -1,7 +1,7 @@
         <ion-view title="首页" ng-controller="OverViewCtrl" ng-init="DataReq()" >
             <ion-content class="padding">
                 <div class="card">
-                  <div class="item item-text-wrap calm-bg">
+                  <div class="item item-text-wrap ">
                     <i class="icon ion-medkit"></i>
                     安防状况
                     <span class="item-note">
@@ -49,26 +49,31 @@
 
                 <div class="clearfix"></div>
                 <div class="card">
-                  <div class="item item-text-wrap">
-                    当前主机
-                  </div>
+
+                <div class="item item-icon-left item-text-wrap">
+                                <i class="icon ion-flame" ></i>
+                                当前主机
+                                <span class="item-note">
+                                    {{DevicesViewModel.devices[0].name}}
+                                </span>
+                </div>                                                
                 </div>                  
 
                     <div class="padding-horizontal">
                         <div class="blockLine">
-                            <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'MEG')" id="megnetDevices" >
+                            <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', NodesViewModel.nodes, '门磁')" id="megnetDevices" >
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-magnet blockLine-Icon"></i>
                                 </div>
                                 <div class="blockLine-Desc">门磁</div>
                             </div>
-                            <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'INF')" id="infraDevices">
+                            <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', NodesViewModel.nodes, '红外感应')" id="infraDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-wifi blockLine-Icon" ></i>
                                 </div>
                                 <div class="blockLine-Desc">红外探测</div>                                
                             </div>
-                            <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'SMK')" id="smokeDevices">
+                            <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', NodesViewModel.nodes, '烟雾报警器')" id="smokeDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-flame blockLine-Icon"></i>
                                 </div>
@@ -76,13 +81,13 @@
                             </div>
                         </div>
                         <div class="blockLine">
-                            <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'GAS')" id="gasDevices">
+                            <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', NodesViewModel.nodes, '温度传感器')" id="gasDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-bonfire blockLine-Icon"></i>
                                 </div>
                                 <div class="blockLine-Desc">燃气探测</div>
                             </div>
-                            <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'SEC')" id="eKeyDevices">
+                            <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', NodesViewModel.nodes, '电子钥匙')" id="eKeyDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-locked blockLine-Icon"></i>
                                 </div>

@@ -1,22 +1,11 @@
-        <ion-view title="GateWay Manage">
+        <ion-view title="主机设置">
             <ion-content class="padding-vertical">
-                <div ng-repeat="device in devices">
-                    <div class="col-lg-50">
-                        <div class="item item-icon-left" on-tap="deviceTap('app.device', device)">
-                            <i class="icon" ng-class="device.icon"></i>
-                            {{ device.name }}
-                            <span class="item-note" ng-class="device.color">
-                                {{ device.status }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
                 <div class="list">
                     <div class="item item-divider">
-                        Add a Subuser
+                       添加主机
                     </div>
                     <li class="item" on-tap="pageJump('app.gatewayinfo')">
-                        Add
+                        添加
                     </li>
                 </div>
                 <div class="clearfix"></div>

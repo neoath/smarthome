@@ -1,30 +1,27 @@
-        <ion-view title="{{nodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
+        <ion-view title="{{NodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
             <ion-content class="padding">
                 <div ng-if="nodes.length === 0">
                     <h5 class="text-center">No Nodes to Show</h5>
                 </div>
 
-                <div ng-repeat="node in nodesViewModel.nodes | filter: { nodeType: nodesViewModel.nodeType}">
+                <div ng-repeat="node in NodesViewModel.nodes | filter: { nodeType: NodesViewModel.nodeType}">
                     <div ng-if="node.id != null">
                         <div class="list">
-                            <div class="item item-icon-left" on-tap="nodeTap('app.node', node, 'MEG')">
-                                <i class="icon" ng-class="node.icon"></i>
+                            <div class="item item-icon-left">
+                                <i class="icon ion-flame" ></i>
                                 {{node.name}} :{{node.nodeType}}
                                 <span class="item-note">
-                                    {{node.status}}
+                                    {{node.alert}}
                                 </span>
                             </div>
-                            <div class="item item-divider">
-                                Node Info
-                            </div>
-                            <div class="item item-toggle" style="height: 48px;">
-                                <label class="toggle toggle-balanced">
-                                    <input type="checkbox" ng-checked="true">
-                                    <div class="track">
-                                        <div class="handle"></div>
-                                    </div>
-                                </label>
-                            </div>
+                            <div class="clearfix"></div>
+                            <div class="item item-icon-left">
+                                <i class="icon ion-flame" ></i>
+                                最新报警时间
+                                <span class="item-note">
+                                    {{node.alertTime}}
+                                </span>
+                            </div>                            
                         </div>
                     </div>                    
                 </div>

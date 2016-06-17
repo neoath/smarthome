@@ -45,24 +45,24 @@ angular.module('starter.controllers', [])
 		{ id: '7', name: 'Arm Securuty', type: "toggle", featured: false },
 	];
 
-  $scope.nodesViewModel = {
-    nodeType:"",
-    nodes:[
-                { id: '1', name: 'Door Magnet1', icon: 'ion-magnet', status: 'unarmed', nodeType: 'MEG'},
-                { id: '2', name: 'Infra Sensor1', icon: 'ion-wifi', status: 'unarmed', nodeType: 'INF'},
-                { id: '3', name: 'Smoke Sensor1', icon: 'ion-flame', status: 'unarmed', nodeType: 'SMK'},
-                { id: '4', name: 'Smoke Sensor2', icon: 'ion-flame', status: 'unarmed', nodeType: 'SMK'},
-                { id: '5', name: 'Gas Sensor1', icon: 'ion-bonfire', status: 'unarmed', nodeType: 'GAS'},
-                { id: '6', name: 'Gas Sensor2', icon: 'ion-bonfire', status: 'unarmed', nodeType: 'GAS'},
-              ],
-    nodeList:[
-                  { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: 'MEG'},
-                  { id: '2', name: '红外探测', icon: 'ion-wifi', nodeType: 'INF'},
-                  { id: '3', name: '烟雾探测', icon: 'ion-flame',  nodeType: 'SMK'},
-                  { id: '4', name: '燃气探测', icon: 'ion-bonfire',  nodeType: 'GAS'},
-                  { id: '5', name: '电子钥匙', icon: 'ion-locked',  nodeType: 'SEC'},
-                  { id: '6', name: '摄像监控', icon: 'ion-videocamera', nodeType: 'CAM'},
-   ]};
+  // $scope.nodesViewModel = {
+  //   nodeType:"",
+  //   nodes:[
+  //               { id: '1', name: 'Door Magnet1', icon: 'ion-magnet', status: 'unarmed', nodeType: 'MEG'},
+  //               { id: '2', name: 'Infra Sensor1', icon: 'ion-wifi', status: 'unarmed', nodeType: 'INF'},
+  //               { id: '3', name: 'Smoke Sensor1', icon: 'ion-flame', status: 'unarmed', nodeType: 'SMK'},
+  //               { id: '4', name: 'Smoke Sensor2', icon: 'ion-flame', status: 'unarmed', nodeType: 'SMK'},
+  //               { id: '5', name: 'Gas Sensor1', icon: 'ion-bonfire', status: 'unarmed', nodeType: 'GAS'},
+  //               { id: '6', name: 'Gas Sensor2', icon: 'ion-bonfire', status: 'unarmed', nodeType: 'GAS'},
+  //             ],
+  //   nodeList:[
+  //                 { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: 'MEG'},
+  //                 { id: '2', name: '红外探测', icon: 'ion-wifi', nodeType: 'INF'},
+  //                 { id: '3', name: '烟雾探测', icon: 'ion-flame',  nodeType: 'SMK'},
+  //                 { id: '4', name: '燃气探测', icon: 'ion-bonfire',  nodeType: 'GAS'},
+  //                 { id: '5', name: '电子钥匙', icon: 'ion-locked',  nodeType: 'SEC'},
+  //                 { id: '6', name: '摄像监控', icon: 'ion-videocamera', nodeType: 'CAM'},
+  //  ]};
 
    $scope.nodeViewModel = {
     node:""
@@ -73,13 +73,144 @@ angular.module('starter.controllers', [])
   };
 
   $scope.ArmViewModel = { checked: true };
-  $scope.DevicesModel = [
-    { devicename: 'Device1', id: 'dv1'},
-    { devicename: 'Device2', id: 'dv2'},
-    { devicename: 'Device3', id: 'dv3'},
-  ];  
+  $scope.DevicesViewModel = {
+    devices : [
+        {
+            "id": 2,
+            "name": "TY‘s 设备",
+            "deviceId": "7CEC7939212C",
+            "status": "ONLINE",
+            "alertStatus": "SET",
+            "deviceType": "HOMEGATEWAY",
+            "lastHeartBeat": "2016-06-17T04:12:39Z",
+            "isDeleted": false,
+            "createAt": "2016-06-17T04:12:39Z",
+            "account": {
+                "accountId": 1,
+                "cellPhone": "15687877676",
+                "location": null,
+                "createAt": "2016-06-17T04:12:39Z"
+            }
+        },
+        {
+            "id": 1,
+            "name": "设备一",
+            "deviceId": "7CEC793924C3",
+            "status": "ONLINE",
+            "alertStatus": "SET",
+            "deviceType": "HOMEGATEWAY",
+            "lastHeartBeat": "2016-06-17T04:12:39Z",
+            "isDeleted": false,
+            "createAt": "2016-06-17T04:12:39Z",
+            "account": {
+                "accountId": 1,
+                "cellPhone": "15687877676",
+                "location": null,
+                "createAt": "2016-06-17T04:12:39Z"
+            }
+        }
+  ]
+  };  
+  $scope.NodesViewModel ={
+    nodeType:"",
+    nodes:[
+                    {
+                          "id": 1,
+                          "nodeId": "A712736253627172837166ABF36379FA",
+                          "nodeType": "红外感应",
+                          "name": null,
+                          "alert": "正常",
+                          "alertTime": "2016-06-17T06:09:33Z",
+                          "dataset_set": [
+                                                    {
+                                                        "id": 1,
+                                                        "dataSetId": 1,
+                                                        "alert": true,
+                                                        "alertTime": "2016-06-17T06:09:14Z",
+                                                        "node": 1,
+                                                        "dataSetMetaData": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "dataSetId": 2,
+                                                        "alert": false,
+                                                        "alertTime": "2016-06-17T04:13:24Z",
+                                                        "node": 1,
+                                                        "dataSetMetaData": 1
+                                                    },
+                                                    {
+                                                        "id": 4,
+                                                        "dataSetId": 8,
+                                                        "alert": false,
+                                                        "alertTime": "2016-06-17T04:13:24Z",
+                                                        "node": 1,
+                                                        "dataSetMetaData": 1
+                                                    },
+                                                    {
+                                                        "id": 6,
+                                                        "dataSetId": 4,
+                                                        "alert": false,
+                                                        "alertTime": "2016-06-17T04:13:24Z",
+                                                        "node": 1,
+                                                        "dataSetMetaData": 4
+                                                    }
+                                                ]
+                    },
+                    {
+                          "id": 2,
+                          "nodeId": "FF12736253627172837166ABF36379FF",
+                          "nodeType": "门磁",
+                          "name": null,
+                          "alert": "正常",
+                          "alertTime": "2016-06-17T04:13:24Z",
+                          "dataset_set": [
+                                                    {
+                                                        "id": 3,
+                                                        "dataSetId": 1,
+                                                        "alert": false,
+                                                        "alertTime": "2016-06-17T04:13:24Z",
+                                                        "node": 2,
+                                                        "dataSetMetaData": 1
+                                                    },
+                                                    {
+                                                        "id": 5,
+                                                        "dataSetId": 2,
+                                                        "alert": false,
+                                                        "alertTime": "2016-06-17T04:13:24Z",
+                                                        "node": 2,
+                                                        "dataSetMetaData": 1
+                                                    },
+                                                    {
+                                                        "id": 7,
+                                                        "dataSetId": 8,
+                                                        "alert": false,
+                                                        "alertTime": "2016-06-17T04:13:24Z",
+                                                        "node": 2,
+                                                        "dataSetMetaData": 1
+                                                    },
+                                                    {
+                                                        "id": 8,
+                                                        "dataSetId": 4,
+                                                        "alert": false,
+                                                        "alertTime": "2016-06-17T04:13:24Z",
+                                                        "node": 2,
+                                                        "dataSetMetaData": 4
+                                                    }
+                                                ]
+                    }
+                ],
+    nodeList:[
+                    { id: '0', name: '电子钥匙', icon: 'ion-locked',  nodeType: '0'},
+                    { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '1'},
+                    { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '2'},
+                    { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '3'},
+                    { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '4'}
+                  ]
+    
+   }
 
-  $scope.Fake = { AccID : 1};
+
+
 
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
@@ -152,28 +283,13 @@ angular.module('starter.controllers', [])
         
         $scope.user = $scope.newuser;
       }
-        userinfoReq.resolve();
+        deferred.resolve();
     }, function(error) {
-        userinfoReq.reject();
+        deferred.reject();
     });
 
     //主机、节点信息 xw接口
-    // var req = "http://t.xinlaihome.cn:8001/api/app/1.0/account/1/device";      
-    // var csrftoken = getCookie('csrftoken');      
-    // $.ajax({
-    //            url: req,
-    //            contentType: "application/x-www-form-urlencoded",
-    //            beforeSend: function(xhr, settings) {xhr.setRequestHeader("X-CSRFToken", csrftoken);},
-    //            dataType: "JSON",
-    //            method: "GET",
-    //            async: true,
-    //            success: function (data) {
-    //                console.log(data);
-    //            },
-    //            error: function (jqXhr, textStatus, errorThrown) {
-    //                console.log("异常信息：" + jqXhr.readyState + "：" + jqXhr.status + "：" + textStatus);
-    //            }
-    //         });          
+    
             
     
     $timeout(function () {
@@ -185,8 +301,8 @@ angular.module('starter.controllers', [])
     $ionicSideMenuDelegate.toggleLeft();
   };
   $scope.nodeTypeTap = function(route, nodes, detType) {
-    $scope.nodesViewModel.nodes = nodes;
-    $scope.nodesViewModel.nodeType = detType;
+    $scope.NodesViewModel.nodes = nodes;
+    $scope.NodesViewModel.nodeType = detType;
     $state.go(route);
   };
   $scope.nodeTap = function(route, node) {
@@ -883,37 +999,7 @@ function httpReqGen(apibranch,reqData){
       data: reqParam.requestData
     };  
 }
-function httpReqGen2(url,apibranch,reqData){
 
-    var urlp = url + apibranch;
-    var reqParam = {
-      url: urlp,
-      method: 'GET'
-      };
-    return req = {
-      method: reqParam.method,
-      url: reqParam.url
-    };  
-}
-
-
-
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 
 
 
