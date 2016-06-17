@@ -1,51 +1,5 @@
 angular.module('starter.controllers', [])
 
-.controller('login', function($scope, $ionicSlideBoxDelegate, $timeout, $ionicLoading, $ionicPopup) {
-  $scope.login = function() {
-    $ionicLoading.show({
-      template: 'Logging in...'
-    });
-    $timeout( function() {
-      $ionicLoading.show({
-        template: 'Success'
-      });
-    }, 1600);
-    $timeout( function() {
-      $ionicLoading.hide();
-      $ionicSlideBoxDelegate.next();
-    }, 2000);
-  }
-  $scope.nextSlide = function() {
-    $ionicSlideBoxDelegate.next();
-  }
-  $scope.prevSlide = function() {
-    $ionicSlideBoxDelegate.previous();
-  }
-  $scope.showRegister = function() {
-    $scope.data = {}
-    var myPopup = $ionicPopup.show({
-      template: '<input type="email" ng-model="data.email">',
-      title: 'Enter Your Email Address',
-      subTitle: 'You will be notified once approved',
-      scope: $scope,
-      buttons: [
-        { text: 'Cancel' },
-        {
-         text: '<b>Submit</b>',
-         type: 'button-balanced',
-         onTap: function(e) {
-           if (!$scope.data.email) {
-           e.preventDefault();
-           } else {
-           return $scope.data.email;
-           }
-         }
-        },
-      ]
-    });
-  };
-})
-
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
   $scope.global = { cust_id : 0 };
   $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', EmergMan2Phone: '13609876541', Addr: '浦东新区耀华路120弄121号102' };
@@ -269,9 +223,7 @@ angular.module('starter.controllers', [])
   }
   $scope.registerData = {};
 
-  $scope.submit = function() {
-    var code = getReqNo();
-
+  $scope.submit = function(scope) {
     if(!$scope.registerData.mobileNo) {
       alert('mobileNo required');
       return;
@@ -309,10 +261,80 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('updateUser', function($scope,$q,$http) {
+.controller('login', function($scope, $ionicSlideBoxDelegate, $timeout, $ionicLoading, $ionicPopup, $http) {
+  $scope.loginData = {};
+  $scope.login = function() {
+    if(!$scope.loginData.username) {
+      alert('username required');
+      return;
+    }
+    if(!$scope.loginData.password) {
+      alert('password required');
+      return;
+    }
+    var requestData = {
+      phone: $scope.loginData.username,
+      login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
+    };
+    console.log(requestData);
+
+  var apibranch = '/account/login';
+  var request = httpReqGen(apibranch,requestData);
+
+  $http(request).then(function(response) {
+      console.log(response);
+      var result = $.parseJSON(response.data.result);
+      if (result.code == 0000){
+        $scope.global.cust_id = result.data.cust_id;
+        console.log(result.data.cust_id);
+        $state.go('app.overview');
+      } else {
+        alert(result.msg);
+      }
+    }, function(error) {
+      console.log(error);
+      alert(error);
+    });
+  }
+  $scope.nextSlide = function() {
+    $ionicSlideBoxDelegate.next();
+  }
+  $scope.prevSlide = function() {
+    $ionicSlideBoxDelegate.previous();
+  }
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
+})
+
+.controller('updateUser', function($scope,$q,$http) {
+
+  var requestData = {
+      cust_id: $scope.global.cust_id,
+    };
+  console.log(requestData);
+
+  var apibranch = '/account/detail ';
+  var request = httpReqGen(apibranch,requestData);
+
+  $http(request).then(function(response) {
+      console.log(response);
+    }, function(error) {
+      console.log(error);
+    });
+
+$http.get("http://data2.unitoon.cn/impactcrusher/getrealdata?id=1013")
+       .success(function(response) 
+           {
+              console.log(response);
+              // $scope.user = response;
+              // console.log($scope.user);
+           });
+
+  $scope.setFormScope = function(scope){
+    this.formScope = scope;
+  }
+
   $scope.newuser = $scope.user;
   $scope.userSubmit = function() {
     if(!$scope.newuser.Name) {
@@ -321,7 +343,8 @@ angular.module('starter.controllers', [])
     }
     var userid = $scope.user.cust_id;
     var code = getReqNo();
-    var requestdata = '{"cust_id":"' + $scope.newuser.Id + '", "tel":"' +$scope.newuser.Tel +'", "email": "' + $scope.newuser.Email + '", "address": "' + $scope.newuser.Addr +'"}';
+    var requestdata = '{"cust_id":"' + $scope.newuser.Id + '", "tel":"' +$scope.newuser.Tel +
+                '", "email": "' + $scope.newuser.Email + '", "address": "' + $scope.newuser.Addr +'"}';
     var reqParam = {
       code: code,
       url: 'http://139.196.13.82/xinlai/account/upgrade?req_no=' + code,
@@ -473,7 +496,7 @@ angular.module('starter.controllers', [])
   $scope.DataReq = function(){
  
     var apibranch = '/account/detail';
-    var reqd = '{"cust_id":"740089105671409664"}';
+    var reqd = {"cust_id":"740089105671409664"};
     var req = httpReqGen(apibranch,reqd);
 
     var deferred = $q.defer();
@@ -501,6 +524,7 @@ angular.module('starter.controllers', [])
       }
         deferred.resolve();
     }, function(error) {
+        console.log(error);
         deferred.reject();
     });
   }
@@ -584,8 +608,7 @@ angular.module('starter.controllers', [])
       "old_pwd":oldpw,
       "new_pwd":newpw
     };
-    var reqstr = JSON.stringify(reqobj);
-    var req = httpReqGen(apibranch,reqstr);
+    var req = httpReqGen(apibranch,reqobj);
 
     var deferred = $q.defer();
     $http(req).then(function(response) {
@@ -625,8 +648,7 @@ angular.module('starter.controllers', [])
             $(element).owlCarousel(options);
         }
     };
-})
-;
+});
 
 function getReqNo(){
     var newuuid = UUID.prototype.createUUID();
@@ -650,7 +672,6 @@ function getReqNo(){
 }
 
 function httpReqGen(apibranch,reqData){
-
     var code = getReqNo();
     var urlp = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
     var reqParam = {
@@ -665,3 +686,4 @@ function httpReqGen(apibranch,reqData){
       data: reqParam.requestData
     };  
 }
+
