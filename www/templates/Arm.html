@@ -1,4 +1,4 @@
-        <ion-view title="布防" ng-controller="Arm">
+        <ion-view title="布防" ng-controller="ArmCtrl">
             <ion-content class="padding-vertical">
                         <div class="card">
                             <div class="item item-avatar">
@@ -11,7 +11,7 @@
                                 </div>
                             </div>
                             <div>
-                                <ion-toggle ng-model="ArmVM.checked" ng-change="pushNotificationChange()">
+                                <ion-toggle ng-model="ArmViewModel.checked" ng-change="pushNotificationChange()">
                                         布防
                                 </ion-toggle>
                             </div>

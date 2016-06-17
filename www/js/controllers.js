@@ -45,7 +45,7 @@ angular.module('starter.controllers', [])
 		{ id: '7', name: 'Arm Securuty', type: "toggle", featured: false },
 	];
 
-  $scope.nodeModel = {
+  $scope.nodesViewModel = {
     nodeType:"",
     nodes:[
                 { id: '1', name: 'Door Magnet1', icon: 'ion-magnet', status: 'unarmed', nodeType: 'MEG'},
@@ -64,19 +64,19 @@ angular.module('starter.controllers', [])
                   { id: '6', name: '摄像监控', icon: 'ion-videocamera', nodeType: 'CAM'},
    ]};
 
-   $scope.nodeModel = {
+   $scope.nodeViewModel = {
     node:""
    };
 
-  $scope.OverViewVM = {
+  $scope.OverViewViewModel = {
     OverStatus:"normal"
   };
 
-  $scope.ArmVM = { checked: true };
-  $scope.Gateways = [
-    { gatewayname: 'GateWay1', id: 'gw1'},
-    { gatewayname: 'GateWay2', id: 'gw2'},
-    { gatewayname: 'GateWay3', id: 'gw3'},
+  $scope.ArmViewModel = { checked: true };
+  $scope.DevicesModel = [
+    { devicename: 'Device1', id: 'dv1'},
+    { devicename: 'Device2', id: 'dv2'},
+    { devicename: 'Device3', id: 'dv3'},
   ];  
 
 	$scope.toggleLeft = function() {
@@ -153,7 +153,7 @@ angular.module('starter.controllers', [])
         deferred.resolve();
       $timeout(function () {
         $ionicLoading.hide();
-      }, 2000);
+      }, 500);
     }, function(error) {
         deferred.reject();
     });
@@ -162,13 +162,13 @@ angular.module('starter.controllers', [])
   $scope.toggleLeft = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
-  $scope.deviceTypeTap = function(route, detectors, detType) {
-    $scope.detectorsVM.detectors = detectors;
-    $scope.detectorsVM.detectorType = detType;
+  $scope.nodeTypeTap = function(route, nodes, detType) {
+    $scope.nodesViewModel.nodes = nodes;
+    $scope.nodesViewModel.nodeType = detType;
     $state.go(route);
   };
-  $scope.deviceTap = function(route, detector) {
-    $scope.detectorVM.detector = detector;
+  $scope.nodeTap = function(route, node) {
+    $scope.nodeViewModel.node = node;
     $state.go(route);
   };  
   $scope.pageJump = function(route) {
@@ -193,9 +193,9 @@ angular.module('starter.controllers', [])
   }, 1500);  
 })
 //布防 app.arm arm.html
-.controller('Arm', function($scope) {
+.controller('ArmCtrl', function($scope) {
   $scope.pushNotificationChange = function() {
-    console.log('Push Notification Change', $scope.ArmVM.checked);
+    console.log('Push Notification Change', $scope.ArmViewModel.checked);
   };
 })
 //摄像头 app.camera camera.html
@@ -246,34 +246,34 @@ angular.module('starter.controllers', [])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//添加设备 app.addDevice add-device.html
-.controller('addDevice', function($scope) {
-  $scope.sensors = [
-    { sensorname: 'Door Magnet', email: 'admin@test.domain', location: true, id: 'admin', avatar: 'img/men.jpg', enabled: 'true', lastLogin: 'Online',sensortype:'doormagnet' },
-    { sensorname: 'Infra Sensor', email: 'stacy@test.domain', location: true, id: 'stacy', avatar: 'img/girl.jpg', enabled: 'true', lastLogin: 'Online',sensortype:'infrasensor' },
-    { sensorname: 'Smoke Sensor', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,sensortype:'smokesensor'},
-    { sensorname: 'Gas Sensor', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,sensortype:'gassensor'},
-    { sensorname: 'E-Key', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,sensortype:'ekey'},
-    { sensorname: 'Camera', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'false', lastLogin: 'Online' ,sensortype:'camera'},
+//添加设备 app.addNode add-node.html
+.controller('addNode', function($scope) {
+  $scope.nodes = [
+    { nodename: 'Door Magnet', email: 'admin@test.domain', location: true, id: 'admin', avatar: 'img/men.jpg', enabled: 'true', lastLogin: 'Online',nodetype:'doormagnet' },
+    { nodename: 'Infra Sensor', email: 'stacy@test.domain', location: true, id: 'stacy', avatar: 'img/girl.jpg', enabled: 'true', lastLogin: 'Online',nodetype:'infrasensor' },
+    { nodename: 'Smoke Sensor', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,nodetype:'smokesensor'},
+    { nodename: 'Gas Sensor', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,nodetype:'gassensor'},
+    { nodename: 'E-Key', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'true', lastLogin: 'Online' ,nodetype:'ekey'},
+    { nodename: 'Camera', email: 'mom@test.domain', location: true, id: 'mom', avatar: 'img/men.png', enabled: 'false', lastLogin: 'Online' ,nodetype:'camera'},
   ]; 
-  $scope.gateways = [
-    { gatewayname: 'GateWay1', id: 'gw1'},
-    { gatewayname: 'GateWay2', id: 'gw2'},
-    { gatewayname: 'GateWay3', id: 'gw3'},
+  $scope.devices = [
+    { devicename: 'Device1', id: 'dv1'},
+    { devicename: 'Device2', id: 'dv2'},
+    { devicename: 'Device3', id: 'dv3'},
   ];      
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
-  $scope.newdevice = {};
-  $scope.deviceSubmit = function() {
+  $scope.newnode = {};
+  $scope.nodeSubmit = function() {
     var defaultForm = {
       id : "",
       name : "",
       icon : "",
-      sensorSelect : "",
-      gatewaySelect : ""
+      nodeSelect : "",
+      deviceSelect : ""
     };
-    $scope.newdevice = defaultForm;
+    $scope.newnode = defaultForm;
   };
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -367,6 +367,7 @@ angular.module('starter.controllers', [])
       var resData = "";
       if(response.status == 200){
         alert('User Info updated!');
+        $state.go('app.usersetting');
       }
         deferred.resolve();
     }, function(error) {
@@ -419,7 +420,7 @@ angular.module('starter.controllers', [])
 ///
 /////////////////////////////////////////////////
 //更改密码 app.changepassword changepassword.html
-.controller('PasswordCtrl', function($scope,$q,$http) {
+.controller('PasswordCtrl', function($scope,$q,$http,$state) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
@@ -516,11 +517,11 @@ angular.module('starter.controllers', [])
 ///
 /////////////////////////////////////////////////
 //主机设备绑定管理 app.gatewaymanage gatewaymanage.html
-.controller('GateWayDeviceBindingManageCtrl', function($scope){ 
+.controller('DeviceNodeBindingManageCtrl', function($scope){ 
 })
 ////////////////////
 //添加主机 app.gatewayinfo gatewayinfo.html
-.controller('addGateWay', function($scope) {
+.controller('addDevice', function($scope) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
@@ -846,7 +847,6 @@ function getReqNo(){
 }
 
 function httpReqGen(apibranch,reqData){
-
     var code = getReqNo();
     var urlp = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
     var reqParam = {

@@ -5,7 +5,7 @@
                     <i class="icon ion-medkit"></i>
                     安防状况
                     <span class="item-note">
-                       {{OverViewVM.OverStatus}}
+                       {{OverViewViewModel.OverStatus}}
                     </span>
                   </div>
                 </div>   
@@ -56,19 +56,19 @@
 
                     <div class="padding-horizontal">
                         <div class="blockLine">
-                            <div class="item blockLine-left" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'MEG')" id="megnetDevices" >
+                            <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'MEG')" id="megnetDevices" >
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-magnet blockLine-Icon"></i>
                                 </div>
                                 <div class="blockLine-Desc">门磁</div>
                             </div>
-                            <div class="item blockLine-middle" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'INF')" id="infraDevices">
+                            <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'INF')" id="infraDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-wifi blockLine-Icon" ></i>
                                 </div>
                                 <div class="blockLine-Desc">红外探测</div>                                
                             </div>
-                            <div class="item blockLine-right" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'SMK')" id="smokeDevices">
+                            <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'SMK')" id="smokeDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-flame blockLine-Icon"></i>
                                 </div>
@@ -76,13 +76,13 @@
                             </div>
                         </div>
                         <div class="blockLine">
-                            <div class="item blockLine-left" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'GAS')" id="gasDevices">
+                            <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'GAS')" id="gasDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-bonfire blockLine-Icon"></i>
                                 </div>
                                 <div class="blockLine-Desc">燃气探测</div>
                             </div>
-                            <div class="item blockLine-middle" on-tap="deviceTypeTap('app.deviceType', detectorsVM.detectors, 'SEC')" id="eKeyDevices">
+                            <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', nodesViewModel.nodes, 'SEC')" id="eKeyDevices">
                                 <div class="blockLine-IconParent">
                                     <i class="icon ion-locked blockLine-Icon"></i>
                                 </div>
