@@ -77,6 +77,8 @@ angular.module('starter.controllers', [])
     { devicename: 'Device3', id: 'dv3'},
   ];  
 
+  $scope.Fake = { AccID : 1};
+
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
 	};
@@ -120,11 +122,11 @@ angular.module('starter.controllers', [])
       showDelay: 0
     });
 
+    //用户信息 dc接口
     var apibranch = '/account/detail';
     var reqd = {"cust_id":"740089105671409664"};
     var req = httpReqGen(apibranch,reqd);
-
-    var deferred = $q.defer();
+    var userinfoReq = $q.defer();
     $http(req).then(function(response) {
       var ssss = response;
       var resData = "";
@@ -147,13 +149,33 @@ angular.module('starter.controllers', [])
         $scope.user = $scope.newuser;
         
       }
-        deferred.resolve();
-      $timeout(function () {
+        userinfoReq.resolve();
+    }, function(error) {
+        userinfoReq.reject();
+    });
+
+    //主机、节点信息 xw接口
+    // var req = "http://t.xinlaihome.cn:8001/api/app/1.0/account/1/device";      
+    // var csrftoken = getCookie('csrftoken');      
+    // $.ajax({
+    //            url: req,
+    //            contentType: "application/x-www-form-urlencoded",
+    //            beforeSend: function(xhr, settings) {xhr.setRequestHeader("X-CSRFToken", csrftoken);},
+    //            dataType: "JSON",
+    //            method: "GET",
+    //            async: true,
+    //            success: function (data) {
+    //                console.log(data);
+    //            },
+    //            error: function (jqXhr, textStatus, errorThrown) {
+    //                console.log("异常信息：" + jqXhr.readyState + "：" + jqXhr.status + "：" + textStatus);
+    //            }
+    //         });          
+            
+    
+    $timeout(function () {
         $ionicLoading.hide();
       }, 500);
-    }, function(error) {
-        deferred.reject();
-    });
   }
 
   $scope.toggleLeft = function() {
@@ -864,3 +886,38 @@ function httpReqGen(apibranch,reqData){
       data: reqParam.requestData
     };  
 }
+function httpReqGen2(url,apibranch,reqData){
+
+    var urlp = url + apibranch;
+    var reqParam = {
+      url: urlp,
+      method: 'GET'
+      };
+    return req = {
+      method: reqParam.method,
+      url: reqParam.url
+    };  
+}
+
+
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+
