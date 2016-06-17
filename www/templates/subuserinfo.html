@@ -1,0 +1,19 @@
+        <ion-view title="添加子账户" ng-controller="addSubUser">
+            <ion-content>
+                <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+                    <div class="list">
+                        <div class="item item-divider">
+                            基本信息
+                        </div>
+                        <label class="item item-input">
+                            <input type="text" placeholder="名称" ng-model="newuser.username">
+                        </label>
+                    </div>
+                    <div class="padding">
+                        <button class="button button-block">
+                            添加
+                        </button>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>

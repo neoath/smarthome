@@ -1,0 +1,74 @@
+        <ion-side-menus>
+            <ion-side-menu-content>
+                <ion-nav-bar class="bar-light" animation="nav-title-slide-ios7">
+                    <ion-nav-back-button class="button-icon ion-arrow-left-c">
+                    </ion-nav-back-button>
+                </ion-nav-bar>
+                <ion-nav-buttons side="left">
+                    <button class="button button-icon ion-navicon" ng-click="toggleLeft()" ng-hide="$exposeAside.active"></button>
+                </ion-nav-buttons>
+                <ion-nav-buttons side="right">
+                    <a class="button button-icon icon ion-ios7-email-outline" ng-click="openAlerts($event)"><span class="badge badge-balanced">0</span></a>
+                </ion-nav-buttons>
+                <ion-nav-view name="menuContent"></ion-nav-view>
+            </ion-side-menu-content>
+            <ion-side-menu expose-aside-when="large">
+                <ion-header-bar class="bar-balanced">
+                    <h1 class="title">Menu</h1>
+                </ion-header-bar>
+                <ion-content>
+                    <div class="list">
+                        <a menu-close class="item item-icon-left" href="#/app/overview">
+                            <i class="icon ion-eye"></i>
+                            首页
+                        </a>
+                        <a menu-close class="item item-icon-left" href="#/app/arm">
+                            <i class="icon ion-key"></i>
+                            布防
+                        </a>
+                        <a menu-close class="item item-icon-left" href="#/app/camera">
+                            <i class="icon ion-camera"></i>
+                            摄像头
+                        </a>
+                        <a menu-close class="item item-icon-left" href="#/app/dashboard">
+                            <i class="icon ion-camera"></i>
+                            Dashboard
+                        </a>
+                        <div class="item item-divider">
+                            快捷操作
+                        </div>
+                        <a menu-close class="item item-icon-left" href="#/app/add-device">
+                            <i class="icon ion-fork-repo"></i>
+                            添加设备
+                        </a>
+                        <div class="item item-divider">
+                            其他
+                        </div>
+                        <a menu-close class="item item-icon-left" href="#/app/usersetting">
+                            <i class="icon ion-person"></i>
+                            用户
+                        </a>
+                        <a menu-close class="item item-icon-left" href="#/app/settings">
+                            <i class="icon ion-settings"></i>
+                            设置
+                        </a>
+                        <a menu-close class="item item-icon-left" href="#/app/notifies">
+                            <i class="icon ion-alert"></i>
+                            重要通知
+                        </a>
+                        <a menu-close class="item item-icon-left" href="#/app/vib">
+                            <i class="icon ion-alert"></i>
+                            紧急
+                        </a>   
+                        <a menu-close class="item item-icon-left" href="#">
+                            <i class="icon ion-alert"></i>
+                            商城
+                        </a>
+                        <a menu-close class="item item-icon-left" href="#">
+                            <i class="icon ion-alert"></i>
+                            智能家居
+                        </a>                                              
+                    </div>
+                </ion-content>
+            </ion-side-menu>
+        </ion-side-menus>

@@ -1,0 +1,33 @@
+        <ion-view title="{{detectorsVM.detectorType}}" ng-controller="OverViewCtrl">
+            <ion-content class="padding">
+                <div ng-if="detectors.length === 0">
+                    <h5 class="text-center">No Devices to Show</h5>
+                </div>
+
+                <div ng-repeat="device in detectorsVM.detectors | filter: { detectorType: detectorsVM.detectorType}">
+                    <div ng-if="device.id != null">
+                        <div class="list">
+                            <div class="item item-icon-left" on-tap="deviceTap('app.device', device, 'MEG')">
+                                <i class="icon" ng-class="device.icon"></i>
+                                {{device.name}} :{{device.detectorType}}
+                                <span class="item-note">
+                                    {{device.status}}
+                                </span>
+                            </div>
+                            <div class="item item-divider">
+                                Device Info
+                            </div>
+                            <div class="item item-toggle" style="height: 48px;">
+                                <label class="toggle toggle-balanced">
+                                    <input type="checkbox" ng-checked="true">
+                                    <div class="track">
+                                        <div class="handle"></div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+
+            </ion-content>
+        </ion-view>

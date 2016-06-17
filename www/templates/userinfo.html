@@ -1,0 +1,49 @@
+        <ion-view title="个人信息" ng-controller="updateUser">
+            <ion-content>
+                <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+                    <div class="list">
+                        <div class="item item-divider">
+                            基本信息
+                        </div>
+                        <label class="item item-input">
+                            <input type="text" placeholder="用户ID" ng-model="newuser.Id">
+                        </label>
+                        <label class="item item-input">
+                            <input type="text" placeholder="用户名" ng-model="newuser.Name">
+                        </label>
+                        <label class="item item-input">
+                            <input type="email" placeholder="邮箱" ng-model="newuser.Email">
+                        </label>
+                        <label class="item item-input">
+                            <input type="text" placeholder="手机" ng-model="newuser.Phone">
+                        </label>
+                        <div class="item item-divider">
+                            可选信息
+                        </div>
+                        <label class="item item-input">
+                            <input type="text" placeholder="主机地址" ng-model="newuser.Addr">
+                        </label>                        
+                        <label class="item item-input">
+                            <input type="text" placeholder="固定电话" ng-model="newuser.Tel">
+                        </label>
+                        <label class="item item-input">
+                            <input type="text" placeholder="紧急联系人1" ng-model="newuser.EmergMan1">
+                        </label>    
+                        <label class="item item-input">
+                            <input type="text" placeholder="紧急联系人1手机" ng-model="newuser.EmergMan1Phone">
+                        </label>  
+                        <label class="item item-input">
+                            <input type="text" placeholder="紧急联系人2" ng-model="newuser.EmergMan2">
+                        </label>    
+                        <label class="item item-input">
+                            <input type="text" placeholder="紧急联系人2手机" ng-model="newuser.EmergMan2Phone">
+                        </label>   
+                    </div>
+                    <div class="padding">
+                        <button class="button button-balanced button-block">
+                            更新
+                        </button>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>

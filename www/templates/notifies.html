@@ -1,0 +1,20 @@
+        <ion-view title="Notification" ng-controller="NotificationCtrl">
+            <ion-content>
+                <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+                    <div class="list">
+                        <li class="item" on-tap="pageJump('app.purchaseinfo')">
+                            Purchase
+                        </li>
+                        <li class="item " on-tap="pageJump('app.alarm')">
+                            Alarm
+                        </li>
+                        <li class="item " on-tap="pageJump('app.battery')">
+                            Mainboard/Battery
+                        </li>                        
+                        <li class="item " on-tap="pageJump('app.manustack')">
+                            Manipulation Stack
+                        </li>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>
