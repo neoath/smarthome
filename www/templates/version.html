@@ -1,25 +1,36 @@
-         <ion-view title="版本信息" ng-controller="VersionCtrl">
+         <ion-view title="版本信息" ng-init="init()" ng-controller="VersionCtrl">
              <ion-content class="padding" >
-				<div class="item item-icon-left">
-                   <i class="icon ion-magnet"></i>
+				<div class="item">
                    当前版本
                        <span class="item-note">
-                         1.0.0
+                         {{version.CurrentVersion_no}}
                        </span>
                 </div>
 
-				<div class="item item-icon-left">
-                   <i class="icon ion-magnet"></i>
+				        <div class="item">
                    最新版本
                        <span class="item-note">
-                         2.0.0
+                         {{version.LastestVersion_no}}
                        </span>
                 </div>  
 
-                <div class="card">
-                  <div class="item item-text-wrap">
-                    版本更新信息
-                  </div>
-                </div>                              
+                <div class="item">
+                   需要更新
+                       <span class="item-note">
+                         {{version.IsUpdate}}
+                       </span>
+                </div>       
+                <div class="item">
+                   安装包更新时间
+                       <span class="item-note">
+                         {{version.UpdateTime}}
+                       </span>
+                </div>    
+                <div class="item">
+                   更新说明
+                       <span class="item-note">
+                         {{version.UpdateContent}}
+                       </span>
+                </div>                                                      
              </ion-content>
          </ion-view>

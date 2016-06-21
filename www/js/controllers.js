@@ -7,7 +7,10 @@ angular.module('starter.controllers', [])
   $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', 
                   EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', 
                   EmergMan2Phone: '13609876541', address: '浦东新区耀华路120弄121号102' };
-  $scope.subUsers = [{Id:1,Name:'AdminSub1'},{Id:2,Name:'AdminSub2'},{Id:3,Name:'AdminSub3'}];
+
+  $scope.version = {"Platform":"Android","UpdateTime":"2016-05-06 11:46:33","DownloadAddr":"http:\/\/www.baidu.com","CurrentVersion_no":"1.0.0","LastestVersion_no":"3.0.1","UpdateContent":"优化","IsUpdate":"需要"};
+
+  $scope.subUsers = [{Id:1,Name:'子账号1'}];
 
   $scope.users = [
 		{ username: 'Admin', email: 'admin@test.domain', location: true, id: 'admin', avatar: 'img/men.jpg', enabled: 'true', lastLogin: 'Online' },
@@ -44,26 +47,6 @@ angular.module('starter.controllers', [])
 		{ id: '6', name: 'Open Garage Doors', type: "toggle", featured: false },
 		{ id: '7', name: 'Arm Securuty', type: "toggle", featured: false },
 	];
-
-  // $scope.nodesViewModel = {
-  //   nodeType:"",
-  //   nodes:[
-  //               { id: '1', name: 'Door Magnet1', icon: 'ion-magnet', status: 'unarmed', nodeType: 'MEG'},
-  //               { id: '2', name: 'Infra Sensor1', icon: 'ion-wifi', status: 'unarmed', nodeType: 'INF'},
-  //               { id: '3', name: 'Smoke Sensor1', icon: 'ion-flame', status: 'unarmed', nodeType: 'SMK'},
-  //               { id: '4', name: 'Smoke Sensor2', icon: 'ion-flame', status: 'unarmed', nodeType: 'SMK'},
-  //               { id: '5', name: 'Gas Sensor1', icon: 'ion-bonfire', status: 'unarmed', nodeType: 'GAS'},
-  //               { id: '6', name: 'Gas Sensor2', icon: 'ion-bonfire', status: 'unarmed', nodeType: 'GAS'},
-  //             ],
-  //   nodeList:[
-  //                 { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: 'MEG'},
-  //                 { id: '2', name: '红外探测', icon: 'ion-wifi', nodeType: 'INF'},
-  //                 { id: '3', name: '烟雾探测', icon: 'ion-flame',  nodeType: 'SMK'},
-  //                 { id: '4', name: '燃气探测', icon: 'ion-bonfire',  nodeType: 'GAS'},
-  //                 { id: '5', name: '电子钥匙', icon: 'ion-locked',  nodeType: 'SEC'},
-  //                 { id: '6', name: '摄像监控', icon: 'ion-videocamera', nodeType: 'CAM'},
-  //  ]};
-
    $scope.nodeViewModel = {
     node:""
    };
@@ -77,20 +60,21 @@ angular.module('starter.controllers', [])
     devices : [
         {
             "id": 2,
-            "name": "TY‘s 设备",
+            "name": "TY's 设备",
             "deviceId": "7CEC7939212C",
             "status": "ONLINE",
             "alertStatus": "SET",
             "deviceType": "HOMEGATEWAY",
-            "lastHeartBeat": "2016-06-17T04:12:39Z",
+            "lastHeartBeat": "2016-06-17 04:12:39",
             "isDeleted": false,
-            "createAt": "2016-06-17T04:12:39Z",
+            "createAt": "2016-06-17 04:12:39",
             "account": {
                 "accountId": 1,
                 "cellPhone": "15687877676",
                 "location": null,
-                "createAt": "2016-06-17T04:12:39Z"
-            }
+                "createAt": "2016-06-17 04:12:39"
+            },
+            "armStatus":false
         },
         {
             "id": 1,
@@ -99,15 +83,16 @@ angular.module('starter.controllers', [])
             "status": "ONLINE",
             "alertStatus": "SET",
             "deviceType": "HOMEGATEWAY",
-            "lastHeartBeat": "2016-06-17T04:12:39Z",
+            "lastHeartBeat": "2016-06-17 04:12:39",
             "isDeleted": false,
-            "createAt": "2016-06-17T04:12:39Z",
+            "createAt": "2016-06-17 04:12:39",
             "account": {
                 "accountId": 1,
                 "cellPhone": "15687877676",
                 "location": null,
                 "createAt": "2016-06-17T04:12:39Z"
-            }
+            },
+            "armStatus":false
         }
   ]
   };  
@@ -118,7 +103,7 @@ angular.module('starter.controllers', [])
                           "id": 1,
                           "nodeId": "A712736253627172837166ABF36379FA",
                           "nodeType": "红外感应",
-                          "name": null,
+                          "name": "红外感应1Name",
                           "alert": "正常",
                           "alertTime": "2016-06-17T06:09:33Z",
                           "dataset_set": [
@@ -160,7 +145,7 @@ angular.module('starter.controllers', [])
                           "id": 2,
                           "nodeId": "FF12736253627172837166ABF36379FF",
                           "nodeType": "门磁",
-                          "name": null,
+                          "name": "门磁1Name",
                           "alert": "正常",
                           "alertTime": "2016-06-17T04:13:24Z",
                           "dataset_set": [
@@ -259,7 +244,7 @@ angular.module('starter.controllers', [])
     var apibranch = '/account/detail';
     var reqd = {"cust_id":"740089105671409664"};
     var req = httpReqGen(apibranch,reqd);
-    console.log($scope.global.cust_id);
+    alert($scope.global.cust_id);
 
     var deferred = $q.defer();
     $http(req).then(function(response) {
@@ -332,55 +317,55 @@ angular.module('starter.controllers', [])
 })
 //布防 app.arm arm.html
 .controller('ArmCtrl', function($scope) {
-  $scope.pushNotificationChange = function() {
-    console.log('Push Notification Change', $scope.ArmViewModel.checked);
-  };
 })
+
 //摄像头 app.camera camera.html
-.controller('CameraCtrl', function($scope){ 
+.controller('CameraCtrl', function($scope, $http){ 
+  $scope.init = function() {
+      var url = 'http://apis.baidu.com/heweather/weather/free?city=jiujiang';
+      var head = {
+                    'apikey':'8c389785a8f4c903b97f64982ed199bb',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*'
+               };
+      httpTESTGen(url,head);           
+      $http(req).success(function(data){
+            var datas = data['HeWeather data service 3.0'][0];
+
+            var aqi = datas.aqi.city.aqi;
+            var pm25 = datas.aqi.city.pm25;
+            var pm10 = datas.aqi.city.pm10;
+
+            var code1 = datas.daily_forecast[0].cond.code_d;
+            var desc1 = datas.daily_forecast[0].cond.txt_d;
+            var hum1 = datas.daily_forecast[0].hum;
+            var tmp1min = datas.daily_forecast[0].tmp.min;
+            var tmp1max = datas.daily_forecast[0].tmp.max;
+
+            var code2 = datas.daily_forecast[1].cond.code_d;
+            var desc2 = datas.daily_forecast[1].cond.txt_d;
+            var hum2 = datas.daily_forecast[1].hum;
+            var tmp2min = datas.daily_forecast[1].tmp.min;
+            var tmp2max = datas.daily_forecast[1].tmp.max;
+
+            var result = {
+                    PM25:pm25,  
+                    TodayDesc: desc1,
+                    TodayHum: hum1,
+                    TodayMin: tmp1min,
+                    TodayMax: tmp1max,
+
+                    TomorrowDesc: desc2,
+                    TomorrowHum: hum2,
+                    TomorrowMin: tmp2min,
+                    TomorrowMax: tmp2max,
+                };
+            console.log(result);
+            $scope.objobj = result;         
+          }).error(function(){});
+    };
 })
 
-//提供方法
-.controller('Dashboard', function($scope, $interval) {
-  var maximum = 150;
-  $scope.data = [[]];
-  $scope.labels = [];
-  for (var i = 0; i < maximum; i++) {
-    $scope.data[0].push(0);
-    $scope.labels.push("");
-  }
-  $scope.options =  {
-    responsive: true,
-    showTooltips: false,
-    animation: false,
-    pointDot : false,
-    scaleShowLabels: true,
-    showScale: true,
-    maintainAspectRatio: false,
-    datasetStrokeWidth : 1,
-    }; 
-
-    function getLiveChartData () {
-      if ($scope.data[0].length) {
-        $scope.labels = $scope.labels.slice(1);
-        $scope.data[0] = $scope.data[0].slice(1);
-      }
-
-      while ($scope.data[0].length < maximum) {
-        $scope.labels.push('');
-        $scope.data[0].push(getRandomValue($scope.data[0]));
-      }
-    }
-  function getRandomValue (data) {
-    var l = data.length, previous = l ? data[l - 1] : 50;
-    var y = previous + Math.random() * 10 - 5;
-    return y < 0 ? 0 : y > 100 ? 100 : y;
-  }
-  // Simulate async data update
-  $interval(function () {
-    getLiveChartData();
-  }, 500);
-})
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -404,14 +389,7 @@ angular.module('starter.controllers', [])
   }
   $scope.newnode = {};
   $scope.nodeSubmit = function() {
-    var defaultForm = {
-      id : "",
-      name : "",
-      icon : "",
-      nodeSelect : "",
-      deviceSelect : ""
-    };
-    $scope.newnode = defaultForm;
+    alert("尚未提供添加节点接口");
   };
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -419,40 +397,13 @@ angular.module('starter.controllers', [])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //用户 app.usersetting usersetting.html
 .controller('usersetting', function($scope, $state) {
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
-  }
-  $scope.pageJump = function(route) {
-    $state.go(route);
-  };  
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
-    }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
-  };
 })
 /////////////////////////////////////////////////       
 //个人信息 app.userinfo userinfo.html
 .controller('updateUser', function($scope, $q, $http, $state) {
-  if (!$scope.global.cust_id){
-        $state.go('app.login');
-  }
+  // if (!$scope.global.cust_id){
+  //       $state.go('app.login');
+  // }
 
   var requestData = {
       cust_id: $scope.global.cust_id,
@@ -534,24 +485,7 @@ angular.module('starter.controllers', [])
   }
   $scope.newuser = {};
   $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
-    }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
+    alert("尚未提供添加子账户接口");
   };
 })
 /////////////////////////////////////////////////
@@ -576,7 +510,7 @@ angular.module('starter.controllers', [])
 
     var oldpw = hex_md5($scope.codeform.oldPW).toUpperCase();
     var newpw = hex_md5($scope.codeform.newPW).toUpperCase();
-    var id = "740089105671409664";
+    var id = "744802300458721280";
     var reqobj = {
       "cust_id":id,
       "old_pwd":oldpw,
@@ -609,7 +543,37 @@ angular.module('starter.controllers', [])
 ///
 /////////////////////////////////////////////////
 //版本控制 app.version version.html
-.controller('VersionCtrl', function($scope){ 
+.controller('VersionCtrl', function($scope,$http,$q){ 
+  $scope.init = function(){
+
+    var apibranch = '/account/upgrade';
+    var platform = "Android";
+    var version = "2.0.0";
+    var reqd = {"platform":platform,"app_version":version};
+    reqd = JSON.stringify(reqd);
+    var req = httpReqGen(apibranch,reqd);
+
+    var deferred = $q.defer();
+    $http(req).then(function(response) {
+      var resData = "";
+      if(response.status == 200){
+        var resData = $.parseJSON(response.data.result);
+        if(resData.code != "0000"){
+          alert("数据接口有误: " + resData.code);
+          //return;
+        }
+        var objectData = resData.data;
+
+        $scope.newver = $scope.version;
+        
+        
+        $scope.version = $scope.newver;
+      }
+        deferred.resolve();
+    }, function(error) {
+        deferred.reject();
+    }); 
+  }
 })
 /////////////////////////////////////////////////
 ///
@@ -623,74 +587,30 @@ angular.module('starter.controllers', [])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //设置 app.settings settings.html
 .controller('settings', function($scope,$state) {
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
-  }
-  $scope.pageJump = function(route) {
-    $state.go(route);
-  };  
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
-    }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
-  };
+
 })
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
-//主机设备绑定管理 app.gatewaymanage gatewaymanage.html
+//主机设备绑定管理 app.devicemanage devicemanage.html
 .controller('DeviceNodeBindingManageCtrl', function($scope){ 
 })
 ////////////////////
-//添加主机 app.gatewayinfo gatewayinfo.html
+//添加主机 app.deviceinfo deviceinfo.html
 .controller('addDevice', function($scope) {
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
+  $scope.init = function(){
+    alert("添加主机接口尚未提供");
   }
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
-    }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
-  };
 })
 ////////////////////
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
-//主机网络连接管理 app.gatewaynetwork gatewaynetwork.html
-.controller('GateWayNetworkCtrl', function($scope){ 
+//主机网络连接管理 app.devicenetwork devicenetwork.html
+.controller('DeviceNetworkCtrl', function($scope){ 
+  $scope.init = function(){
+    alert("主机网络设置接口尚未提供");
+  }
 })
 /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -698,105 +618,34 @@ angular.module('starter.controllers', [])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //通知 app.notifies notifies.html
 .controller('NotificationCtrl', function($scope,$state) {
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
-  }
-  $scope.pageJump = function(route) {
-    $state.go(route);
-  };  
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
-    }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
-  };
+  
 })
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
 //支付 app.purchaseinfo purchaseinfo.html
 .controller('PurchaseCtrl', function($scope,$state) {
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
+  $scope.init = function(){
+    alert("支付接口尚未提供");
   }
-  $scope.pageJump = function(route) {
-    $state.go(route);
-  };  
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
-    }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
-  };
 })
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
 //报警 app.alarm alarm.html
 .controller('AlarmCtrl', function($scope,$state) {
+    $scope.init = function(){
+    alert("报警接口尚未提供");
+  }
 })
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
 //主板电池信息 app.battery battery.html
 .controller('BatteryCtrl', function($scope,$state) {
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
-  }
-  $scope.pageJump = function(route) {
-    $state.go(route);
-  };  
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
+    $scope.init = function(){
+    alert("主机电池信息接口尚未提供");
     }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
-  };
 })
 /////////////////////////////////////////////////
 ///
@@ -804,33 +653,9 @@ angular.module('starter.controllers', [])
 /////////////////////////////////////////////////
 //操作栈 app.manustack manustack.html
 .controller('ManuStackCtrl', function($scope,$state) {
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
+    $scope.init = function(){
+    alert("操作记录接口尚未提供");
   }
-  $scope.pageJump = function(route) {
-    $state.go(route);
-  };  
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    if(!$scope.newuser.username) {
-      alert('Username required');
-      return;
-    }
-    if(!$scope.newuser.avatar) {
-      $scope.newuser.avatar = 'img/noavatar.png';
-    }
-    $scope.newuser.lastLogin = 'Last login: never';
-    $scope.newuser.id = $scope.users.length + 1;
-    $scope.users.push($scope.newuser);
-    this.formScope.addUserForm.$setPristine();
-    var defaultForm = {
-      id : "",
-      username : "",
-      avatar : "",
-      location: false
-    };
-    $scope.newuser = defaultForm;
-  };
 })
 /////////////////////////////////////////////////
 ///
@@ -951,6 +776,8 @@ angular.module('starter.controllers', [])
     this.formScope = scope;
   }
 })
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 .directive('wrapOwlcarousel', function () {
     return {
@@ -986,21 +813,34 @@ function getReqNo(){
 
 function httpReqGen(apibranch,reqData){
     var code = getReqNo();
-    var urlp = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
-    var reqParam = {
-      code: code,
-      url: urlp,
-      requestData: reqData,
-      method: 'POST',
-      };
+    var url = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
     return req = {
-      method: reqParam.method,
-      url: reqParam.url,
-      data: reqParam.requestData
+      headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*'
+                  },
+      method: 'POST',
+      url: url,
+      data: reqData
     };  
 }
-
-
-
-
-
+function httpReqGETGen(apibranch){
+    var code = getReqNo();
+    var url = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
+    return req = {
+      headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*'
+               },       
+      method: 'GET',
+      url: url
+    };  
+}
+function httpTESTGen(url,head){
+    var code = getReqNo();
+    return req = {
+      headers: head,     
+      method: 'GET',
+      url: url
+    };  
+}

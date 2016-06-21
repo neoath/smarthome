@@ -2,10 +2,10 @@
             <ion-content>
                 <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
                     <div class="list">
-                        <li class="item" on-tap="pageJump('app.gatewaymanage')">
+                        <li class="item" on-tap="pageJump('app.devicemanage')">
                             主机节点绑定设置
                         </li>
-                        <li class="item ">
+                        <li class="item " on-tap="pageJump('app.devicenetwork')">
                             主机网络设置
                         </li>
                     </div>

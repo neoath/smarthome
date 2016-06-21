@@ -42,10 +42,10 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
       url: "/arm",
       views: {
         'menuContent' :{
-          templateUrl: "/templates/Arm.html"
+          templateUrl: "/templates/arm.html"
         }
       }
-    })
+    })  
   .state('app.camera', {
       url: "/camera",
       views: {
@@ -152,27 +152,27 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })
-  .state('app.gatewaymanage', {
-      url: "/gatewaymanage",
+  .state('app.devicemanage', {
+      url: "/devicemanage",
       views: {
         'menuContent' :{
-          templateUrl: "templates/gatewaymanage.html"
+          templateUrl: "templates/devicemanage.html"
         }
       }
     })  
-  .state('app.gatewayinfo', {
-      url: "/gatewayinfo",
+  .state('app.deviceinfo', {
+      url: "/deviceinfo",
       views: {
         'menuContent' :{
-          templateUrl: "templates/gatewayinfo.html"
+          templateUrl: "templates/deviceinfo.html"
         }
       }
     })    
-  .state('app.gatewaynetwork', {
-      url: "/gatewaynetwork",
+  .state('app.devicenetwork', {
+      url: "/devicenetwork",
       views: {
         'menuContent' :{
-          templateUrl: "templates/gatewaynetwork.html"
+          templateUrl: "templates/devicenetwork.html"
         }
       }
     })                   
