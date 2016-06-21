@@ -42,7 +42,7 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
       url: "/arm",
       views: {
         'menuContent' :{
-          templateUrl: "/templates/arm.html"
+          templateUrl: "templates/arm.html"
         }
       }
     })  
