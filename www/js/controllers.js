@@ -8,7 +8,7 @@ angular.module('starter.controllers', [])
                   EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', 
                   EmergMan2Phone: '13609876541', address: '浦东新区耀华路120弄121号102' };
 
-  $scope.version = {"Platform":"Android","UpdateTime":"2016-05-06 11:46:33","DownloadAddr":"http:\/\/www.baidu.com","CurrentVersion_no":"1.0.0","LastestVersion_no":"3.0.1","UpdateContent":"优化","IsUpdate":"需要"};
+  $scope.version = {"Platform":"","UpdateTime":"","DownloadAddr":"","CurrentVersion_no":"","LastestVersion_no":"","UpdateContent":"","IsUpdate":""};
 
   $scope.subUsers = [{Id:1,Name:'子账号1'}];
 
@@ -242,9 +242,8 @@ angular.module('starter.controllers', [])
 
     //用户信息 dc接口
     var apibranch = '/account/detail';
-    var reqd = {"cust_id":"740089105671409664"};
+    var reqd = {"cust_id":$scope.global.cust_id};
     var req = httpReqGen(apibranch,reqd);
-    alert($scope.global.cust_id);
 
     var deferred = $q.defer();
     $http(req).then(function(response) {
@@ -275,7 +274,48 @@ angular.module('starter.controllers', [])
 
     //主机、节点信息 xw接口
     
-            
+    //天气
+     var url = 'http://apis.baidu.com/heweather/weather/free?city=shanghai';
+      var head = {
+                    'apikey':'8c389785a8f4c903b97f64982ed199bb',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*'
+               };
+      var wreq = httpTESTGen(url,head);           
+      $http(wreq).success(function(data){
+            var datas = data['HeWeather data service 3.0'][0];
+
+            var aqi = datas.aqi.city.aqi;
+            var pm25 = datas.aqi.city.pm25;
+            var pm10 = datas.aqi.city.pm10;
+
+            var code1 = datas.daily_forecast[0].cond.code_d;
+            var desc1 = datas.daily_forecast[0].cond.txt_d;
+            var hum1 = datas.daily_forecast[0].hum;
+            var tmp1min = datas.daily_forecast[0].tmp.min;
+            var tmp1max = datas.daily_forecast[0].tmp.max;
+
+            var code2 = datas.daily_forecast[1].cond.code_d;
+            var desc2 = datas.daily_forecast[1].cond.txt_d;
+            var hum2 = datas.daily_forecast[1].hum;
+            var tmp2min = datas.daily_forecast[1].tmp.min;
+            var tmp2max = datas.daily_forecast[1].tmp.max;
+
+            var result = {
+                    PM25:pm25,  
+                    TodayDesc: desc1,
+                    TodayHum: hum1,
+                    TodayMin: tmp1min,
+                    TodayMax: tmp1max,
+
+                    TomorrowDesc: desc2,
+                    TomorrowHum: hum2,
+                    TomorrowMin: tmp2min,
+                    TomorrowMax: tmp2max,
+                };
+            console.log(result);
+            $scope.weatherObj = result;         
+          }).error(function(){});     
     
     $timeout(function () {
         $ionicLoading.hide();
@@ -317,52 +357,13 @@ angular.module('starter.controllers', [])
 })
 //布防 app.arm arm.html
 .controller('ArmCtrl', function($scope) {
+  var io = 2;
 })
 
 //摄像头 app.camera camera.html
 .controller('CameraCtrl', function($scope, $http){ 
   $scope.init = function() {
-      var url = 'http://apis.baidu.com/heweather/weather/free?city=jiujiang';
-      var head = {
-                    'apikey':'8c389785a8f4c903b97f64982ed199bb',
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Accept': '*/*'
-               };
-      httpTESTGen(url,head);           
-      $http(req).success(function(data){
-            var datas = data['HeWeather data service 3.0'][0];
-
-            var aqi = datas.aqi.city.aqi;
-            var pm25 = datas.aqi.city.pm25;
-            var pm10 = datas.aqi.city.pm10;
-
-            var code1 = datas.daily_forecast[0].cond.code_d;
-            var desc1 = datas.daily_forecast[0].cond.txt_d;
-            var hum1 = datas.daily_forecast[0].hum;
-            var tmp1min = datas.daily_forecast[0].tmp.min;
-            var tmp1max = datas.daily_forecast[0].tmp.max;
-
-            var code2 = datas.daily_forecast[1].cond.code_d;
-            var desc2 = datas.daily_forecast[1].cond.txt_d;
-            var hum2 = datas.daily_forecast[1].hum;
-            var tmp2min = datas.daily_forecast[1].tmp.min;
-            var tmp2max = datas.daily_forecast[1].tmp.max;
-
-            var result = {
-                    PM25:pm25,  
-                    TodayDesc: desc1,
-                    TodayHum: hum1,
-                    TodayMin: tmp1min,
-                    TodayMax: tmp1max,
-
-                    TomorrowDesc: desc2,
-                    TomorrowHum: hum2,
-                    TomorrowMin: tmp2min,
-                    TomorrowMax: tmp2max,
-                };
-            console.log(result);
-            $scope.objobj = result;         
-          }).error(function(){});
+     alert("尚未提供添加摄像头接口");
     };
 })
 
@@ -495,6 +496,7 @@ angular.module('starter.controllers', [])
 .controller('PasswordCtrl', function($scope,$q,$http,$state) {
   $scope.setFormScope = function(scope){
     this.formScope = scope;
+
   }
   $scope.codeform = {};
   $scope.changePW = function() {
@@ -510,7 +512,7 @@ angular.module('starter.controllers', [])
 
     var oldpw = hex_md5($scope.codeform.oldPW).toUpperCase();
     var newpw = hex_md5($scope.codeform.newPW).toUpperCase();
-    var id = "744802300458721280";
+    var id = $scope.global.cust_id;
     var reqobj = {
       "cust_id":id,
       "old_pwd":oldpw,
@@ -546,7 +548,7 @@ angular.module('starter.controllers', [])
 .controller('VersionCtrl', function($scope,$http,$q){ 
   $scope.init = function(){
 
-    var apibranch = '/account/upgrade';
+    var apibranch = '/app/upgrade';
     var platform = "Android";
     var version = "2.0.0";
     var reqd = {"platform":platform,"app_version":version};
@@ -565,8 +567,13 @@ angular.module('starter.controllers', [])
         var objectData = resData.data;
 
         $scope.newver = $scope.version;
-        
-        
+        $scope.newver.Platform = objectData.platform;
+        $scope.newver.UpdateTime = objectData.public_time;
+        $scope.newver.DownloadAddr = objectData.down_addr;
+        $scope.newver.CurrentVersion_no = version;
+        $scope.newver.LastestVersion_no = objectData.version_no;
+        $scope.newver.UpdateContent = objectData.update_content;
+        $scope.newver.IsUpdate = objectData.is_update;       
         $scope.version = $scope.newver;
       }
         deferred.resolve();

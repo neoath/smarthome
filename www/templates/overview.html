@@ -37,9 +37,12 @@
 
 
                 <div class="card">
-                  <div class="item item-text-wrap">
-                    位置&天气
-                  </div>
+                    <div class="item">
+                                上海
+                                <span class="item-note" style="color: #0a0a0a;">
+                                    {{weatherObj.TodayMin}} ~ {{weatherObj.TodayMax}} °C
+                                </span>
+                    </div>                    
                 </div>   
                 <div class="card">
                   <div class="item item-text-wrap">
@@ -50,8 +53,7 @@
                 <div class="clearfix"></div>
                 <div class="card">
 
-                <div class="item item-icon-left item-text-wrap">
-                                <i class="icon ion-flame" ></i>
+                <div class="item item-text-wrap">
                                 当前主机
                                 <span class="item-note">
                                     {{DevicesViewModel.devices[0].name}}
@@ -75,7 +77,7 @@
                             </div>
                             <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', NodesViewModel.nodes, '烟雾报警器')" id="smokeDevices">
                                 <div class="blockLine-IconParent">
-                                    <i class="icon ion-flame blockLine-Icon"></i>
+                                    <i class="icon ion-no-smoking blockLine-Icon"></i>
                                 </div>
                                 <div class="blockLine-Desc">烟雾探测</div>                                  
                             </div>
@@ -103,19 +105,19 @@
                         <div class="blockLine">
                             <div class="item blockLine-left" >
                                 <div class="blockLine-IconParent">
-                                    <i class="icon ion-flame blockLine-Icon" ></i>
+                                    <i class="icon ion-more blockLine-Icon" ></i>
                                 </div>
                                 <div class="blockLine-Desc">Reserved</div>
                             </div>
                             <div class="item blockLine-middle" >
                                 <div class="blockLine-IconParent">
-                                    <i class="icon ion-flame blockLine-Icon" ></i>
+                                    <i class="icon ion-more blockLine-Icon" ></i>
                                 </div>
                                 <div class="blockLine-Desc">Reserved</div>                                
                             </div>
                             <div class="item blockLine-right" >
                                 <div class="blockLine-IconParent">
-                                    <i class="icon ion-flame blockLine-Icon"></i>
+                                    <i class="icon ion-more blockLine-Icon"></i>
                                 </div>
                                 <div class="blockLine-Desc">Reserved</div>                                  
                             </div>

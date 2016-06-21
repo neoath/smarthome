@@ -21,7 +21,7 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider,$httpProvider) {
+.config(function($stateProvider,$urlRouterProvider,$httpProvider) {
   $stateProvider
 
     .state('app', {
@@ -42,7 +42,7 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
       url: "/arm",
       views: {
         'menuContent' :{
-          templateUrl: "/templates/arm.html"
+          templateUrl: "templates/arm.html"
         }
       }
     })  
@@ -276,6 +276,6 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
     })    
   ;
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/overview');
+  $urlRouterProvider.otherwise('/app/login');
   $httpProvider.defaults.headers.post['Content-Type'] = 'text/plain;charset=UTF-8';
 });
