@@ -363,7 +363,17 @@ angular.module('starter.controllers', [])
 //摄像头 app.camera camera.html
 .controller('CameraCtrl', function($scope, $http){ 
   $scope.init = function() {
-     alert("尚未提供添加摄像头接口");
+    var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/1/device';
+      var head = {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*'
+               };
+          var wreq = httpTESTGen(url,head);           
+          $http(wreq).success(function(data){
+            
+            alert(data.devices[1].name);
+          }).error(function(){});    
+     //alert("尚未提供添加摄像头接口");
     };
 })
 
@@ -844,7 +854,6 @@ function httpReqGETGen(apibranch){
     };  
 }
 function httpTESTGen(url,head){
-    var code = getReqNo();
     return req = {
       headers: head,     
       method: 'GET',
