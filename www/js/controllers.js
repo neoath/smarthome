@@ -229,7 +229,7 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //首页 app.overview overview.html
-.controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http,$ionicLoading) {
+.controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http,$ionicLoading, locals) {
   $scope.DataReq = function(){
     $ionicLoading.show({
       templateUrl:"templates/loading.html",
@@ -239,6 +239,12 @@ angular.module('starter.controllers', [])
       maxWidth: 200,
       showDelay: 0
     });
+
+    var cust_id = locals.get("cust_id","")
+    alert(cust_id);
+    if (!cust_id)
+      $state.go("app.login"); 
+
 
     //用户信息 dc接口
     var apibranch = '/account/detail';
@@ -750,8 +756,27 @@ angular.module('starter.controllers', [])
     });
   }
 })
+
+//本地存储数据===================================
+.factory('locals',['$window',function($window){
+      return{        //存储单个属性
+        set :function(key,value){
+          $window.localStorage[key]=value;
+        },        //读取单个属性
+        get:function(key,defaultValue){
+          return  $window.localStorage[key] || defaultValue;
+        },        //存储对象，以JSON格式存储
+        setObject:function(key,value){
+          $window.localStorage[key]=JSON.stringify(value);
+        },        //读取对象
+        getObject: function (key) {
+          return JSON.parse($window.localStorage[key] || '{}');
+        }
+      }
+  }])
+
 //登录
-.controller('login', function($scope, $ionicSlideBoxDelegate, $timeout, $ionicLoading, $ionicPopup, $http, $state) {
+.controller('login', function($scope, $ionicSlideBoxDelegate, $timeout, $ionicLoading, $ionicPopup, $http, $state, locals) {
   $scope.loginData = {};
   $scope.login = function() {
     if(!$scope.loginData.username) {
@@ -767,6 +792,8 @@ angular.module('starter.controllers', [])
       login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
     };
 
+  
+
   var apibranch = '/account/login';
   var request = httpReqGen(apibranch,requestData);
 
@@ -775,6 +802,14 @@ angular.module('starter.controllers', [])
       var result = $.parseJSON(response.data.result);
       if (result.code == 0000){
         $scope.global.cust_id = result.data.cust_id;
+
+        //存储数据
+        locals.set("username",requestData.phone);
+        locals.set("cust_id", result.data.cust_id);
+        //读取数据
+        console.log(locals.get("username",""));
+        console.log(locals.get("cust_id",""));
+
         $state.go('app.overview');
       } else {
         alert(result.msg);
@@ -793,7 +828,6 @@ angular.module('starter.controllers', [])
     this.formScope = scope;
   }
 })
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 .directive('wrapOwlcarousel', function () {
