@@ -18,6 +18,8 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    // navigator.splashscreen.hide();
   });
 })
 
