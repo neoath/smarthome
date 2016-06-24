@@ -194,9 +194,6 @@ angular.module('starter.controllers', [])
     
    }
 
-
-
-
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
 	};
@@ -240,11 +237,9 @@ angular.module('starter.controllers', [])
       showDelay: 0
     });
 
-    var cust_id = locals.get("cust_id","")
-    alert(cust_id);
-    if (!cust_id)
+    console.log(locals.get("cust_id",""));
+    if (!locals.get("cust_id",""))
       $state.go("app.login"); 
-
 
     //用户信息 dc接口
     var apibranch = '/account/detail';
@@ -362,12 +357,16 @@ angular.module('starter.controllers', [])
   }, 1500);  
 })
 //布防 app.arm arm.html
-.controller('ArmCtrl', function($scope) {
-  var io = 2;
+.controller('ArmCtrl', function($scope, $state, locals) {
+    if (!locals.get("cust_id",""))
+      $state.go("app.login"); 
 })
 
 //摄像头 app.camera camera.html
-.controller('CameraCtrl', function($scope, $http){ 
+.controller('CameraCtrl', function($scope, $http, $state, locals){ 
+    if (!locals.get("cust_id",""))
+      $state.go("app.login"); 
+
   $scope.init = function() {
     var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/1/device';
       var head = {
@@ -387,7 +386,10 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //添加设备 app.addNode add-node.html
-.controller('addNode', function($scope) {
+.controller('addNode', function($scope, $state, locals) {
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
+
   $scope.nodes = [
     { nodename: 'Door Magnet', email: 'admin@test.domain', location: true, id: 'admin', avatar: 'img/men.jpg', enabled: 'true', lastLogin: 'Online',nodetype:'doormagnet' },
     { nodename: 'Infra Sensor', email: 'stacy@test.domain', location: true, id: 'stacy', avatar: 'img/girl.jpg', enabled: 'true', lastLogin: 'Online',nodetype:'infrasensor' },
@@ -413,14 +415,24 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //用户 app.usersetting usersetting.html
-.controller('usersetting', function($scope, $state) {
+.controller('usersetting', function($scope, $state, locals) {
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
+
+  $scope.logout = function() {
+    alert(locals.get("cust_id",""));
+    //存储数据
+    locals.set("username",'');
+    locals.set("cust_id", '');
+    console.log('cust_id: ' + locals.get("cust_id",""));
+    $state.go('app.login');
+  }
 })
 /////////////////////////////////////////////////       
 //个人信息 app.userinfo userinfo.html
-.controller('updateUser', function($scope, $q, $http, $state) {
-  // if (!$scope.global.cust_id){
-  //       $state.go('app.login');
-  // }
+.controller('updateUser', function($scope, $q, $http, $state, locals) {
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
 
   var requestData = {
       cust_id: $scope.global.cust_id,
@@ -496,7 +508,10 @@ angular.module('starter.controllers', [])
   };  
 })
 //子账号 app.subuserinfo subuserinfo.html
-.controller('addSubUser', function($scope) {
+.controller('addSubUser', function($scope, locals) {
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
+
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
@@ -509,7 +524,10 @@ angular.module('starter.controllers', [])
 ///
 /////////////////////////////////////////////////
 //更改密码 app.changepassword changepassword.html
-.controller('PasswordCtrl', function($scope,$q,$http,$state) {
+.controller('PasswordCtrl', function($scope,$q,$http,$state, locals) {
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
+  
   $scope.setFormScope = function(scope){
     this.formScope = scope;
 
@@ -561,7 +579,10 @@ angular.module('starter.controllers', [])
 ///
 /////////////////////////////////////////////////
 //版本控制 app.version version.html
-.controller('VersionCtrl', function($scope,$http,$q){ 
+.controller('VersionCtrl', function($scope,$http,$q, locals){
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
+
   $scope.init = function(){
 
     var apibranch = '/app/upgrade';
@@ -609,7 +630,9 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //设置 app.settings settings.html
-.controller('settings', function($scope,$state) {
+.controller('settings', function($scope, $state, locals) {
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
 
 })
 /////////////////////////////////////////////////
@@ -640,8 +663,10 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //通知 app.notifies notifies.html
-.controller('NotificationCtrl', function($scope,$state) {
-  
+.controller('NotificationCtrl', function($scope, $state, locals) {
+  if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
+
 })
 /////////////////////////////////////////////////
 ///
@@ -684,8 +709,10 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //测试用功能 app.vib vib.html
-.controller('VibrationCtrl', function($scope,$cordovaVibration,$cordovaBarcodeScanner){ 
- 
+.controller('VibrationCtrl', function($scope, $cordovaVibration, $cordovaBarcodeScanner, $state, locals){ 
+ if (!locals.get("cust_id",""))
+    $state.go("app.login"); 
+
   $scope.startVib=function(){ 
     // 震动 1000ms 
     $cordovaVibration.vibrate(1000); 
@@ -700,7 +727,7 @@ angular.module('starter.controllers', [])
 
   console.log("Barcode Format -> " + imageData.format);
 
-  console.log("Cancelled -> " + imageData.cancelled);
+  console.log("Cancelled -> d" + imageData.cancelled);
 
   }, function(error) {
 
@@ -712,7 +739,9 @@ angular.module('starter.controllers', [])
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //注册
-.controller('register', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http) {
+.controller('register', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http, locals) {
+  if (!locals.get("cust_id",""))
+      $state.go("app.login"); 
 
   $scope.setFormScope = function(scope){
     this.formScope = scope;
@@ -792,8 +821,6 @@ angular.module('starter.controllers', [])
       login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
     };
 
-  
-
   var apibranch = '/account/login';
   var request = httpReqGen(apibranch,requestData);
 
@@ -861,7 +888,6 @@ function getReqNo(){
     var code = aesEncrypt(newuuid, aesKey, aesKey);   
     return code;
 }
-
 function httpReqGen(apibranch,reqData){
     var code = getReqNo();
     var url = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
@@ -880,8 +906,8 @@ function httpReqGETGen(apibranch){
     var url = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
     return req = {
       headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Accept': '*/*'
+                  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                  'Accept': '*/*'
                },       
       method: 'GET',
       url: url
