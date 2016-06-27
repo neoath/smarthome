@@ -58,6 +58,43 @@
             <span>Loading...</span>
     </script>
 
+
+    <script id="templates/dashboard.html" type="text/ng-template">
+        <ion-view title="Dashboard" >
+            <ion-tabs class="nav-title-slide-ios7 tabs-striped tabs-icon-top tabs-top tabs-background-light tabs-balanced" animation="nav-title-slide-ios7">
+                <ion-tab title="Home" icon-on="ion-ios7-home" icon-off="ion-ios7-home-outline" href="#/app/dashboard/home">
+                    <ion-nav-view name="home-tab"></ion-nav-view>
+                </ion-tab>
+                <ion-tab title="Favorites" icon-on="ion-ios7-star" icon-off="ion-ios7-star-outline" href="#/app/dashboard/favorites">
+                    <ion-nav-view name="favorites-tab"></ion-nav-view>
+                </ion-tab>
+                <ion-tab title="Settings" icon-on="ion-ios7-settings-strong" icon-off="ion-ios7-settings" href="#/app/dashboard/settings">
+                    <ion-nav-view name="settings-tab"></ion-nav-view>
+                </ion-tab>
+            </ion-tabs>
+        </ion-view>
+    </script>
+    <script id="templates/favorites.html" type="text/ng-template">
+        <ion-view title="Favorites">
+            <ion-content>
+               
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="templates/home.html" type="text/ng-template">
+        <ion-view title="<img src='img/logo.png' class='img-responsive'>">
+            <ion-content>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="templates/settingss.html" type="text/ng-template">
+        <ion-view title="Settings">
+            <ion-content>
+                
+            </ion-content>
+        </ion-view>
+    </script>
+
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>   
 </body>

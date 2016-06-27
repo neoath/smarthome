@@ -32,6 +32,43 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
     templateUrl: 'templates/side-menu-left.html'
     // controller: 'AppCtrl'
   })
+
+
+ .state('app.dashboard', {
+      url: "/dashboard",
+    abstract: true,
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/dashboard.html"
+        }
+      }
+    })
+  .state('app.dashboard.home', {
+      url: "/home",
+      views: {
+        'home-tab' :{
+          templateUrl: "templates/home.html"
+        }
+      }
+    })
+  .state('app.dashboard.favorites', {
+      url: "/favorites",
+      views: {
+        'favorites-tab' :{
+          templateUrl: "templates/favorites.html"
+        }
+      }
+    })
+  .state('app.dashboard.settings', {
+      url: "/settings",
+      views: {
+        'settings-tab' :{
+          templateUrl: "templates/settingss.html"
+        }
+      }
+    })
+
+
   .state('app.overview', {
       url: "/overview",
       views: {
@@ -56,14 +93,6 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })  
-    .state('app.dashboard', {
-      url: "/dashboard",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/dashboard.html"
-        }
-      }
-    }) 
   .state('app.addNode', {
       url: "/add-node",
       views: {
@@ -71,31 +100,7 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
           templateUrl: "templates/add-node.html"
         }
       }
-    })       
-  .state('app.dashboard.home', {
-      url: "/home",
-      views: {
-        'home-tab' :{
-          templateUrl: "templates/home.html"
-        }
-      }
-    })
-  .state('app.dashboard.favorites', {
-      url: "/favorites",
-      views: {
-        'favorites-tab' :{
-          templateUrl: "templates/favorites.html"
-        }
-      }
-    })
-  .state('app.dashboard.settings', {
-      url: "/settings",
-      views: {
-        'settings-tab' :{
-          templateUrl: "templates/settings.html"
-        }
-      }
-    })    
+    })        
 
   .state('app.nodeType', {
       url: "/nodeType",
@@ -154,6 +159,14 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })
+  .state('app.deviceselect', {
+      url: "/deviceselect",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/deviceselect.html"
+        }
+      }
+    })    
   .state('app.devicemanage', {
       url: "/devicemanage",
       views: {
@@ -194,6 +207,14 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })
+  .state('app.purchasedevices', {
+      url: "/purchasedevices",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/purchasedevices.html"
+        }
+      }
+    })    
   .state('app.purchaseinfo', {
       url: "/purchaseinfo",
       views: {
@@ -202,6 +223,14 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })  
+  .state('app.purchasemethod', {
+      url: "/purchasemethod",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/purchasemethod.html"
+        }
+      }
+    })    
   .state('app.battery', { 
       url: '/battery', 
       views: { 

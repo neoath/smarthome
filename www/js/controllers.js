@@ -3,6 +3,7 @@ angular.module('starter.controllers', [])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //数据
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout) {
+
   $scope.global = { cust_id : 0 };
   $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', 
                   EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', 
@@ -17,84 +18,20 @@ angular.module('starter.controllers', [])
 		{ username: 'Stacy S', email: 'stacy@test.domain', location: true, id: 'stacy', avatar: 'img/girl.jpg', enabled: 'true', lastLogin: 'Last login: 01/09/2014' },
 		{ username: 'Mom', email: 'mom@test.domain', location: false, id: 'mom', avatar: 'img/noavatar.png', enabled: 'false', lastLogin: 'Last login: never' },
 	];
-	$scope.device = { id: null, name: 'No Device', icon: 'ion-ios7-help-empty', status: 'Offline' },
-	$scope.devices = [
-		{ id: '1', name: 'Thermostat (bedroom)', icon: 'ion-thermometer', status: 'Away', featured: true, userSelect: "stacy", actionSelect: "3" },
-		{ id: '2', name: 'Coffee Machine', icon: 'ion-coffee', status: 'Finished', color: 'balanced', featured: true, userSelect: "mom", actionSelect: null },
-		{ id: '3', name: 'Smoke Sensor', icon: 'ion-no-smoking', status: 'Idle', color: 'assertive', featured: true, userSelect: "admin", actionSelect: null },
-		{ id: '4', name: 'Garage', icon: 'ion-model-s', status: 'Car Inside', featured: true, userSelect: "admin", actionSelect: "6" },
-		{ id: '5', name: 'House Security', icon: 'ion-locked', status: 'Unarmed', color: 'assertive', featured: true, userSelect: "admin", actionSelect: "7"},
-		{ id: '6', name: 'Fan (WC)', icon: 'ion-load-b', status: 'Working', color: 'balanced', userSelect: "admin", actionSelect: null },
-		{ id: '7', name: 'Desktop PC', icon: 'ion-social-windows', status: 'Online', color: 'balanced', featured: true, userSelect: "admin", actionSelect: null },
-		{ id: '8', name: 'Stacy\'s Laptop', icon: 'ion-social-apple', status: 'Online', color: 'balanced', userSelect: "stacy", actionSelect: null },
-		{ id: '9', name: 'Media Center (torrent downloader)', icon: 'ion-social-tux', status: 'Online', color: 'balanced', userSelect: "admin", actionSelect: null },
-		{ id: '10', name: 'Unknow Smartphone', icon: 'ion-social-android', status: 'Offline', color: 'assertive', userSelect: "admin", actionSelect: null },
-		{ id: '11', name: 'Room 1 Lights', icon: 'ion-ios7-lightbulb', userSelect: "admin", actionSelect: "1" },
-		{ id: '12', name: 'Room 2 Lights', icon: 'ion-ios7-lightbulb', userSelect: "admin", actionSelect: "1" },
-		{ id: '13', name: 'Room 3 Lights', icon: 'ion-ios7-lightbulb', userSelect: "admin", actionSelect: "1" },
-		{ id: '14', name: 'Lawn Lights', icon: 'ion-ios7-lightbulb', userSelect: "admin", actionSelect: "5" },
-	];
-	$scope.locations = [
-		{ id: '1', name: 'Kitchen', icon: 'ion-fork', note: 'For mum', featured: true },
-		{ id: '2', name: 'WC', icon: 'ion-waterdrop', note: 'Occupied', featured: true },
-	];
-	$scope.actions = [
-		{ id: '1', name: 'Lawn Lights Brightness', type: "range", value: '68', minValue : "0", maxValue : "100", units: "%", iconBefore: 'ion-ios7-lightbulb-outline', iconAfter: 'ion-ios7-lightbulb', deviceSelect : "", script: "", featured: true },
-		{ id: '2', name: 'Smart Grid Power', type: "range", value: '24', minValue : "0", maxValue : "100", units: "%", iconBefore: 'ion-ios7-bolt-outline', iconAfter: 'ion-ios7-bolt', deviceSelect : "", script: "", featured: false },
-		{ id: '3', name: 'Temperature', type: "range", value: '40', minValue : "-20", maxValue : "80", units: "°", iconBefore: 'ion-ios7-snowy', iconAfter: 'ion-ios7-sunny-outline', deviceSelect : "", script: "", featured: true },
-		{ id: '4', name: 'Popcorn Time', type: "toggle", featured: false },
-		{ id: '5', name: 'Good Night', type: "toggle", featured: true },
-		{ id: '6', name: 'Open Garage Doors', type: "toggle", featured: false },
-		{ id: '7', name: 'Arm Securuty', type: "toggle", featured: false },
-	];
-   $scope.nodeViewModel = {
+	$scope.CurrentDeviceViewModel = { id: 0, name: 'No Device', icon: 'ion-ios7-help-empty', status: 'Offline'};
+
+  $scope.nodeViewModel = {
     node:""
    };
 
   $scope.OverViewViewModel = {
-    OverStatus:"normal"
+    OverStatus:"normal",
+    JustLogin:false
   };
 
   $scope.ArmViewModel = { checked: true };
   $scope.DevicesViewModel = {
-    devices : [
-        {
-            "id": 2,
-            "name": "TY's 设备",
-            "deviceId": "7CEC7939212C",
-            "status": "ONLINE",
-            "alertStatus": "SET",
-            "deviceType": "HOMEGATEWAY",
-            "lastHeartBeat": "2016-06-17 04:12:39",
-            "isDeleted": false,
-            "createAt": "2016-06-17 04:12:39",
-            "account": {
-                "accountId": 1,
-                "cellPhone": "15687877676",
-                "location": null,
-                "createAt": "2016-06-17 04:12:39"
-            },
-            "armStatus":false
-        },
-        {
-            "id": 1,
-            "name": "设备一",
-            "deviceId": "7CEC793924C3",
-            "status": "ONLINE",
-            "alertStatus": "SET",
-            "deviceType": "HOMEGATEWAY",
-            "lastHeartBeat": "2016-06-17 04:12:39",
-            "isDeleted": false,
-            "createAt": "2016-06-17 04:12:39",
-            "account": {
-                "accountId": 1,
-                "cellPhone": "15687877676",
-                "location": null,
-                "createAt": "2016-06-17T04:12:39Z"
-            },
-            "armStatus":false
-        }
-  ]
+    devices:""
   };  
   $scope.NodesViewModel ={
     nodeType:"",
@@ -194,6 +131,9 @@ angular.module('starter.controllers', [])
     
    }
 
+  $scope.PurchasingDevice = {device:{}};
+
+
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
 	};
@@ -226,7 +166,7 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //首页 app.overview overview.html
-.controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http,$ionicLoading, locals) {
+.controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate,$ionicPopup, $ionicPopover, $state, $timeout, $http,$ionicLoading, locals) {
   $scope.DataReq = function(){
     $ionicLoading.show({
       templateUrl:"templates/loading.html",
@@ -274,7 +214,46 @@ angular.module('starter.controllers', [])
     });
 
     //主机、节点信息 xw接口
-    
+    var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/7/device';
+    var head = {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*'
+               };
+    var wreq = httpTESTGen(url,head);           
+    $http(wreq).success(function(data){
+      $scope.DevicesViewModel.devices = null;
+      $scope.DevicesViewModel.devices = data.devices;
+      console.log(data.devices);
+    }).error(function(){});    
+
+    //只有在首次登陆后选择默认主机
+    if($scope.OverViewViewModel.JustLogin){
+      $scope.newnode = {};
+      var purchaseDeviceSelect = $ionicPopup.show({
+            template: '<label class="item item-input item-select"><div class="input-label">选择主机</div><select ng-model="newnode.deviceSelect" ng-options="o as o.name for o in DevicesViewModel.devices"></select></label>',
+            title: '请选择要充值的主机',
+            scope: $scope,
+            buttons: [
+              {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                  return $scope.newnode.deviceSelect;
+                }
+              }
+            ]
+      });
+      purchaseDeviceSelect.then(function(res) {
+            if(res == undefined){
+              $state.go('app.overview');
+            }
+            $scope.CurrentDeviceViewModel.id = res.id;
+            $scope.CurrentDeviceViewModel.name = res.name;         
+      });     
+      $scope.OverViewViewModel.JustLogin = false;   
+    }
+ 
+
     //天气
      var url = 'http://apis.baidu.com/heweather/weather/free?city=shanghai';
       var head = {
@@ -368,17 +347,7 @@ angular.module('starter.controllers', [])
       $state.go("app.login"); 
 
   $scope.init = function() {
-    var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/1/device';
-      var head = {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Accept': '*/*'
-               };
-          var wreq = httpTESTGen(url,head);           
-          $http(wreq).success(function(data){
-            
-            alert(data.devices[1].name);
-          }).error(function(){});    
-     //alert("尚未提供添加摄像头接口");
+     alert("尚未提供添加摄像头接口");
     };
 })
 
@@ -642,6 +611,18 @@ angular.module('starter.controllers', [])
 .controller('DeviceNodeBindingManageCtrl', function($scope){ 
 })
 ////////////////////
+//选择主机 app.deviceselect deviceselect.html
+.controller('DeviceSelectCtrl', function($scope, $state) {
+  $scope.data = {};
+  console.log($scope.CurrentDeviceViewModel.name);
+  $scope.init = function(){
+    
+  }
+  $scope.currentDeviceChange = function(device) {
+    $scope.CurrentDeviceViewModel.id = device.id;
+    $scope.CurrentDeviceViewModel.name = device.name;
+  };
+})
 //添加主机 app.deviceinfo deviceinfo.html
 .controller('addDevice', function($scope) {
   $scope.init = function(){
@@ -663,20 +644,53 @@ angular.module('starter.controllers', [])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //通知 app.notifies notifies.html
-.controller('NotificationCtrl', function($scope, $state, locals) {
+.controller('NotificationCtrl', function($scope, $state, $ionicPopup, locals) {
   if (!locals.get("cust_id",""))
     $state.go("app.login"); 
 
+  $scope.deviceSelect = function() {
+
+  };     
 })
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
 //支付 app.purchaseinfo purchaseinfo.html
-.controller('PurchaseCtrl', function($scope,$state) {
+.controller('PurchaseDevicesCtrl', function($scope,$state) {
   $scope.init = function(){
-    alert("支付接口尚未提供");
+    // alert("支付接口尚未提供");
+  }
+  $scope.next = function(device){
+    //$scope.PurchasingDevice.device = device;
+    $scope.PurchasingDevice.device.accountId = device.account.accountId;
+    $scope.PurchasingDevice.device.createAt = device.createAt;
+    $scope.PurchasingDevice.device.deviceId = device.deviceId;
+    $scope.PurchasingDevice.device.isDeleted = device.isDeleted;
+    $scope.PurchasingDevice.device.name = device.name;
+    $state.go('app.purchaseinfo');
   }
 })
+//支付 app.purchaseinfo purchaseinfo.html
+.controller('PurchaseCtrl', function($scope,$state) {
+  $scope.init = function(){
+    // alert("支付接口尚未提供");
+  }
+
+  $scope.next = function() {
+    $state.go('app.purchasemethod');    
+  }
+
+})
+.controller('PurchaseMethodCtrl', function($scope,$state) {
+  $scope.init = function(){
+    
+  }
+  $scope.purchase = function(){
+    
+  }  
+
+})
+
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
@@ -836,7 +850,7 @@ angular.module('starter.controllers', [])
         //读取数据
         console.log(locals.get("username",""));
         console.log(locals.get("cust_id",""));
-
+        $scope.OverViewViewModel.JustLogin = true;
         $state.go('app.overview');
       } else {
         alert(result.msg);

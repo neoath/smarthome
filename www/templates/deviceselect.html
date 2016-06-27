@@ -1,0 +1,26 @@
+        <ion-view title="主机变更" ng-init="init()" ng-controller="DeviceSelectCtrl">
+            <ion-content class="padding">
+			<div class="list card">
+
+			  <div class="item item-avatar">
+			    <img src="/img/doormagnet.jpg">
+			    <h2>当前主机</h2>
+			    <p>{{CurrentDeviceViewModel.name}}</p>
+			  </div>
+
+			</div>
+            	<div class="item item-divider">
+                    可用主机
+                </div>
+                <div ng-repeat="device in DevicesViewModel.devices">
+                    <label class="item item-radio" >
+                            <input type="radio" name="group" ng-model="data.currentDevice"  ng-value="device.name" ng-change="currentDeviceChange(device)">
+                            <div class="item-content">
+                                {{device.name}}
+                            </div>
+                            <i class="radio-icon ion-checkmark-circled"></i>
+                    </label>
+                </div>
+            </ion-content>
+
+        </ion-view>
