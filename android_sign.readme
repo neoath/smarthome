@@ -20,3 +20,5 @@ jarsigner是工具名称，-verbose表示将签名过程中的详细信息打印
 -signedjar demo_signed.apk 签名后的apk 
 demo.apk 需要签名的apk 
 demo.keystore 证书的别名
+
+Password: 123456
