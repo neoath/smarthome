@@ -491,6 +491,41 @@ angular.module('starter.controllers', [])
 })
 /////////////////////////////////////////////////
 ///
+.controller('findPasswordCtrl', function($scope, $q, $http, $state, locals){
+  $scope.findData = {};
+  $scope.findPassword = function() {
+    if(!$scope.findData.mobileNo || !$scope.findData.password || !$scope.findData.passwordConfirm
+      || !$scope.findData.code) {
+      alert("请填写");
+      return;
+    }
+    if($scope.findData.password != $scope.findData.passwordConfirm) {
+      alert('新密码输入不一致');
+      return;
+    }    
+
+    var apibranch = '/account/findpwd';
+    var newpw = hex_md5($scope.findData.password).toUpperCase();
+    var requestObject = {
+        phone: $scope.findData.mobileNo,
+        login_pwd: newpw,
+        sms_captcha: $scope.findData.code
+    };
+    var req = httpReqGen(apibranch,requestObject);
+
+    $http(req).then(function(response) {
+      console.log(response);     
+      var result = $.parseJSON(response.data.result);
+      if (result.code == 0000){
+        $state.go('app.login');
+      } else {
+        alert(result.msg);
+      }
+    }, function(error) {    
+      console.log(error);
+    });
+  };
+})
 /////////////////////////////////////////////////
 //更改密码 app.changepassword changepassword.html
 .controller('PasswordCtrl', function($scope,$q,$http,$state, locals) {
@@ -754,8 +789,6 @@ angular.module('starter.controllers', [])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //注册
 .controller('register', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout, $http, locals) {
-  if (!locals.get("cust_id",""))
-      $state.go("app.login"); 
 
   $scope.setFormScope = function(scope){
     this.formScope = scope;
