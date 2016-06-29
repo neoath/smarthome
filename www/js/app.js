@@ -85,6 +85,14 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
         }
       }
     })  
+  .state('app.about', {
+      url: "/about",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/about.html"
+        }
+      }
+    })    
   .state('app.camera', {
       url: "/camera",
       views: {
@@ -304,7 +312,15 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
              templateUrl: 'templates/register.html', 
         } 
       } 
-    })    
+    })  
+    .state('app.findPassword', { 
+    url: '/findPassword', 
+    views: { 
+        'menuContent': { 
+             templateUrl: 'templates/findPassword.html', 
+        } 
+      } 
+    })      
   ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/overview');
