@@ -1,10 +1,10 @@
-        <ion-view title="{{NodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
+        <ion-view title="{{UsingNodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
             <ion-content class="padding">
                 <div ng-if="nodes.length === 0">
                     <h5 class="text-center">No Nodes to Show</h5>
                 </div>
 
-                <div ng-repeat="node in NodesViewModel.nodes | filter: { nodeType: NodesViewModel.nodeType}">
+                <div ng-repeat="node in UsingNodesViewModel.nodes | filter: { nodeType: UsingNodesViewModel.nodeType}">
                     <div ng-if="node.id != null">
                         <div class="list">
                             <div class="item item-icon-left">

@@ -4,8 +4,27 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova', 'WifiServices'])
 
+
+.controller('WifiController', ['$scope', 'WifiService', function ($scope, WifiService) {
+
+    $scope.wifiList = [];
+
+    window.setTimeout(function () {
+        $scope.wifiList = WifiService.list();
+        // alert($scope.wifiList);
+        $scope.$apply();
+    }, 5000);
+
+    $scope.getList = function () {
+        $scope.wifiList = WifiService.list();
+    }
+
+    $scope.connectWifi = function (name) {
+        WifiService.connectionToWifi(name);
+    }
+}])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -320,7 +339,15 @@ angular.module('starter', ['ionic', 'starter.controllers','chart.js','ngCordova'
              templateUrl: 'templates/findPassword.html', 
         } 
       } 
-    })      
+    })
+    .state('app.wifi', {
+        url: '/wifi',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/wifi.html',
+            }
+        }
+    })
   ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/overview');

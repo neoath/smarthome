@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['WifiServices'])
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //数据
@@ -19,7 +19,18 @@ angular.module('starter.controllers', [])
 		{ username: 'Mom', email: 'mom@test.domain', location: false, id: 'mom', avatar: 'img/noavatar.png', enabled: 'false', lastLogin: 'Last login: never' },
 	];
 	$scope.CurrentDeviceViewModel = { id: 0, name: 'No Device', icon: 'ion-ios7-help-empty', status: 'Offline'};
-
+	$scope.UsingDeviceViewModel = { device: null };
+	$scope.UsingNodesViewModel = {
+	    nodeType: null,
+	    nodes: null,
+	    nodeList: [
+                        { id: '0', name: '电子钥匙', icon: 'ion-locked', nodeType: '0' },
+                        { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '1' },
+                        { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '2' },
+                        { id: '3', name: '烟雾报警器', icon: 'ion-flame', nodeType: '3' },
+                        { id: '4', name: '温度传感器', icon: 'ion-bonfire', nodeType: '4' }
+	    ]
+	};
   $scope.nodeViewModel = {
     node:""
    };
@@ -165,9 +176,29 @@ angular.module('starter.controllers', [])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+.controller('WifiController', ['$scope', 'WifiService', function($scope, WifiService){
+    $scope.wifiList = [];
+
+    window.setTimeout(function(){
+        $scope.wifiList = WifiService.list();
+        $scope.$apply();
+    }, 5000);
+
+    $scope.getList = function(){
+        $scope.wifiList = WifiService.list();
+    }
+
+    $scope.connectWifi = function(name){
+        WifiService.connectionToWifi(name);
+    }
+}])
+
+
 //首页 app.overview overview.html
-.controller('OverViewCtrl', function($q, $scope, $ionicSideMenuDelegate,$ionicPopup, $ionicPopover, $state, $timeout, $http,$ionicLoading, locals) {
-  $scope.DataReq = function(){
+.controller('OverViewCtrl', function ($q, $scope, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover, $state, $timeout, $http, $ionicLoading, locals) {
+    $scope.DataReq = function () {
+
+    var accountId = 5;
     $ionicLoading.show({
       templateUrl:"templates/loading.html",
       content: 'Loading',
@@ -214,7 +245,7 @@ angular.module('starter.controllers', [])
     });
 
     //主机、节点信息 xw接口
-    var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/7/device';
+    var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/' + accountId + '/device';
     var head = {
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                     'Accept': '*/*'
@@ -223,8 +254,24 @@ angular.module('starter.controllers', [])
     $http(wreq).success(function(data){
       $scope.DevicesViewModel.devices = null;
       $scope.DevicesViewModel.devices = data.devices;
+      $scope.UsingDeviceViewModel.device = data.devices[0];
       console.log(data.devices);
-    }).error(function(){});    
+
+      var urls = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/' + accountId + '/device/' + $scope.UsingDeviceViewModel.device.deviceId + '/node';
+      var heads = {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': '*/*'
+      };
+      var wreqs = httpTESTGen(urls, heads);
+        $http(wreqs).success(function (data) {
+          $scope.UsingNodesViewModel.nodes = data.nodes;
+      }).error(function () { });
+    }).error(function () { });
+
+
+
+
+
 
     //只有在首次登陆后选择默认主机
     if($scope.OverViewViewModel.JustLogin){
@@ -306,8 +353,8 @@ angular.module('starter.controllers', [])
     $ionicSideMenuDelegate.toggleLeft();
   };
   $scope.nodeTypeTap = function(route, nodes, detType) {
-    $scope.NodesViewModel.nodes = nodes;
-    $scope.NodesViewModel.nodeType = detType;
+      //$scope.UsingNodesViewModel.nodes = nodes;
+      $scope.UsingNodesViewModel.nodeType = detType;
     $state.go(route);
   };
   $scope.nodeTap = function(route, node) {
@@ -873,7 +920,7 @@ angular.module('starter.controllers', [])
 
   $http(request).then(function(response) {
       console.log(response);
-      var result = $.parseJSON(response.data.result);
+      var result = response.data.result;
       if (result.code == 0000){
         $scope.global.cust_id = result.data.cust_id;
 
@@ -967,3 +1014,4 @@ function httpTESTGen(url,head){
       url: url
     };  
 }
+

@@ -7,9 +7,9 @@
                 <ion-nav-buttons side="left">
                     <button class="button button-icon ion-navicon" ng-click="toggleLeft()" ng-hide="$exposeAside.active"></button>
                 </ion-nav-buttons>
-                <ion-nav-buttons side="right">
+                <!--<ion-nav-buttons side="right">
                     <a class="button button-icon icon ion-ios7-email-outline" ng-click="openAlerts($event)"><span class="badge badge-balanced">0</span></a>
-                </ion-nav-buttons>
+                </ion-nav-buttons>-->
                 <ion-nav-view name="menuContent"></ion-nav-view>
             </ion-side-menu-content>
             <ion-side-menu expose-aside-when="large">
@@ -56,7 +56,11 @@
                         <a menu-close class="item item-icon-left" href="#/app/vib">
                             <i class="icon ion-flame"></i>
                             紧急
-                        </a>                                                
+                        </a>               
+                        <a menu-close class="item item-icon-left" href="#/app/wifi">
+                            <i class="icon ion-flame"></i>
+                            WIFI
+                        </a>                                    
                     </div>
                 </ion-content>
             </ion-side-menu>
