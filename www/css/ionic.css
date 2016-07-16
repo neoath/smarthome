@@ -2774,11 +2774,13 @@ a.subdued {
       background: transparent; }
   .bar.bar-light {
     border-color: #ddd;
-    background-color: white;
+    background-color: #57a595;
     background-image: linear-gradient(0deg, #ddd, #ddd 50%, transparent 50%);
     color: #444; }
     .bar.bar-light .title {
-      color: #444; }
+      color: white; 
+      font-weight: 800;
+    }
     .bar.bar-light.bar-footer {
       background-image: linear-gradient(180deg, #ddd, #ddd 50%, transparent 50%); }
   .bar.bar-stable {
@@ -2818,9 +2820,9 @@ a.subdued {
     .bar.bar-assertive.bar-footer {
       background-image: linear-gradient(180deg, #cc2311, #cc2311 50%, transparent 50%); }
   .bar.bar-balanced {
-    border-color: #498f24;
-    background-color: #66cc33;
-    background-image: linear-gradient(0deg, #498f24, #498f24 50%, transparent 50%);
+    border-color: #70b7a8;
+    background-color: #70b7a8;
+    background-image: linear-gradient(0deg, #70b7a8, #70b7a8 50%, transparent 50%);
     color: #fff; }
     .bar.bar-balanced .title {
       color: #fff; }

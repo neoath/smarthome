@@ -69,8 +69,8 @@
 *	v1.3.3
 */
 .owl-theme .owl-controls {
-  margin-top: 10px;
-  text-align: center;
+  margin-top: -25px;
+  text-align: right;
 }
 /* Styling Next and Prev buttons */
 .owl-theme .owl-controls .owl-buttons div {

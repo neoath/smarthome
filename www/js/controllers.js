@@ -255,8 +255,28 @@ angular.module('starter.controllers', ['WifiServices'])
       $scope.DevicesViewModel.devices = null;
       $scope.DevicesViewModel.devices = data.devices;
       $scope.UsingDeviceViewModel.device = data.devices[0];
+      if(data.devices[0].status == "OFFLINE"){
+          $scope.UsingDeviceViewModel.device.status = false;
+          $scope.UsingDeviceViewModel.device.titleText = "撤防";
+          $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
+      }
+      else{
+          $scope.UsingDeviceViewModel.device.status = true;
+          $scope.UsingDeviceViewModel.device.titleText = "布防";
+          $scope.UsingDeviceViewModel.device.icon = "ion-locked";
+      }
+
+      if (data.devices[0].alertStatus == "SET") {
+          $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正在报警";
+      }
+      else {
+          $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正常连接";
+      }
+
       console.log(data.devices);
 
+
+    //主机信息返回后请求节点信息
       var urls = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/' + accountId + '/device/' + $scope.UsingDeviceViewModel.device.deviceId + '/node';
       var heads = {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -346,8 +366,27 @@ angular.module('starter.controllers', ['WifiServices'])
     
     $timeout(function () {
         $ionicLoading.hide();
-      }, 500);
+    }, 500);
+
+        //
+        //九宫格css
+    //circleCss();
+        //DataReq end
   }
+    //toggle用
+    $scope.armStatusChange = function () {
+        $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.status ? "布防" : "撤防";
+        $scope.UsingDeviceViewModel.device.icon = $scope.UsingDeviceViewModel.device.status ? "ion-locked" : "ion-unlocked";
+    };
+    //button用
+    $scope.armStatusBtnChange = function () {
+        if ($scope.UsingDeviceViewModel.device.status)
+            $scope.UsingDeviceViewModel.device.status = false;
+        else
+            $scope.UsingDeviceViewModel.device.status = true;
+        $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.status ? "布防" : "撤防";
+        $scope.UsingDeviceViewModel.device.icon = $scope.UsingDeviceViewModel.device.status ? "ion-locked" : "ion-unlocked";
+    };
 
   $scope.toggleLeft = function() {
     $ionicSideMenuDelegate.toggleLeft();
@@ -1013,5 +1052,47 @@ function httpTESTGen(url,head){
       method: 'GET',
       url: url
     };  
+}
+
+
+function circleCss() {
+    var cWidth = parseFloat($('.cn-wrapper li a').css('width').split('p')[0]);
+    var rate = cWidth / 366;
+
+    var ss = [-70, 14, 40];
+    var m1 = [-140, 152, 179];
+    var m2 = [-100, 55, 80];
+    var m3 = [0, 15, 45];
+    var m4 = [100, 57, 83];
+    var m5 = [146, 154, 181];
+    var m6 = [97, 254, 282];
+    var m7 = [0, 293, 323];
+    var m8 = [-101, 257, 285];
+    var mm = [m1,m2,m3,m4,m5,m6,m7,m8]
+
+    ss[0] = Math.floor(ss[0] * rate) + "px";
+    ss[1] = Math.ceil(ss[1] * rate) + "px";
+    ss[2] = Math.ceil(ss[2] * rate) + "px";
+    for (var i = 0; i < mm.length; i++) {
+        for (var j = 0; j < m1.length; j++) {
+            mm[i][j] = Math.floor(mm[i][j] * rate) + "px";
+        }
+    }
+
+
+    var eicon = $('.cn-wrapper li a i');
+    for (var i = 0; i < eicon.length; i++) {
+        eicon.eq(i).css("left", mm[i][0]);
+        eicon.eq(i).css("top", mm[i][1]);
+        eicon.eq(i).css("font-size", ss[2]);
+    }
+    var espan = $('.cn-wrapper li a span');
+    for (var i = 0; i < espan.length; i++) {
+        espan.eq(i).css("left", mm[i][0]);
+        espan.eq(i).css("top", mm[i][2]);
+        espan.eq(i).css("margin-top", ss[0]);
+        espan.eq(i).css("font-size", ss[1]);
+    }
+
 }
 

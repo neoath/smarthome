@@ -1,4 +1,8 @@
-        <ion-view title="首页" ng-controller="OverViewCtrl" ng-init="DataReq()" >
+      
+    <ion-view title="信来智家【{{UsingDeviceViewModel.device.titleText}}】" ng-controller="OverViewCtrl" ng-init="DataReq()">
+        <ion-nav-buttons side="right">
+            <button class="button-clear" ng-click="armStatusBtnChange()"><i class="icon" ng-class="UsingDeviceViewModel.device.icon" style="font-size: 22px;color: white;"></i></button>
+        </ion-nav-buttons>
             <ion-content class="padding">
 
                 <wrap-owlcarousel class="owl-carousel padding"
@@ -26,7 +30,32 @@
                     </div>
                 </wrap-owlcarousel>
 
-                <div class="padding-horizontal">
+                <div class="card">
+                    <div class="item">
+                        {{UsingDeviceViewModel.device.deviceStatus}}
+                        <span class="item-note" on-tap="pageJump('app.deviceselect')">
+                            切换主机
+                        </span>
+                    </div>
+                </div>
+
+                <!--<div class="padding-horizontal" style="padding-top: 176px;">
+                    <div class="cn-wrapper opened-nav" id="cn-wrapper">
+                        <ul>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(15deg) scale(1);"><i class="icon ion-magnet blockLine-Icon"></i><span>门磁</span></a></li>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(-30deg) scale(1);"><i class="icon ion-wifi blockLine-Icon"></i><span>红外探测</span></a></li>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(-75deg) scale(1);"><i class="icon ion-no-smoking blockLine-Icon"></i><span>烟雾探测</span></a></li>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(-120deg) scale(1);"><i class="icon ion-bonfire blockLine-Icon"></i><span>燃气探测</span></a></li>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(-165deg) scale(1);"><i class="icon ion-magnet blockLine-Icon"></i><span>电子钥匙</span></a></li>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(-210deg) scale(1);"><i class="icon ion-videocamera blockLine-Icon"></i><span>视频监控</span></a></li>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(-255deg) scale(1);"><i class="icon ion-more blockLine-Icon"></i><span>智能看护</span></a></li>
+                            <li><a href="#" style="transform: skew(-60deg) rotate(-300deg) scale(1);"><i class="icon ion-more blockLine-Icon"></i><span>智能家居</span></a></li>
+                        </ul>
+                    </div>
+                </div>-->
+
+
+                <div class="padding-horizontal" style="padding-top: 30px;">
                     <div class="blockLine">
                         <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', UsingNodesViewModel.nodes, 1)" id="megnetDevices">
                             <div class="blockLine-IconParent">
@@ -89,53 +118,17 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <!--<div class="card">
                     <div class="item">
                                 上海
                                 <span class="item-note" style="color: #0a0a0a;">
                                     {{weatherObj.TodayMin}} ~ {{weatherObj.TodayMax}} °C
                                 </span>
-                    </div>                    
-                </div>   
-             
-                <div class="card">
-                        <div class="item item-avatar">
-                            <img src="img/doormagnet.jpg" />
-                            <h2>{{UsingDeviceViewModel.device.name}}</h2>
-                            <h3>{{UsingDeviceViewModel.device.deviceId}}</h3>
-                        </div>
-                        <div class="item">
-                            状态
-                            <span class="item-note">
-                                {{UsingDeviceViewModel.device.status}}
-                            </span>
-                        </div>
-                        <div class="item">
-                            LastHeartBeat
-                            <span class="item-note">
-                                {{UsingDeviceViewModel.device.lastHeartBeat}}
-                            </span>
-                        </div>
-                        <div class="item">
-                            主机类型
-                            <span class="item-note">
-                                {{UsingDeviceViewModel.device.deviceType}}
-                            </span>
-                        </div>
-                        <div ng-show="true" class="item item-image">
-                            <div id="sss" style="height: 150px;" data-tap-disabled="true">
-                                <img src="img/doormagnet.jpg" style="margin-top: -78px;" />
-                            </div>
-                        </div>
-                        <div>
-                            <ion-toggle ng-model="UsingDeviceViewModel.device.armStatus">
-                                布防
-                            </ion-toggle>
-                        </div>
-
                     </div>
+                </div>-->
 
-                <div class="clearfix"></div>    
                 <div class="clearfix"></div>
+                <div class="clearfix"></div>
+
             </ion-content>
         </ion-view>
