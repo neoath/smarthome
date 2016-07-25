@@ -201,7 +201,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           templateUrl: "templates/devicemanage.html"
         }
       }
-    })  
+  })
+  .state('app.devicedetails', {
+      url: "/devicedetails",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/devicedetails.html"
+          }
+      }
+  })
   .state('app.deviceinfo', {
       url: "/deviceinfo",
       views: {
@@ -345,6 +353,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         views: {
             'menuContent': {
                 templateUrl: 'templates/wifi.html',
+            }
+        }
+    })
+    .state('app.politics', {
+        url: '/politics',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/politics.html',
             }
         }
     })

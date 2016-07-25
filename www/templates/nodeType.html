@@ -4,24 +4,16 @@
                     <h5 class="text-center">No Nodes to Show</h5>
                 </div>
 
-                <div ng-repeat="node in UsingNodesViewModel.nodes | filter: { nodeType: UsingNodesViewModel.nodeType}">
-                    <div ng-if="node.id != null">
+                <div ng-repeat="node in UsingNodesViewModel.nodes | filter: { type: UsingNodesViewModel.nodeType}">
+                    <div ng-if="node.node_id != null">
                         <div class="list">
                             <div class="item item-icon-left">
                                 <i class="icon ion-flame" ></i>
-                                {{node.name}} :{{node.nodeType}}
+                                {{node.name}} :{{node.type_name}}
                                 <span class="item-note">
-                                    {{node.alert}}
+                                    {{node.status}}
                                 </span>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="item item-icon-left">
-                                <i class="icon ion-flame" ></i>
-                                最新报警时间
-                                <span class="item-note">
-                                    {{node.alertTime}}
-                                </span>
-                            </div>                            
+                            </div>                       
                         </div>
                     </div>                    
                 </div>

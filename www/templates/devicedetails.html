@@ -1,0 +1,24 @@
+        <ion-view title="主机信息" ng-init="init()" ng-controller="DeviceDetailsCtrl">
+            <ion-content>
+                <form name="addSensorForm" ng-init="setFormScope(this)" data-ng-submit="nodeSubmit()">
+                    <div class="list" style="background:#ffffff;">
+                        <div class="item item-divider">
+                            主机信息
+                        </div>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">主机名称</span>
+                            <input type="text" placeholder="Name" ng-model="temp.name">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">主机ID</span>
+                            <input type="text" placeholder="id" ng-model="temp.id" />
+                        </label>
+                    </div>
+                    <div class="padding">
+                        <button class="button button-balanced" ng-click="updateDeviceInfo()">
+                            保存修改
+                        </button>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>

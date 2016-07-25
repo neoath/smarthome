@@ -42,96 +42,11 @@ angular.module('starter.controllers', ['WifiServices'])
 
   $scope.ArmViewModel = { checked: true };
   $scope.DevicesViewModel = {
-    devices:""
+    devices:null
   };  
   $scope.NodesViewModel ={
     nodeType:"",
-    nodes:[
-                    {
-                          "id": 1,
-                          "nodeId": "A712736253627172837166ABF36379FA",
-                          "nodeType": "红外感应",
-                          "name": "红外感应1Name",
-                          "alert": "正常",
-                          "alertTime": "2016-06-17T06:09:33Z",
-                          "dataset_set": [
-                                                    {
-                                                        "id": 1,
-                                                        "dataSetId": 1,
-                                                        "alert": true,
-                                                        "alertTime": "2016-06-17T06:09:14Z",
-                                                        "node": 1,
-                                                        "dataSetMetaData": 1
-                                                    },
-                                                    {
-                                                        "id": 2,
-                                                        "dataSetId": 2,
-                                                        "alert": false,
-                                                        "alertTime": "2016-06-17T04:13:24Z",
-                                                        "node": 1,
-                                                        "dataSetMetaData": 1
-                                                    },
-                                                    {
-                                                        "id": 4,
-                                                        "dataSetId": 8,
-                                                        "alert": false,
-                                                        "alertTime": "2016-06-17T04:13:24Z",
-                                                        "node": 1,
-                                                        "dataSetMetaData": 1
-                                                    },
-                                                    {
-                                                        "id": 6,
-                                                        "dataSetId": 4,
-                                                        "alert": false,
-                                                        "alertTime": "2016-06-17T04:13:24Z",
-                                                        "node": 1,
-                                                        "dataSetMetaData": 4
-                                                    }
-                                                ]
-                    },
-                    {
-                          "id": 2,
-                          "nodeId": "FF12736253627172837166ABF36379FF",
-                          "nodeType": "门磁",
-                          "name": "门磁1Name",
-                          "alert": "正常",
-                          "alertTime": "2016-06-17T04:13:24Z",
-                          "dataset_set": [
-                                                    {
-                                                        "id": 3,
-                                                        "dataSetId": 1,
-                                                        "alert": false,
-                                                        "alertTime": "2016-06-17T04:13:24Z",
-                                                        "node": 2,
-                                                        "dataSetMetaData": 1
-                                                    },
-                                                    {
-                                                        "id": 5,
-                                                        "dataSetId": 2,
-                                                        "alert": false,
-                                                        "alertTime": "2016-06-17T04:13:24Z",
-                                                        "node": 2,
-                                                        "dataSetMetaData": 1
-                                                    },
-                                                    {
-                                                        "id": 7,
-                                                        "dataSetId": 8,
-                                                        "alert": false,
-                                                        "alertTime": "2016-06-17T04:13:24Z",
-                                                        "node": 2,
-                                                        "dataSetMetaData": 1
-                                                    },
-                                                    {
-                                                        "id": 8,
-                                                        "dataSetId": 4,
-                                                        "alert": false,
-                                                        "alertTime": "2016-06-17T04:13:24Z",
-                                                        "node": 2,
-                                                        "dataSetMetaData": 4
-                                                    }
-                                                ]
-                    }
-                ],
+    nodes:null,
     nodeList:[
                     { id: '0', name: '电子钥匙', icon: 'ion-locked',  nodeType: '0'},
                     { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '1'},
@@ -141,7 +56,10 @@ angular.module('starter.controllers', ['WifiServices'])
                   ]
     
    }
-
+  $scope.Temp = {
+      EditingDevice:null
+  };
+  $scope.UserViewModel = { user: null };
   $scope.PurchasingDevice = {device:{}};
 
 
@@ -197,8 +115,6 @@ angular.module('starter.controllers', ['WifiServices'])
 //首页 app.overview overview.html
 .controller('OverViewCtrl', function ($q, $scope, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover, $state, $timeout, $http, $ionicLoading, locals) {
     $scope.DataReq = function () {
-
-    var accountId = 5;
     $ionicLoading.show({
       templateUrl:"templates/loading.html",
       content: 'Loading',
@@ -207,171 +123,90 @@ angular.module('starter.controllers', ['WifiServices'])
       maxWidth: 200,
       showDelay: 0
     });
-
     console.log(locals.get("cust_id",""));
     if (!locals.get("cust_id",""))
       $state.go("app.login"); 
 
-    //用户信息 dc接口
-    var apibranch = '/account/detail';
-    var reqd = {"cust_id":$scope.global.cust_id};
-    var req = httpReqGen(apibranch,reqd);
-
-    var deferred = $q.defer();
-    $http(req).then(function(response) {
-      var ssss = response;
-      var resData = "";
-      if(response.status == 200){
-        var resData = $.parseJSON(response.data.result);
-        var objectData = resData.data;
-        $scope.newuser = $scope.user;
-        
-        $scope.newuser.Id = objectData.cust_id;
-        $scope.newuser.Name = objectData.name;
-        $scope.newuser.Email = objectData.email;
-        $scope.newuser.Phone = objectData.phone;
-        $scope.newuser.Tel = objectData.tel;
-        $scope.newuser.EmergMan1 = "";
-        $scope.newuser.EmergMan1Phone ="";
-        $scope.newuser.EmergMan2 = "";
-        $scope.newuser.EmergMan2Phone = "";
-        $scope.newuser.Addr = objectData.address;
-        
-        $scope.user = $scope.newuser;
-      }
-        deferred.resolve();
-    }, function(error) {
-        deferred.reject();
-    });
 
     //主机、节点信息 xw接口
-    var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/' + accountId + '/device';
-    var head = {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Accept': '*/*'
-               };
-    var wreq = httpTESTGen(url,head);           
-    $http(wreq).success(function(data){
-      $scope.DevicesViewModel.devices = null;
-      $scope.DevicesViewModel.devices = data.devices;
-      $scope.UsingDeviceViewModel.device = data.devices[0];
-      if(data.devices[0].status == "OFFLINE"){
-          $scope.UsingDeviceViewModel.device.status = false;
-          $scope.UsingDeviceViewModel.device.titleText = "撤防";
-          $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
-      }
-      else{
-          $scope.UsingDeviceViewModel.device.status = true;
-          $scope.UsingDeviceViewModel.device.titleText = "布防";
-          $scope.UsingDeviceViewModel.device.icon = "ion-locked";
-      }
+    //var url = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/' + accountId + '/device';
+    //var head = {
+    //                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    //                'Accept': '*/*'
+    //           };
+        //var wreq = httpTESTGen(url,head);           
 
-      if (data.devices[0].alertStatus == "SET") {
-          $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正在报警";
-      }
-      else {
-          $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正常连接";
-      }
+        //7-21改为dc接口
+        //首次登录overview是加载默认主机，之后使用UsingDevice仅加载节点信息
+    if ($scope.OverViewViewModel.JustLogin) {
+        var devicelisturl = '/device/list';
+        var devicelistreqd = { "cust_id": $scope.global.cust_id };
+        var devicelistreq = httpReqGen(devicelisturl, devicelistreqd);
 
-      console.log(data.devices);
-
-
-    //主机信息返回后请求节点信息
-      var urls = 'http://t.xinlaihome.cn:8001/api/app/1.0/account/' + accountId + '/device/' + $scope.UsingDeviceViewModel.device.deviceId + '/node';
-      var heads = {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-          'Accept': '*/*'
-      };
-      var wreqs = httpTESTGen(urls, heads);
-        $http(wreqs).success(function (data) {
-          $scope.UsingNodesViewModel.nodes = data.nodes;
-      }).error(function () { });
-    }).error(function () { });
-
-
-
-
-
-
-    //只有在首次登陆后选择默认主机
-    if($scope.OverViewViewModel.JustLogin){
-      $scope.newnode = {};
-      var purchaseDeviceSelect = $ionicPopup.show({
-            template: '<label class="item item-input item-select"><div class="input-label">选择主机</div><select ng-model="newnode.deviceSelect" ng-options="o as o.name for o in DevicesViewModel.devices"></select></label>',
-            title: '请选择要充值的主机',
-            scope: $scope,
-            buttons: [
-              {
-                text: '<b>OK</b>',
-                type: 'button-positive',
-                onTap: function(e) {
-                  return $scope.newnode.deviceSelect;
-                }
-              }
-            ]
-      });
-      purchaseDeviceSelect.then(function(res) {
-            if(res == undefined){
-              $state.go('app.overview');
+        $http(devicelistreq).success(function (data) {
+            var resdata = resResult(data);
+            $scope.DevicesViewModel.devices = null;
+            $scope.DevicesViewModel.devices = resdata;
+            //var newdada = [resdata[0], resdata[0], resdata[0]];
+            //$scope.DevicesViewModel.devices = newdada;
+            $scope.UsingDeviceViewModel.device = resdata[0];
+            if (resdata[0].status == 0) {
+                $scope.UsingDeviceViewModel.device.status = false;
+                $scope.UsingDeviceViewModel.device.titleText = "撤防";
+                $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
             }
-            $scope.CurrentDeviceViewModel.id = res.id;
-            $scope.CurrentDeviceViewModel.name = res.name;         
-      });     
-      $scope.OverViewViewModel.JustLogin = false;   
+            else {
+                $scope.UsingDeviceViewModel.device.status = true;
+                $scope.UsingDeviceViewModel.device.titleText = "布防";
+                $scope.UsingDeviceViewModel.device.icon = "ion-locked";
+            }
+
+            if (resdata[0].alertStatus == 1) {
+                $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正在报警";
+            }
+            else {
+                $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正常连接";
+            }
+
+            //主机信息返回后请求节点信息
+            var nodelisturl = '/node/list';
+            var dvcid = $scope.UsingDeviceViewModel.device.device_id;
+            var nodelistreqd = { "cust_id": $scope.global.cust_id, "device_id": dvcid };
+            var nodelistreq = httpReqGen(nodelisturl, nodelistreqd);
+
+            $http(nodelistreq).success(function (data) {
+                var nodesdata = resResult(data);
+                $scope.NodesViewModel.nodes = nodesdata;
+                $scope.UsingNodesViewModel.nodes = nodesdata;
+            }).error(function () { });
+
+
+        }).error(function () { });
+        $scope.OverViewViewModel.JustLogin = false;
     }
- 
+    else {
+        //主机信息返回后请求节点信息
+        var nodelisturl = '/node/list';
+        var dvcid = $scope.UsingDeviceViewModel.device.device_id;
+        var nodelistreqd = { "cust_id": $scope.global.cust_id, "device_id": dvcid };
+        var nodelistreq = httpReqGen(nodelisturl, nodelistreqd);
 
-    //天气
-     var url = 'http://apis.baidu.com/heweather/weather/free?city=shanghai';
-      var head = {
-                    'apikey':'8c389785a8f4c903b97f64982ed199bb',
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Accept': '*/*'
-               };
-      var wreq = httpTESTGen(url,head);           
-      $http(wreq).success(function(data){
-            var datas = data['HeWeather data service 3.0'][0];
+        $http(nodelistreq).success(function (data) {
+            var nodesdata = resResult(data);
+            $scope.NodesViewModel.nodes = nodesdata;
+            $scope.UsingNodesViewModel.nodes = nodesdata;
+        }).error(function () { });
+    }
 
-            var aqi = datas.aqi.city.aqi;
-            var pm25 = datas.aqi.city.pm25;
-            var pm10 = datas.aqi.city.pm10;
-
-            var code1 = datas.daily_forecast[0].cond.code_d;
-            var desc1 = datas.daily_forecast[0].cond.txt_d;
-            var hum1 = datas.daily_forecast[0].hum;
-            var tmp1min = datas.daily_forecast[0].tmp.min;
-            var tmp1max = datas.daily_forecast[0].tmp.max;
-
-            var code2 = datas.daily_forecast[1].cond.code_d;
-            var desc2 = datas.daily_forecast[1].cond.txt_d;
-            var hum2 = datas.daily_forecast[1].hum;
-            var tmp2min = datas.daily_forecast[1].tmp.min;
-            var tmp2max = datas.daily_forecast[1].tmp.max;
-
-            var result = {
-                    PM25:pm25,  
-                    TodayDesc: desc1,
-                    TodayHum: hum1,
-                    TodayMin: tmp1min,
-                    TodayMax: tmp1max,
-
-                    TomorrowDesc: desc2,
-                    TomorrowHum: hum2,
-                    TomorrowMin: tmp2min,
-                    TomorrowMax: tmp2max,
-                };
-            console.log(result);
-            $scope.weatherObj = result;         
-          }).error(function(){});     
     
     $timeout(function () {
         $ionicLoading.hide();
     }, 500);
 
-        //
+
         //九宫格css
-    //circleCss();
-        //DataReq end
+       //circleCss();
+       //DataReq end
   }
     //toggle用
     $scope.armStatusChange = function () {
@@ -391,7 +226,7 @@ angular.module('starter.controllers', ['WifiServices'])
   $scope.toggleLeft = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
-  $scope.nodeTypeTap = function(route, nodes, detType) {
+  $scope.nodeTypeTap = function(route, detType) {
       //$scope.UsingNodesViewModel.nodes = nodes;
       $scope.UsingNodesViewModel.nodeType = detType;
     $state.go(route);
@@ -489,63 +324,35 @@ angular.module('starter.controllers', ['WifiServices'])
   if (!locals.get("cust_id",""))
     $state.go("app.login"); 
 
-  var requestData = {
-      cust_id: $scope.global.cust_id,
-    };
-  console.log(requestData);
-  var apibranch = '/account/detail';
-  var request = httpReqGen(apibranch,requestData);
 
-  $http(request).then(function(response) {
-      console.log(response);
-      var result = $.parseJSON(response.data.result);
-      if (result.code == 0000){
-          var data = result.data;
-          console.log(data);
-      } else {
-        alert(result.msg);
+  var url = '/account/detail';
+  var reqd = { "cust_id": $scope.global.cust_id};
+  var req = httpReqGen(url, reqd);
+  $http(req).success(function (data) {
+      var validData = resResult(data);
+      if (validData) {
+          $scope.UserViewModel.user = validData;
       }
-    }, function(error) {
-      console.log(error);
-    });
+  }).error(function () { });
+
 
   $scope.setFormScope = function(scope){
     this.formScope = scope;
   }
 
-  $scope.newuser = $scope.user;
+  //$scope.newuser = $scope.user;
   $scope.userSubmit = function() {
-    if(!$scope.newuser.Name) {
-      alert('Username required');
-      return;
-    }
-    var userid = $scope.user.cust_id;
-    var code = getReqNo();
-    var requestdata = '{"cust_id":"' + $scope.newuser.Id + '", "tel":"' +$scope.newuser.Tel +
-                '", "email": "' + $scope.newuser.Email + '", "address": "' + $scope.newuser.Addr +'"}';
-    var reqParam = {
-      code: code,
-      url: 'http://139.196.13.82/xinlai/account/upgrade?req_no=' + code,
-      requestData: requestdata,
-      method: 'POST',
-      };
-    var req = {
-      method: reqParam.method,
-      url: reqParam.url,
-      data: reqParam.requestData
-    };
+      var url = '/account/upgrade';
+      var reqd = { "cust_id": $scope.global.cust_id,"tel":$scope.UserViewModel.user.tel, "email":$scope.UserViewModel.user.email,"address":$scope.UserViewModel.user.address };
+      var req = httpReqGen(url, reqd);
+      $http(req).success(function (data) {
+          var validData = resResult(data);
+          if (validData) {
+              $state.go("app.usersetting");
+          }
+      }).error(function () { });
+      $scope.UserViewModel.user
 
-    var deferred = $q.defer();
-    $http(req).then(function(response) {
-      var resData = "";
-      if(response.status == 200){
-        alert('User Info updated!');
-        $state.go('app.usersetting');
-      }
-        deferred.resolve();
-    }, function(error) {
-        deferred.reject();
-    });
   };
 })
 //子账号 app.subusers subusers.html
@@ -728,21 +535,78 @@ angular.module('starter.controllers', ['WifiServices'])
 /////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////
-//主机设备绑定管理 app.devicemanage devicemanage.html
-.controller('DeviceNodeBindingManageCtrl', function($scope){ 
-})
+
 ////////////////////
 //选择主机 app.deviceselect deviceselect.html
 .controller('DeviceSelectCtrl', function($scope, $state) {
   $scope.data = {};
-  console.log($scope.CurrentDeviceViewModel.name);
+  //console.log($scope.UsingDeviceViewModel.name);
   $scope.init = function(){
     
   }
-  $scope.currentDeviceChange = function(device) {
-    $scope.CurrentDeviceViewModel.id = device.id;
-    $scope.CurrentDeviceViewModel.name = device.name;
+  $scope.currentDeviceChange = function (device) {
+      $scope.UsingDeviceViewModel.device = device;
   };
+})
+//主机管理 app.devicemanage devicemanage.html
+.controller('DeviceMangeCtrl', function ($scope, $state,$http) {
+    $scope.data = {};
+    //console.log($scope.UsingDeviceViewModel.name);
+    $scope.init = function () {
+
+    }
+    $scope.deviceTap = function (route, device) {
+        $scope.Temp.EditingDevice = device;
+        $state.go(route);
+    };
+
+    //通过二维码添加主机
+    $scope.addDevicebyBarcode = function () {
+
+        $cordovaBarcodeScanner.scan().then(function (imageData) {
+
+            var deviceId = imageData.text;
+            var devicename = ""
+            var customerId = $scope.global.cust_id;
+            //添加主机
+            var url = '/device/binding';
+            var dvcid = $scope.UsingDeviceViewModel.device.device_id;
+            var reqd = { "cust_id": customerId, "device_id": deviceId, "device_name": devicename };
+            var req = httpReqGen(url, reqd);
+
+            $http(req).success(function (data) {
+                var validData = resResult(data);
+                if (validData) {
+                    var devicelisturl = '/device/list';
+                    var devicelistreqd = { "cust_id": $scope.global.cust_id };
+                    var devicelistreq = httpReqGen(devicelisturl, devicelistreqd);
+
+                    $http(devicelistreq).success(function (data) {
+                        var resdata = resResult(data);
+                        $scope.DevicesViewModel.devices = null;
+                        $scope.DevicesViewModel.devices = resdata;
+                        //var newdada = [resdata[0], resdata[0], resdata[0]];
+                        //$scope.DevicesViewModel.devices = newdada;
+                        $scope.UsingDeviceViewModel.device = resdata[0];
+                    }).error(function () { });
+                }
+            }).error(function () { });
+
+
+            console.log("Barcode Format -> " + imageData.format);
+
+            console.log("Cancelled -> d" + imageData.cancelled);
+
+        }, function (error) {
+            console.log("An error happened -> " + error);
+        });
+    };
+})
+.controller('DeviceDetailsCtrl', function ($scope, $state) {
+    $scope.temp = { name: $scope.Temp.EditingDevice.device_name, id: $scope.Temp.EditingDevice.device_id };
+    $scope.updateDeviceInfo = function () {
+        var datata = $scope.temp;
+    }
 })
 //添加主机 app.deviceinfo deviceinfo.html
 .controller('addDevice', function($scope) {
@@ -917,6 +781,9 @@ angular.module('starter.controllers', ['WifiServices'])
     }, function(error) {
     });
   }
+  $scope.pageJump = function (route) {
+      $state.go(route);
+  };
 })
 
 //本地存储数据===================================
@@ -1094,5 +961,12 @@ function circleCss() {
         espan.eq(i).css("font-size", ss[1]);
     }
 
+}
+
+function resResult(data) {
+    if (data.result.code == "0000")
+        return data.result.data;
+    else
+        return false;
 }
 

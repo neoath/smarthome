@@ -1,13 +1,19 @@
-        <ion-view title="主机设置">
-            <ion-content class="padding-vertical">
-                <div class="list">
-                    <div class="item item-divider">
-                       添加主机
-                    </div>
-                    <li class="item" on-tap="pageJump('app.deviceinfo')">
-                        添加
-                    </li>
+        <ion-view title="主机设置" ng-controller="DeviceMangeCtrl">
+            <ion-nav-buttons side="right">
+                <a class="button button-icon icon ion-ios7-email-outline" ng-click='add()'></a>
+        </ion-nav-buttons>
+    <ion-content class="padding-vertical">
+        <div class="item item-divider">
+            所有主机
+        </div>
+        <div ng-repeat="device in DevicesViewModel.devices">
+            <label class="item item-radio">
+                <input type="radio" name="group" ng-model="data.currentDevice" ng-value="device.device_name" ng-change="deviceTap('app.devicedetails',device)">
+                <div class="item-content">
+                    <i class="icon ion-person-stalker" ng-hide="device.device_name != UsingDeviceViewModel.device.device_name"></i>
+                    {{device.device_name}}
                 </div>
-                <div class="clearfix"></div>
-            </ion-content>
-        </ion-view>
+            </label>
+        </div>
+    </ion-content>
+</ion-view>

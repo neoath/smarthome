@@ -5,7 +5,7 @@
 			  <div class="item item-avatar">
 			    <img src="/img/doormagnet.jpg">
 			    <h2>当前主机</h2>
-			    <p>{{CurrentDeviceViewModel.name}}</p>
+			    <p>{{UsingDeviceViewModel.device.device_name}}</p>
 			  </div>
 
 			</div>
@@ -14,9 +14,9 @@
                 </div>
                 <div ng-repeat="device in DevicesViewModel.devices">
                     <label class="item item-radio" >
-                            <input type="radio" name="group" ng-model="data.currentDevice"  ng-value="device.name" ng-change="currentDeviceChange(device)">
+                            <input type="radio" name="group" ng-model="data.currentDevice"  ng-value="device.device_name" ng-change="currentDeviceChange(device)">
                             <div class="item-content">
-                                {{device.name}}
+                                {{device.device_name}}
                             </div>
                             <i class="radio-icon ion-checkmark-circled"></i>
                     </label>

@@ -1,50 +1,53 @@
-        <ion-view title="个人信息" ng-controller="updateUser">
+        <ion-view title="账号信息" ng-controller="updateUser">
             <ion-content>
-                <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+                <form name="addUserForm"  data-ng-submit="userSubmit()">
                     <div class="list">
                         <div class="item item-divider">
                             基本信息
                         </div>
                         <label class="item item-input">
-                            <input type="text" placeholder="用户ID" ng-model="newuser.Id">
+                            <input type="text" placeholder="账号" ng-model="UserViewModel.user.cust_id">
                         </label>
                         <label class="item item-input">
-                            <input type="text" placeholder="用户名" ng-model="newuser.Name">
+                            <input type="text" placeholder="姓名" ng-model="UserViewModel.user.name">
                         </label>
                         <label class="item item-input">
-                            <input type="email" placeholder="邮箱" ng-model="newuser.Email">
+                            <input type="email" placeholder="邮箱" ng-model="UserViewModel.user.email">
                         </label>
                         <label class="item item-input">
-                            <input type="text" placeholder="手机号" ng-model="newuser.Phone">
+                            <input type="text" placeholder="手机号码" ng-model="UserViewModel.user.phone">
                         </label>
                         <label class="item item-input">
-                            <input type="text" placeholder="地址" ng-model="newuser.address">
+                            <input type="text" placeholder="地址" ng-model="UserViewModel.user.address">
                         </label>
-                        <div class="item item-divider">
-                            可选信息
-                        </div>
                         <label class="item item-input">
-                            <input type="text" placeholder="主机地址" ng-model="newuser.Addr">
+                            <input type="text" placeholder="主机地址" ng-model="UserViewModel.user.deviceAddress">
                         </label>                        
                         <label class="item item-input">
-                            <input type="text" placeholder="固定电话" ng-model="newuser.Tel">
+                            <input type="text" placeholder="家庭座机" ng-model="UserViewModel.user.tel">
                         </label>
+                        <div class="item item-divider">
+                            紧急联系人1
+                        </div>
                         <label class="item item-input">
-                            <input type="text" placeholder="紧急联系人1" ng-model="newuser.EmergMan1">
+                            <input type="text" placeholder="姓名" ng-model="UserViewModel.user.EmergMan1">
                         </label>    
                         <label class="item item-input">
-                            <input type="text" placeholder="紧急联系人1手机" ng-model="newuser.EmergMan1Phone">
+                            <input type="text" placeholder="紧急联系人1手机号码" ng-model="UserViewModel.user.EmergMan1Phone">
                         </label>  
+                        <div class="item item-divider">
+                            紧急联系人2
+                        </div>
                         <label class="item item-input">
-                            <input type="text" placeholder="紧急联系人2" ng-model="newuser.EmergMan2">
+                            <input type="text" placeholder="姓名" ng-model="UserViewModel.user.EmergMan2">
                         </label>    
                         <label class="item item-input">
-                            <input type="text" placeholder="紧急联系人2手机" ng-model="newuser.EmergMan2Phone">
+                            <input type="text" placeholder="手机号码" ng-model="UserViewModel.user.EmergMan2Phone">
                         </label>   
                     </div>
                     <div class="padding">
                         <button class="button button-balanced button-block">
-                            更新
+                            保存修改
                         </button>
                     </div>
                 </form>

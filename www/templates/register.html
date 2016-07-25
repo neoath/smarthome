@@ -1,26 +1,29 @@
 <ion-modal-view ng-controller="register">
-  <ion-header-bar>
-    <h1 class="title">注册</h1>
-  </ion-header-bar>
-  <ion-content>
+  <ion-content style="background:url('img/bgbg.jpg')">
+      <div><h3 style="text-align:center;padding-top: 20px;">注 册</h3></div>
     <form ng-init="setFormScope(this)" data-ng-submit="submit()">
-      <div class="list text-center col col-center">
-        <label class="item item-input">
+      <label class="list text-center col col-center" style="margin-top: 60px;">
+        <label class="item item-input" style="background: rgba(195, 194, 194, 0.35);border-radius: 10px; margin-top: 18px;">
           <span class="input-label">手机号</span>
           <input type="text" ng-model="registerData.mobileNo">
         </label>
-        <label class="item item-input">
+        <label class="item item-input" style="background: rgba(195, 194, 194, 0.35);border-radius: 10px; margin-top: 18px;">
           <span class="input-label">密码</span>
           <input type="password" ng-model="registerData.password">
         </label>
-        <label class="item item-input">
+        <label class="item item-input" style="background: rgba(195, 194, 194, 0.35);border-radius: 10px; margin-top: 18px;">
           <span class="input-label">验证码</span>
           <input type="text" ng-model="registerData.code">
         </label>
-        <label class="item">
-          <button class="button button-block button-positive" type="submit">注册</button>
+        <label>
+            <input type="checkbox" style="background: transparent;border: none; margin-top: 18px;" />
+            <label style="text-decoration: underline;" ng-click="pageJump('app.politics')">我已阅读并同意服务条款和隐私政策</label>
         </label>
-      </div>
+          <button class="button button-small button-positive" style="margin-top: -40px;">发送验证码</button>
+        <label class="item" style="background: transparent;border:none; margin-top: 25px; ">
+          <button class="button button-block" type="submit" style="background:rgba(195, 194, 194, 0.35);border-radius: 20px;">注册</button>
+        </label>
+      </label>
       <div style="height:100vh;"></div>
     </form>
   </ion-content>
