@@ -3,9 +3,9 @@
         <ion-nav-buttons side="right">
             <button class="button-clear" ng-click="armStatusBtnChange()"><i class="icon" ng-class="UsingDeviceViewModel.device.icon" style="font-size: 22px;color: white;"></i></button>
         </ion-nav-buttons>
-            <ion-content class="padding">
+            <ion-content class="padding" style="padding: 0px;">
 
-                <wrap-owlcarousel class="owl-carousel padding"
+                <wrap-owlcarousel class="owl-carousel "
                                   data-options="{
                             autoPlay: false,
                             slideSpeed : 300,
@@ -59,61 +59,70 @@
                     <div class="blockLine">
                         <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType',  1)" id="megnetDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-magnet blockLine-Icon"></i>
+                                <i class="icon ion-magnet blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">门磁</div>
                         </div>
                         <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType',  2)" id="infraDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-wifi blockLine-Icon"></i>
+                                <i class="icon ion-wifi blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">红外探测</div>
                         </div>
                         <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType',  3)" id="smokeDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-no-smoking blockLine-Icon"></i>
+                                <i class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
                             </div>
-                            <div class="blockLine-Desc">烟雾探测</div>
+                            <div class="blockLine-Desc">水浸</div>
                         </div>
+
                     </div>
                     <div class="blockLine">
                         <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType',  4)" id="gasDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-bonfire blockLine-Icon"></i>
+                                <i class="icon ion-bonfire blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">燃气探测</div>
                         </div>
-                        <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType',  0)" id="eKeyDevices">
+                        <!--<div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType',  0)" id="eKeyDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-locked blockLine-Icon"></i>
+                                <i class="icon ion-locked blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">电子钥匙</div>
+                        </div>-->
+                        <div class="item blockLine-middle" >
+                            <div class="blockLine-IconParent">
+                                <i class="icon ion-record blockLine-Icon" style="color:#57a595;"></i>
+                            </div>
+                            <div class="blockLine-Desc">信来主机</div>
                         </div>
+                        
+                        <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType',  3)" id="smokeDevices">
+                            <div class="blockLine-IconParent">
+                                <i class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
+                            </div>
+                            <div class="blockLine-Desc">烟雾探测</div>
+                        </div>
+
+                    </div>
+                    <div class="blockLine">
                         <div class="item blockLine-right" on-tap="pageJump('app.camera')" id="cameraDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-videocamera blockLine-Icon"></i>
+                                <i class="icon ion-videocamera blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">视频监控</div>
                         </div>
-                    </div>
-                    <div class="blockLine">
-                        <div class="item blockLine-left">
+                        <div class="item blockLine-right" >
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-more blockLine-Icon"></i>
+                                <i class="icon ion-more blockLine-Icon" style="color:#57a595;"></i>
                             </div>
-                            <div class="blockLine-Desc">Reserved</div>
-                        </div>
-                        <div class="item blockLine-middle">
-                            <div class="blockLine-IconParent">
-                                <i class="icon ion-more blockLine-Icon"></i>
-                            </div>
-                            <div class="blockLine-Desc">Reserved</div>
+                            <div class="blockLine-Desc">智能看护</div>
                         </div>
                         <div class="item blockLine-right">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-more blockLine-Icon"></i>
+                                <i class="icon ion-more blockLine-Icon" style="color:#57a595;"></i>
                             </div>
-                            <div class="blockLine-Desc">Reserved</div>
+                            <div class="blockLine-Desc">智能家居</div>
                         </div>
                     </div>
                 </div>

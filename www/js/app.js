@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova', 'WifiServices'])
+angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova', 'WifiServices', 'SmartConfigServices'])
 
 
 .controller('WifiController', ['$scope', 'WifiService', function ($scope, WifiService) {
@@ -23,6 +23,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
 
     $scope.connectWifi = function (name) {
         WifiService.connectionToWifi(name);
+    }
+}])
+.controller('SCController', ['$scope', 'SmartConfigService', function ($scope, SmartConfigService) {
+
+    $scope.startConnect = function () {
+        SmartConfigService.start();
+    }
+    $scope.stopConnect = function () {
+        SmartConfigService.stop();
     }
 }])
 .run(function($ionicPlatform) {
@@ -361,6 +370,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         views: {
             'menuContent': {
                 templateUrl: 'templates/politics.html',
+            }
+        }
+    })
+    .state('app.sc', {
+        url: '/sc',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/sc.html',
             }
         }
     })

@@ -116,13 +116,14 @@
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
-  background: #6c3;
+  background: antiquewhite;
 }
 .owl-theme .owl-controls .owl-page.active span,
 .owl-theme .owl-controls.clickable .owl-page:hover span {
   filter: alpha(opacity=100);
   /*IE7 fix*/
-  opacity: 1;
+  /*opacity: 1;*/
+  background: #6c3;
 }
 /* If PaginationNumbers is true */
 .owl-theme .owl-controls .owl-page span.owl-numbers {
