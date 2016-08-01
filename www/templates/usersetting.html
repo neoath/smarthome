@@ -1,6 +1,9 @@
 <ion-view title="用户" ng-controller="usersetting">
     <ion-content>
-        <form name="addUserForm" ng-init="setFormScope(this)" data-ng-submit="userSubmit()">
+        <div style="padding: 5% 36%; background-color: #70b7a8;">
+            <img style="width: 80px;height: 80px;" src="img/logo.png" />
+            <div style="text-align: center; color: antiquewhite; font-size: 16px; ">Cia_Name</div>
+        </div>
             <div class="list">
                 <div class="item item-divider">
                     设置
@@ -27,7 +30,6 @@
                     关于
                 </li>                
             </div>
-        </form>
         <label class="item">
             <button class="button button-block button-positive" type="submit" ng-click="logout()">退出</button>
         </label>

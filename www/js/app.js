@@ -71,14 +71,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         }
       }
     })
-  .state('app.dashboard.home', {
-      url: "/home",
+  .state('app.dashboard.overview', {
+      url: "/overview",
       views: {
-        'home-tab' :{
-          templateUrl: "templates/home.html"
-        }
+          'overview-tab': {
+              templateUrl: "templates/overview.html"
+          }
       }
-    })
+  })
   .state('app.dashboard.favorites', {
       url: "/favorites",
       views: {
@@ -87,24 +87,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         }
       }
     })
-  .state('app.dashboard.settings', {
-      url: "/settings",
+  .state('app.dashboard.usersetting', {
+      url: "/usersetting",
       views: {
-        'settings-tab' :{
-          templateUrl: "templates/settingss.html"
+          'usersetting-tab': {
+              templateUrl: "templates/usersetting.html"
         }
       }
     })
 
 
-  .state('app.overview', {
-      url: "/overview",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/overview.html"
-        }
-      }
-    })     
+   
   .state('app.arm', {
       url: "/arm",
       views: {
@@ -128,12 +121,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           templateUrl: "templates/camera.html"
         }
       }
-    })  
-  .state('app.addNode', {
-      url: "/add-node",
+  })
+        .state('app.nodes', {
+            url: "/nodes",
+            views: {
+                'menuContent': {
+                    templateUrl: "templates/nodes.html"
+                }
+            }
+        })
+  .state('app.nodeedit', {
+      url: "/nodeedit",
       views: {
         'menuContent' :{
-          templateUrl: "templates/add-node.html"
+            templateUrl: "templates/nodeedit.html"
         }
       }
     })        
@@ -154,14 +155,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         }
       }
     })
-  .state('app.usersetting', {
-      url: "/usersetting",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/usersetting.html"
-        }
-      }
-    })
+  //.state('app.usersetting', {
+  //    url: "/usersetting",
+  //    views: {
+  //      'menuContent' :{
+  //        templateUrl: "templates/usersetting.html"
+  //      }
+  //    }
+  //  })
   .state('app.userinfo', {
       url: "/userinfo",
       views: {
@@ -194,7 +195,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           templateUrl: "templates/settings.html"
         }
       }
-    })
+  })
+  .state('app.messagesetting', {
+      url: "/messagesetting",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/messagesetting.html"
+          }
+      }
+  })
   .state('app.deviceselect', {
       url: "/deviceselect",
       views: {
@@ -383,6 +392,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     })
   ;
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/overview');
+  $urlRouterProvider.otherwise('/app/dashboard/overview');
   $httpProvider.defaults.headers.post['Content-Type'] = 'text/plain;charset=UTF-8';
 });

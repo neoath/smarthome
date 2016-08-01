@@ -1,36 +1,38 @@
-         <ion-view title="版本信息" ng-init="init()" ng-controller="VersionCtrl">
+         <ion-view title="检查更新" ng-init="init()" ng-controller="VersionCtrl">
              <ion-content class="padding" >
-				<div class="item">
+
+                 <div style="padding: 7% 5% 5% 32%;">
+                     <img style="width: 150px;height: 150px;" src="img/logo.png" />
+                 </div>
+                 <div style=" text-align: center; font-size: 22px; color: black;">信来智家</div>
+				<div class="item" style=" margin-top: 40px;">
                    当前版本
                        <span class="item-note">
-                         {{version.CurrentVersion_no}}
+                         {{VersionViewModel.currentVersion.version}}
                        </span>
                 </div>
 
 				        <div class="item">
                    最新版本
                        <span class="item-note">
-                         {{version.LastestVersion_no}}
+                         {{VersionViewModel.version.version_no}}
                        </span>
-                </div>  
-
-                <div class="item">
-                   需要更新
-                       <span class="item-note">
-                         {{version.IsUpdate}}
-                       </span>
-                </div>       
+                </div>      
                 <div class="item">
                    安装包更新时间
                        <span class="item-note">
-                         {{version.UpdateTime}}
+                         {{VersionViewModel.version.public_time}}
                        </span>
                 </div>    
                 <div class="item">
                    更新说明
                        <span class="item-note">
-                         {{version.UpdateContent}}
+                         {{VersionViewModel.version.update_content}}
                        </span>
-                </div>                                                      
+                </div>                   
+                                             
              </ion-content>
+             <div class="bar bar-footer">
+                 <div class="title" style=" font-size: 11px;">Copyright © 2016-2023 Xinlaihome. All Rights Reserved.</div>
+             </div>
          </ion-view>
