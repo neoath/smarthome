@@ -75,8 +75,8 @@
     <script id="templates/dashboard.html" type="text/ng-template">
         <ion-view title="" >
             <ion-tabs class="nav-title-slide-ios7 tabs-striped tabs-icon-top tabs-bottom tabs-background-light tabs-balanced" animation="none">
-                <ion-tab title="Favorites" icon-on="ion-ios7-star" icon-off="ion-ios7-star-outline" href="#/app/dashboard/favorites">
-                    <ion-nav-view name="favorites-tab"></ion-nav-view>
+                <ion-tab title="Messages" icon-on="ion-ios7-star" icon-off="ion-ios7-star-outline" href="#/app/dashboard/messages">
+                    <ion-nav-view name="messages-tab"></ion-nav-view>
                 </ion-tab>
                 <ion-tab title="Home" icon-on="ion-ios7-home" icon-off="ion-ios7-home-outline" href="#/app/dashboard/overview">
                     <ion-nav-view name="overview-tab"></ion-nav-view>
@@ -87,10 +87,25 @@
             </ion-tabs>
         </ion-view>
     </script>
-    <script id="templates/favorites.html" type="text/ng-template">
-        <ion-view title="Favorites">
-            <ion-content>
-
+    <script id="templates/messages.html" type="text/ng-template">
+        <ion-view title="消息通知" ng-controller="MessagesCtrl" ng-init="messageInit()">
+            <ion-content class="padding">
+                <div ng-if="MessageViewModel.messages.length === 0 || MessageViewModel.messages == null">
+                    <h5 class="text-center">No Message Info</h5>
+                </div>
+                <div ng-if="MessageViewModel.messages.length != 0" ng-repeat="message in MessageViewModel.messages">
+                    <div ng-if="message.id != null">
+                        <div class="list">
+                            <div class="item item-icon-left">
+                                <i class="icon ion-flame"></i>
+                                {{message.xxx}} :{{message.xxx2}}
+                                <span class="item-note">
+                                    {{message.xxx3}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </ion-content>
         </ion-view>
     </script>
@@ -127,7 +142,7 @@
                 </wrap-owlcarousel>
 
                 <div class="card">
-                    <div class="item">
+                    <div class="item" id="alarmDesc">
                         {{UsingDeviceViewModel.device.deviceStatus}}
                         <span class="item-note" on-tap="pageJump('app.deviceselect')">
                             切换主机
@@ -155,19 +170,19 @@
                     <div class="blockLine">
                         <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType',  '我的门磁',1)" id="megnetDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-magnet blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="megnetCore" class="icon ion-magnet blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">门磁</div>
                         </div>
                         <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', '我的红外监测',2)" id="infraDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-wifi blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="infraCore" class="icon ion-wifi blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">红外探测</div>
                         </div>
                         <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的水浸',5)" id="smokeDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="waterCore" class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">水浸</div>
                         </div>
@@ -176,7 +191,7 @@
                     <div class="blockLine">
                         <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', '我的燃气探测',4)" id="gasDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-bonfire blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="gasCore" class="icon ion-bonfire blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">燃气探测</div>
                         </div>
@@ -194,7 +209,7 @@
 
                         <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的烟雾探测',3)" id="smokeDevices">
                             <div class="blockLine-IconParent">
-                                <i class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="smokeCore" class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
                             </div>
                             <div class="blockLine-Desc">烟雾探测</div>
                         </div>
@@ -255,9 +270,7 @@
                         <li class="item " on-tap="pageJump('app.subusers')">
                             <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>支付业务</span>
                         </li>
-                        <li class="item " on-tap="pageJump('app.subusers')">
-                            <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>联系客服</span>
-                        </li>
+                        
                         <li class="item " on-tap="pageJump('app.changepassword')">
                             <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>密码修改</span>
                         </li>
@@ -266,6 +279,9 @@
                         </li>
                         <li class="item " on-tap="pageJump('app.about')">
                             <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>关于</span>
+                        </li>
+                        <li class="item " on-tap="pageJump('app.maintanance')">
+                            <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>故障报修</span>
                         </li>
                     </div>
                 <div class="padding">

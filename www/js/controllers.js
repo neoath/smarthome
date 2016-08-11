@@ -56,7 +56,8 @@ angular.module('starter.controllers', ['WifiServices'])
 
     //报警节点
     $scope.AlarmsViewModel = {
-        nodes: null
+        nodes: null,
+        desc:null
     };
     //正在编辑主机、节点类
     $scope.Temp = {
@@ -183,6 +184,13 @@ angular.module('starter.controllers', ['WifiServices'])
                         var alarmsdata = resResult(data);
                         //AlarmsViewModel.nodes 当前主机下所有报警节点
                         $scope.AlarmsViewModel.nodes = alarmsdata;
+
+                        //首页设备报警颜色
+                        alarmCoreJudge(alarmsdata);
+
+                        //报警概要
+                        alarmDescGen(alarmsdata);
+
                     }).error(function () {
                         alert("节点报警信息Error，服务器请求故障");
                     });
@@ -230,7 +238,32 @@ angular.module('starter.controllers', ['WifiServices'])
                 $scope.NodesViewModel.nodes = nodesdata;
                 //UsingNodesViewModel.nodes 正在使用的当前主机下所有节点
                 $scope.UsingNodesViewModel.nodes = nodesdata;
-            }).error(function () { });
+
+
+                //节点信息返回后请求报警信息
+                var alarmurl = '/device/alert';
+                var dvid = $scope.UsingDeviceViewModel.device.device_id;
+                var alarmreqd = { "cust_id": $scope.global.cust_id, "device_id": dvid };
+                var alarmreq = httpReqGen(alarmurl, alarmreqd);
+
+                $http(alarmreq).success(function (data) {
+                    //取返回值有效data
+                    var alarmsdata = resResult(data);
+                    //AlarmsViewModel.nodes 当前主机下所有报警节点
+                    $scope.AlarmsViewModel.nodes = alarmsdata;
+
+                    //首页设备报警颜色
+                    alarmCoreJudge(alarmsdata);
+
+                    //报警概要
+                    alarmDescGen(alarmsdata);
+                    
+                }).error(function () {
+                    alert("节点报警信息Error，服务器请求故障");
+                });
+            }).error(function () {
+                alert("服务器请求故障");
+            });
         }
 
     
@@ -534,6 +567,68 @@ angular.module('starter.controllers', ['WifiServices'])
     $state.go('app.login');
   }
 })
+.controller('MaintananceCtrl', function ($scope, $state, locals) {
+    if (!locals.get("cust_id", ""))
+        $state.go("app.login");
+
+    $scope.init = function () {
+        alert("报修借口未实现");
+    }
+    $scope.GuestSevice = { Maintanance: null };
+
+    $scope.maintananceSubmit = function () {
+        alert(locals.get("cust_id", ""));
+        //报修申请
+
+        //var url = '';
+        //var reqd = { };
+        //var req = httpReqGen(url, reqd);
+
+        //$http(req).success(function (data) {
+        //    //取返回值有效data
+        //    if (data.result.code == "0000") {
+        //        alert("报修已提交");
+        //        $state.go("app.nodes");
+        //    }
+        //    else
+        //        alert(data.result.msg);
+        //}).error(function () {
+        //    alert("服务器请求故障");
+        //});
+
+    }
+})
+
+.controller('MessagesCtrl', function ($scope, $state, locals) {
+    if (!locals.get("cust_id", ""))
+        $state.go("app.login");
+
+    $scope.MessageViewModel = { messages: null };
+
+    $scope.messageInit = function () {
+
+        alert("消息接口未提供");
+
+        ////获取MessageList
+        //var url = 'xxxxx';
+        //var reqd = {};
+        //var req = httpReqGen(url, reqd);
+
+        //$http(req).success(function (data) {
+        //    //取返回值有效data
+        //    if (data.result.code == "0000") {
+        //        $scope.MessageViewModel = data;
+        //    }
+        //    else
+        //        alert(data.result.msg);
+        //}).error(function () {
+        //    alert("服务器请求故障");
+        //});
+
+    }
+
+})
+
 /////////////////////////////////////////////////       
 //个人信息 app.userinfo userinfo.html
 .controller('updateUser', function($scope, $q, $http, $state, locals) {
@@ -1087,43 +1182,43 @@ angular.module('starter.controllers', ['WifiServices'])
 //登录
 .controller('login', function($scope, $ionicSlideBoxDelegate, $ionicPopup, $http, $state, locals) {
   $scope.loginData = {};
-  $scope.login = function() {
-    if(!$scope.loginData.username) {
-      alert('请输入用户名。');
-      return;
-    }
-    if(!$scope.loginData.password) {
-      alert('请输入密码。');
-      return;
-    }
-    var requestData = {
-      phone: $scope.loginData.username,
-      login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
-    };
-
-  var apibranch = '/account/login';
-  var request = httpReqGen(apibranch,requestData);
-
-  $http(request).then(function(response) {
-      console.log(response);
-      var result = response.data.result;
-      if (result.code == 0000){
-        $scope.global.cust_id = result.data.cust_id;
-
-        //存储数据
-        locals.set("username",requestData.phone);
-        locals.set("cust_id", result.data.cust_id);
-        //读取数据
-        console.log(locals.get("username",""));
-        console.log(locals.get("cust_id",""));
-        $scope.OverViewViewModel.JustLogin = true;
-        $state.go('app.dashboard.overview');
-      } else {
-        alert(result.msg);
+  $scope.login = function () {
+      if (!$scope.loginData.username) {
+          alert('请输入用户名。');
+          return;
       }
-    }, function(error) {
-      console.log(error);
-    });
+      if (!$scope.loginData.password) {
+          alert('请输入密码。');
+          return;
+      }
+      var requestData = {
+          phone: $scope.loginData.username,
+          login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
+      };
+
+      var apibranch = '/account/login';
+      var request = httpReqGen(apibranch, requestData);
+
+      $http(request).then(function (response) {
+          console.log(response);
+          var result = response.data.result;
+          if (result.code == 0000) {
+              $scope.global.cust_id = result.data.cust_id;
+
+              //存储数据
+              locals.set("username", requestData.phone);
+              locals.set("cust_id", result.data.cust_id);
+              //读取数据
+              console.log(locals.get("username", ""));
+              console.log(locals.get("cust_id", ""));
+              $scope.OverViewViewModel.JustLogin = true;
+              $state.go('app.dashboard.overview');
+          } else {
+              alert(result.msg);
+          }
+      }, function (error) {
+          console.log(error);
+      });
   }
   $scope.nextSlide = function() {
     $ionicSlideBoxDelegate.next();
@@ -1268,4 +1363,57 @@ function startModal($ionicLoading) {
         maxWidth: 200,
         showDelay: 0
     });
+}
+
+//首页报警颜色显示
+function alarmCoreJudge(alarmdata) {
+    //门磁
+    if (alarmdata.xxxxxx) {
+        $('#megnetCore').css("color", "#d43838");
+    }
+    else
+        $('#megnetCore').css("color", "#57a595");
+
+    //红外
+    if (alarmdata.xxxxxx) {
+        $('#infraCore').css("color", "#d43838");
+    }
+    else
+        $('#infraCore').css("color", "#57a595");
+
+    //水浸
+    if (alarmdata.xxxxxx) {
+        $('#waterCore').css("color", "#d43838");
+    }
+    else
+        $('#waterCore').css("color", "#57a595");
+
+    //燃气
+    if (alarmdata.xxxxxx) {
+        $('#gasCore').css("color", "#d43838");
+    }
+    else
+        $('#gasCore').css("color", "#57a595");
+
+    //烟雾
+    if (alarmdata.xxxxxx) {
+        $('#smokeCore').css("color", "#d43838");
+    }
+    else
+        $('#smokeCore').css("color", "#57a595");
+}
+
+//首页报警概要
+function alarmDescGen(alarmdata) {
+    //生成desc规则 
+    var desc = alarmdata;
+    $scope.AlarmsViewModel.desc = desc;
+
+    //alarm概述字体颜色
+    if (alarmdata.xxx) {
+        $('#alarmDesc').css("color", "#d43838");
+    }
+    else {
+        $('#alarmDesc').css("color", "#57a595");
+    }
 }

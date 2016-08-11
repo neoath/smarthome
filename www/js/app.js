@@ -79,11 +79,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           }
       }
   })
-  .state('app.dashboard.favorites', {
-      url: "/favorites",
+  .state('app.dashboard.messages', {
+      url: "/messages",
       views: {
-        'favorites-tab' :{
-          templateUrl: "templates/favorites.html"
+          'messages-tab': {
+              templateUrl: "templates/messages.html"
         }
       }
     })
@@ -387,6 +387,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         views: {
             'menuContent': {
                 templateUrl: 'templates/sc.html',
+            }
+        }
+    })
+    .state('app.maintanance', {
+        url: '/maintanance',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/maintanance.html',
             }
         }
     })
