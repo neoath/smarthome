@@ -47,6 +47,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
       StatusBar.styleDefault();
     }
 
+    //启动极光推送服务
+    window.plugins.jPushPlugin.init();
+    //调试模式
+    window.plugins.jPushPlugin.setDebugMode(true);
     // navigator.splashscreen.hide();
   });
 })
@@ -228,6 +232,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           }
       }
   })
+  .state('app.deviceedit', {
+      url: "/deviceedit",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/deviceedit.html"
+          }
+      }
+  })
+    
   .state('app.deviceinfo', {
       url: "/deviceinfo",
       views: {
@@ -259,7 +272,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           templateUrl: "templates/alarm.html"
         }
       }
-    })
+  })
+  .state('app.alarmdetail', {
+      url: "/alarmdetail",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/alarmdetail.html"
+          }
+      }
+  })
   .state('app.purchasedevices', {
       url: "/purchasedevices",
       views: {

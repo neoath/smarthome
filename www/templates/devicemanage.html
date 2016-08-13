@@ -8,10 +8,10 @@
         </div>
         <div ng-repeat="device in DevicesViewModel.devices">
             <div class="item" style="line-height: 2;">
-                <div class="item-content" style="float: left;">
+                <div class="item-content" style="float: left;" on-tap="editDevice(device)">
                     {{device.device_name}}<span ng-hide="device.device_name != UsingDeviceViewModel.device.device_name">【当前主机】</span>
                 </div>
-                <button class="item-note button button-balanced button-small" on-tap="pageJump('app.deviceselect')" style="float: right;border-color: #57a595;background-color: #57a595;">
+                <button class="item-note button button-balanced button-small" on-tap="pageJump('app.devicedetails')" style="float: right;border-color: #57a595;background-color: #57a595;">
                     主机详情
                 </button>
             </div>
