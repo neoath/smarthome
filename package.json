@@ -28,8 +28,8 @@
       "locator": "C:\\Sari\\Proj\\SmartHouse\\jpush-phonegap-plugin",
       "id": "jpush-phonegap-plugin"
     },
-    "cordova-plugin-vibration",
-    "cordova-sqlite-storage"
+    "cordova-sqlite-storage",
+    "cordova-plugin-vibration"
   ],
   "cordovaPlatforms": [
     "android"
