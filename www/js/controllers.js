@@ -121,6 +121,7 @@ angular.module('starter.controllers', ['WifiServices'])
             $state.go("app.login"); 
        
 
+        $ionicSideMenuDelegate.canDragContent(true);
         //////////////////////////更新devicelist 2 ViewModel///////////////////////////////
         var devicelisturl = '/device/list';
         var devicelistreqd = { "cust_id": $scope.global.cust_id };
@@ -510,7 +511,7 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //用户 app.usersetting usersetting.html
-.controller('usersettingCtrl', function($scope, $state, locals) {
+.controller('usersettingCtrl', function ($scope, $state, locals, $ionicSideMenuDelegate) {
   if (!locals.get("cust_id",""))
     $state.go("app.login"); 
 
@@ -519,7 +520,8 @@ angular.module('starter.controllers', ['WifiServices'])
     //存储数据
     locals.set("username","0");
     locals.set("cust_id", "0");
-    console.log('cust_id: ' + locals.get("cust_id",""));
+    console.log('cust_id: ' + locals.get("cust_id", ""));
+    $ionicSideMenuDelegate.canDragContent(false);
     $state.go('app.login');
   }
 })
@@ -1029,7 +1031,6 @@ angular.module('starter.controllers', ['WifiServices'])
 //主机网络连接管理 app.devicenetwork devicenetwork.html
 .controller('DeviceNetworkCtrl', function($scope){ 
   $scope.init = function(){
-    alert("主机网络设置接口尚未提供");
   }
 })
 /////////////////////////////////////////////////
@@ -1344,7 +1345,8 @@ angular.module('starter.controllers', ['WifiServices'])
   }])
 
 //登录
-.controller('login', function($scope, $ionicSlideBoxDelegate, $ionicPopup, $http, $state, locals) {
+.controller('login', function ($scope, $ionicSlideBoxDelegate, $ionicPopup, $http, $state, locals, $ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
   $scope.loginData = {};
   $scope.login = function () {
       if (!$scope.loginData.username) {
@@ -1442,7 +1444,7 @@ function httpReqGen(apibranch,reqData){
 }
 function httpReqGETGen(apibranch){
     var code = getReqNo();
-    var url = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
+    var url = 'http://t.xinlaihome.cn' + apibranch + '?req_no=' + code;
     return req = {
       headers: {
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',

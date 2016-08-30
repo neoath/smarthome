@@ -25,15 +25,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         WifiService.connectionToWifi(name);
     }
 }])
-.controller('SCController', ['$scope', 'SmartConfigService', function ($scope, SmartConfigService) {
-
-    $scope.startConnect = function () {
-        SmartConfigService.start();
-    }
-    $scope.stopConnect = function () {
-        SmartConfigService.stop();
-    }
-}])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

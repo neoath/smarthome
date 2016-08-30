@@ -1,5 +1,5 @@
         <ion-side-menus>
-            <ion-side-menu-content>
+            <ion-side-menu-content drag-content="false">
                 <ion-nav-bar class="bar-light" animation="nav-title-slide-ios7">
                     <ion-nav-back-button class="button-icon ion-arrow-left-c">
                     </ion-nav-back-button>
@@ -12,8 +12,8 @@
                 </ion-nav-buttons>-->
                 <ion-nav-view name="menuContent"></ion-nav-view>
             </ion-side-menu-content>
-            <ion-side-menu expose-aside-when="large">
-                <ion-header-bar class="bar-balanced" style=" border-bottom: 1px solid white;">
+            <ion-side-menu >
+                <ion-header-bar class="bar-balanced" style="border-bottom: 1px solid white;">
                     <h1 class="title">信来智家</h1>
                 </ion-header-bar>
                 <ion-content>
@@ -57,19 +57,20 @@
                             <i class="icon ion-settings"></i>
                             检查更新
                         </a>
-                        
+                        <a menu-close class="item item-icon-left" href="#/app/wifi">
+                            <i class="icon ion-flame"></i>
+                            WIFI
+                        </a>   
+                        <a menu-close class="item item-icon-left" href="#/app/vib">
+                            <i class="icon ion-flame"></i>
+                            紧急
+                        </a>      
                         <!--<a menu-close class="item item-icon-left" href="#/app/notifies">
                             <i class="icon ion-alert"></i>
                             重要通知
                         </a>
-                        <a menu-close class="item item-icon-left" href="#/app/vib">
-                            <i class="icon ion-flame"></i>
-                            紧急
-                        </a>               
-                        <a menu-close class="item item-icon-left" href="#/app/wifi">
-                            <i class="icon ion-flame"></i>
-                            WIFI
-                        </a>              
+         
+           
                         <a menu-close class="item item-icon-left" href="#/app/sc">
                             <i class="icon ion-flame"></i>
                             SC
