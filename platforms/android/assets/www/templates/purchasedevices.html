@@ -1,0 +1,32 @@
+        <ion-view title="主机缴费信息" ng-controller="PurchaseDevicesCtrl">
+            <ion-content class="padding">
+                <div ng-repeat="device in DevicesViewModel.devices">
+                    <div class="list" style="margin-bottom:0px;">
+                      <div class="item">
+                        <h2>{{device.name}}
+                            <span class="item-note">
+                               2016年6月
+                            </span>
+                        </h2>
+                      </div>
+
+                      <div class="item item-body">
+                        <p>
+                        主机账号
+                          <span class="item-note">
+                               {{device.deviceId}}
+                            </span>
+                        </p>
+                        <p>
+                        欠费信息
+                          <span class="item-note">
+                               {{device.isDeleted}}
+                            </span>
+                        </p>
+                        <p>
+                      </div>
+                    </div>
+                    <button class="button button-block button-positive" ng-click="next(device)">为该主机缴费</button>
+                </div>
+            </ion-content>
+        </ion-view>

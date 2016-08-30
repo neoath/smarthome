@@ -1,0 +1,38 @@
+<ion-view title="用户" ng-controller="usersetting">
+    <ion-content>
+        <div style="padding: 5% 36%; background-color: #70b7a8;">
+            <img style="width: 80px;height: 80px;" src="img/logo.png" />
+            <div style="text-align: center; color: antiquewhite; font-size: 16px; ">Cia_Name</div>
+        </div>
+            <div class="list">
+                <div class="item item-divider">
+                    设置
+                </div>
+                <li class="item" on-tap="pageJump('app.userinfo')">
+                    个人信息
+                </li>
+                <li class="item " on-tap="pageJump('app.subusers')">
+                    子账号
+                </li>
+                <div class="item item-divider">
+                    其他
+                </div>
+                <li class="item " on-tap="pageJump('app.changepassword')">
+                    密码修改
+                </li>                        
+                <li class="item " on-tap="pageJump('app.version')">
+                    版本更新信息
+                </li>
+                <li class="item " on-tap="pageJump('app.help')">
+                    帮助
+                </li>
+                <li class="item " on-tap="pageJump('app.about')">
+                    关于
+                </li>                
+            </div>
+        <label class="item">
+            <button class="button button-block button-positive" type="submit" ng-click="logout()">退出</button>
+        </label>
+    </ion-content>
+</ion-view>
+

@@ -1,0 +1,28 @@
+        <ion-view title="我的主机" ng-controller="DeviceMangeCtrl">
+            <ion-nav-buttons side="right">
+                <a class="button button-icon icon ion-ios7-email-outline" ng-click='add()'></a>
+        </ion-nav-buttons>
+    <ion-content class="padding-vertical">
+        <div class="item item-divider">
+            所有主机
+        </div>
+        <div ng-repeat="device in DevicesViewModel.devices">
+            <div class="item" style="line-height: 2;">
+                <div class="item-content" style="float: left;">
+                    {{device.device_name}}<span ng-hide="device.device_name != UsingDeviceViewModel.device.device_name">【当前主机】</span>
+                </div>
+                <button class="item-note button button-balanced button-small" on-tap="pageJump('app.deviceselect')" style="float: right;border-color: #57a595;background-color: #57a595;">
+                    主机详情
+                </button>
+            </div>
+
+
+            <!--<label class="item item-radio">
+                <input type="radio" name="group" ng-model="data.currentDevice" ng-value="device.device_name" ng-change="deviceTap('app.devicedetails',device)">
+                <div class="item-content">
+                    {{device.device_name}}<span ng-hide="device.device_name != UsingDeviceViewModel.device.device_name">【当前主机】</span>
+                </div>
+            </label>-->
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,38 @@
+        <ion-view title="布防" ng-controller="DisarmCtrl">
+            <ion-content class="padding-vertical">
+                    <div ng-repeat="device in DevicesViewModel.devices">
+                        <div class="card">
+                            <div class="item item-avatar">
+                                <img src="img/doormagnet.jpg" />
+                                <h2>{{device.name}}</h2>
+                                <h3>{{device.deviceId}}</h2>
+                            </div>
+                            <div class="item item-icon-left">
+                                <i class="icon ion-flame"></i>
+                                主机状态
+                                <span class="item-note">
+                                    {{device.status}}
+                                </span>
+                            </div>
+                            <div class="item item-icon-left">
+                                <i class="icon ion-flame"></i>
+                                Last HeartBeat
+                                <span class="item-note">
+                                    {{device.lastHeartBeat}}
+                                </span>
+                            </div>                            
+                            <div ng-show="true" class="item item-image">
+                                <div id="sss" style="height: 150px;" data-tap-disabled="true">
+                                    <img src="img/doormagnet.jpg" style="margin-top: -78px;"/>
+                                </div>
+                            </div>
+                            <div>
+                                <ion-toggle ng-model="device.armStatus" >
+                                        布防
+                                </ion-toggle>
+                            </div>
+                        </div>   
+                        <div class="clearfix"></div>
+                    </div>         
+            </ion-content>
+        </ion-view>

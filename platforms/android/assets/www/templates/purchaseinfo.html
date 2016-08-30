@@ -1,0 +1,77 @@
+        <ion-view title="支付信息" ng-init="init()" ng-controller="PurchaseCtrl">
+            <ion-content class="padding">
+             <div class="list card">
+
+			  <div class="item">
+			    <h2>￥60.00
+			    	<span class="item-note">
+                       2016年6月
+                    </span>
+			    </h2>
+			  </div>
+
+			  <div class="item item-body">
+			    <p>
+			    缴费单位
+			      <span class="item-note">
+                       收款账户
+                    </span>
+			    </p>
+			    <p>
+			    主机账号
+			      <span class="item-note">
+                       {{PurchasingDevice.device.deviceId}}
+                    </span>
+			    </p>
+			    <p>
+			    客户姓名
+			      <span class="item-note">
+                       客户{{PurchasingDevice.device.accountId}}
+                    </span>
+			    </p>
+			    <p>
+			    创建时间
+			      <span class="item-note">
+                       {{PurchasingDevice.device.createAt}}
+                    </span>
+			    </p>
+			  </div>
+
+			</div>
+
+            <button class="button button-block button-positive" ng-click="next()">立即缴费</button>
+
+            <div class="card">
+				<div class="item item-divider">
+	                详情
+	            </div>
+	            <div class="item item-text-wrap">支付详情介绍
+				</div>
+			</div>				
+			<div class="card">
+				<div class="item item-divider">
+                	须知
+            	</div>
+	            <p class="item item-text-wrap">用户须知
+				</p>
+			</div>	
+			<div class="card">
+				<div class="item item-divider">
+	                通知
+	            </div>
+	            <p class="item item-text-wrap">最新通知
+				</p>	
+			</div>	
+			<div class="card">
+				<div class="item item-divider">
+	                推广
+	            </div>
+	            <p class="item item-text-wrap">推广信息
+				</p>	
+			</div>									
+                     
+
+		       
+            </ion-content>
+
+        </ion-view>
