@@ -4,8 +4,8 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova', 'WifiServices', 'SmartConfigServices'])
-
+angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova',
+ 'WifiServices'])
 
 .controller('WifiController', ['$scope', 'WifiService', function ($scope, WifiService) {
 
@@ -25,25 +25,69 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         WifiService.connectionToWifi(name);
     }
 }])
-.run(function($ionicPlatform) {
+
+// .run(function($ionicPlatform) {
+//   $ionicPlatform.ready(function() {
+//     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+//     // for form inputs)
+//     if (window.cordova && window.cordova.plugins.Keyboard) {
+//       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+//       cordova.plugins.Keyboard.disableScroll(true);
+//     }
+//     if (window.StatusBar) {
+//       // org.apache.cordova.statusbar required
+//       StatusBar.styleDefault();
+//     }
+
+//     //启动极光推送服务
+//     window.plugins.jPushPlugin.init();
+//     //调试模式
+//     window.plugins.jPushPlugin.setDebugMode(true);
+//   });
+// })
+
+.run(function($ionicPlatform,$state,jpushService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
+    if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
     }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
+    if(window.StatusBar) {
       StatusBar.styleDefault();
     }
 
-    //启动极光推送服务
-    window.plugins.jPushPlugin.init();
-    //调试模式
-    window.plugins.jPushPlugin.setDebugMode(true);
-    // navigator.splashscreen.hide();
+    //推送初始化
+    var setTagsWithAliasCallback = function(event){
+      window.alert('result code:'+event.resultCode+' tags:'+event.tags+' alias:'+event.alias);
+    }
+    var openNotificationInAndroidCallback=function(data){
+      var json=data;
+      window.alert(json);
+      if(typeof data === 'string'){
+        json=JSON.parse(data);
+      }
+      var id=json.extras['cn.jpush.android.EXTRA'].id;
+      window.alert(id);
+      $state.go('alarm');
+      // $state.go('detail',{id:id});
+    }
+    var config={
+      stac:setTagsWithAliasCallback,
+      oniac:openNotificationInAndroidCallback
+    };
+    
+    jpushService.init(config);
   });
+
+  window.onerror = function(msg, url, line) {  
+   var idx = url.lastIndexOf("/");  
+   if(idx > -1) {  
+    url = url.substring(idx+1);  
+   }  
+   alert("ERROR in " + url + " (line #" + line + "): " + msg);  
+   return false;  
+  };
 })
 
 .config(function($stateProvider,$urlRouterProvider,$httpProvider) {
@@ -223,15 +267,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           }
       }
   })
-  .state('app.deviceedit', {
-      url: "/deviceedit",
-      views: {
-          'menuContent': {
-              templateUrl: "templates/deviceedit.html"
-          }
-      }
-  })
-    
   .state('app.deviceinfo', {
       url: "/deviceinfo",
       views: {
@@ -263,15 +298,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           templateUrl: "templates/alarm.html"
         }
       }
-  })
-  .state('app.alarmdetail', {
-      url: "/alarmdetail",
-      views: {
-          'menuContent': {
-              templateUrl: "templates/alarmdetail.html"
-          }
-      }
-  })
+    })
   .state('app.purchasedevices', {
       url: "/purchasedevices",
       views: {

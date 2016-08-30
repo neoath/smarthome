@@ -1,37 +1,24 @@
         <ion-view title="主机信息" ng-init="init()" ng-controller="DeviceDetailsCtrl">
-            <ion-content>           
+            <ion-content>
+                <form name="addSensorForm" ng-init="setFormScope(this)" data-ng-submit="nodeSubmit()">
                     <div class="list" style="background:#ffffff;">
                         <div class="item item-divider">
                             主机信息
                         </div>
                         <label class="item item-input item-stacked-label">
-                            <span class="input-label">布防状态</span>
-                            <input type="text" placeholder="Name" ng-model="thidDetailModel.device.alert_status">
-                        </label>
-                        <label class="item item-input item-stacked-label">
                             <span class="input-label">主机名称</span>
-                            <input type="text" placeholder="Name" ng-model="thidDetailModel.device.device_name">
-                        </label>
-                        <label class="item item-input item-stacked-label">
-                            <span class="input-label">最新数据时间</span>
-                            <input type="text" placeholder="Name" ng-model="thidDetailModel.device.last_hearbeat">
-                        </label>
-                        <label class="item item-input item-stacked-label">
-                            <span class="input-label">过期时间</span>
-                            <input type="text" placeholder="Name" ng-model="thidDetailModel.device.expire_time">
-                        </label>
-                        <label class="item item-input item-stacked-label">
-                            <span class="input-label">主机地址</span>
-                            <input type="text" placeholder="Name" ng-model="thidDetailModel.device.device_addr">
+                            <input type="text" placeholder="Name" ng-model="temp.name">
                         </label>
                         <label class="item item-input item-stacked-label">
                             <span class="input-label">主机ID</span>
-                            <input type="text" placeholder="Name" ng-model="thidDetailModel.device.id">
-                        </label>
-                        <label class="item item-input item-stacked-label">
-                            <span class="input-label">连接状态</span>
-                            <input type="text" placeholder="Name" ng-model="thidDetailModel.device.status">
+                            <input type="text" placeholder="id" ng-model="temp.id" />
                         </label>
                     </div>
+                    <div class="padding">
+                        <button class="button button-balanced button-block" ng-click="updateDeviceInfo()" style="border-color: #57a595;background-color: #57a595;">
+                            保存修改
+                        </button>
+                    </div>
+                </form>
             </ion-content>
         </ion-view>

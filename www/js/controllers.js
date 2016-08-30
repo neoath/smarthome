@@ -57,8 +57,7 @@ angular.module('starter.controllers', ['WifiServices'])
     //报警节点
     $scope.AlarmsViewModel = {
         nodes: null,
-        desc: null,
-        alarmdetail: null
+        desc:null
     };
     //正在编辑主机、节点类
     $scope.Temp = {
@@ -120,44 +119,116 @@ angular.module('starter.controllers', ['WifiServices'])
         if (locals.get("cust_id","0") == "0")
             $state.go("app.login"); 
        
-
         $ionicSideMenuDelegate.canDragContent(true);
         //////////////////////////更新devicelist 2 ViewModel///////////////////////////////
         var devicelisturl = '/device/list';
         var devicelistreqd = { "cust_id": $scope.global.cust_id };
         var devicelistreq = httpReqGen(devicelisturl, devicelistreqd);
 
-        $http(devicelistreq).success(function (data) {
-            //取返回值有效data
-            var resdata = resResult(data);
-            //DevicesViewModel.devices 用户下所有主机
-            $scope.DevicesViewModel.devices = null;
-            $scope.DevicesViewModel.devices = resdata;
-            //UsingDeviceViewModel.device 当前使用主机
-            $scope.UsingDeviceViewModel.device = resdata[0];
-            //布防状态alert_status 1布防 0撤防
-            if (resdata[0].alert_status == 0) {
-                $scope.UsingDeviceViewModel.device.status = false;
-                $scope.UsingDeviceViewModel.device.titleText = "撤防";
-                $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
-            }
-            else {
-                $scope.UsingDeviceViewModel.device.status = true;
-                $scope.UsingDeviceViewModel.device.titleText = "布防";
-                $scope.UsingDeviceViewModel.device.icon = "ion-locked";
-            }
+        //首次登录overview是加载默认主机，之后使用UsingDevice仅加载节点信息
+        if ($scope.OverViewViewModel.JustLogin) {
+            var devicelisturl = '/device/list';
+            var devicelistreqd = { "cust_id": $scope.global.cust_id };
+            var devicelistreq = httpReqGen(devicelisturl, devicelistreqd);
 
-            //状态status 1在线 0掉线
-            if (resdata[0].alertStatus == 1) {
-                $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正在正常运行";
-                $('#cubicCore').css("background-color", "#57a595");
-            }
-            else {
-                $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机已掉线";
-                $('#cubicCore').css("background-color", "#d43838");
-            }
+            $http(devicelistreq).success(function (data) {
+                //取返回值有效data
+                var resdata = resResult(data);
+                //DevicesViewModel.devices 用户下所有主机
+                $scope.DevicesViewModel.devices = null;
+                $scope.DevicesViewModel.devices = resdata;
+                //UsingDeviceViewModel.device 当前使用主机
+                $scope.UsingDeviceViewModel.device = resdata[0];
+                //布防状态alert_status 1布防 0撤防
+                if (resdata[0].alert_status == 0) {
+                    $scope.UsingDeviceViewModel.device.status = false;
+                    $scope.UsingDeviceViewModel.device.titleText = "撤防";
+                    $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
+                }
+                else {
+                    $scope.UsingDeviceViewModel.device.status = true;
+                    $scope.UsingDeviceViewModel.device.titleText = "布防";
+                    $scope.UsingDeviceViewModel.device.icon = "ion-locked";
+                }
+
+                //状态status 1在线 0掉线
+                if (resdata[0].alertStatus == 1) {
+                    $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正在正常运行";
+                    $('#cubicCore').css("background-color", "#57a595");
+                }
+                else {
+                    $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机已掉线";
+                    $('#cubicCore').css("background-color", "#d43838");
+                }
 
 
+                //主机信息返回后请求节点信息
+                var nodelisturl = '/node/list';
+                var dvcid = $scope.UsingDeviceViewModel.device.device_id;
+                var nodelistreqd = { "cust_id": $scope.global.cust_id, "device_id": dvcid };
+                var nodelistreq = httpReqGen(nodelisturl, nodelistreqd);
+
+                $http(nodelistreq).success(function (data) {
+                    //取返回值有效data
+                    var nodesdata = resResult(data);
+                    //NodesViewModel.nodes 当前主机下所有节点
+                    $scope.NodesViewModel.nodes = nodesdata;
+                    //UsingNodesViewModel.nodes 正在使用的当前主机下所有节点
+                    $scope.UsingNodesViewModel.nodes = nodesdata;
+
+
+                    //节点信息返回后请求报警信息
+                    var alarmurl = '/device/alert';
+                    var dvid = $scope.UsingDeviceViewModel.device.device_id;
+                    var alarmreqd = { "cust_id": $scope.global.cust_id, "device_id": dvid };
+                    var alarmreq = httpReqGen(alarmurl, alarmreqd);
+
+                    $http(alarmreq).success(function (data) {
+                        //取返回值有效data
+                        var alarmsdata = resResult(data);
+                        //AlarmsViewModel.nodes 当前主机下所有报警节点
+                        $scope.AlarmsViewModel.nodes = alarmsdata;
+
+                        //首页设备报警颜色
+                        alarmCoreJudge(alarmsdata);
+
+                        //报警概要
+                        alarmDescGen(alarmsdata);
+
+                    }).error(function () {
+                        alert("节点报警信息Error，服务器请求故障");
+                    });
+                }).error(function () {
+                    alert("服务器请求故障");
+                });
+            }).error(function () {
+                alert("服务器请求故障");
+            });
+
+
+            //加载TempToggle配置文件
+            var n_versionStr = locals.get("n_version", "false");
+            if (n_versionStr == "false")
+                $scope.TempToggle.notifyVersion = false;
+            else
+                $scope.TempToggle.notifyVersion = true;
+
+            var n_vibStr = locals.get("n_vib", "false");
+            if (n_vibStr == "false")
+                $scope.TempToggle.notifyVib = false;
+            else
+                $scope.TempToggle.notifyVib = true;
+
+            var n_pushStr = locals.get("n_push", "false");
+            if (n_pushStr == "false")
+                $scope.TempToggle.notifyPush = false;
+            else
+                $scope.TempToggle.notifyPush = true;
+            //
+            $scope.OverViewViewModel.JustLogin = false;
+        }
+            //其他出跳转overview 不加载默认主机，当前主机已在其他出更新、只更新当前主机下的节点
+        else {
             //主机信息返回后请求节点信息
             var nodelisturl = '/node/list';
             var dvcid = $scope.UsingDeviceViewModel.device.device_id;
@@ -190,39 +261,15 @@ angular.module('starter.controllers', ['WifiServices'])
 
                     //报警概要
                     alarmDescGen(alarmsdata);
-
+                    
                 }).error(function () {
                     alert("节点报警信息Error，服务器请求故障");
                 });
             }).error(function () {
                 alert("服务器请求故障");
             });
-        }).error(function () {
-            alert("服务器请求故障");
-        });
+        }
 
-
-        //加载TempToggle配置文件
-        var n_versionStr = locals.get("n_version", "false");
-        if (n_versionStr == "false")
-            $scope.TempToggle.notifyVersion = false;
-        else
-            $scope.TempToggle.notifyVersion = true;
-
-        var n_vibStr = locals.get("n_vib", "false");
-        if (n_vibStr == "false")
-            $scope.TempToggle.notifyVib = false;
-        else
-            $scope.TempToggle.notifyVib = true;
-
-        var n_pushStr = locals.get("n_push", "false");
-        if (n_pushStr == "false")
-            $scope.TempToggle.notifyPush = false;
-        else
-            $scope.TempToggle.notifyPush = true;
-        //
-        $scope.OverViewViewModel.JustLogin = false;
-        /////////////////////////////////////////////////////////////////////////////
     
 
         //九宫格css
@@ -460,7 +507,7 @@ angular.module('starter.controllers', ['WifiServices'])
             $state.go("app.nodeedit")
         }
         $scope.removeNode = function (editingNode) {
-            //删除节点
+            //修改节点名字
             var url = '/node/delete';
             var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, "node_id": editingNode.node_id };
             var req = httpReqGen(url, reqd);
@@ -525,32 +572,34 @@ angular.module('starter.controllers', ['WifiServices'])
     $state.go('app.login');
   }
 })
-.controller('MaintananceCtrl', function ($scope, $state, locals, $http) {
+.controller('MaintananceCtrl', function ($scope, $state, locals) {
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
 
     $scope.init = function () {
+        alert("报修借口未实现");
     }
     $scope.GuestSevice = { Maintanance: null };
 
     $scope.maintananceSubmit = function () {
-
+        alert(locals.get("cust_id", ""));
         //报修申请
-        var url = '/device/repairs';
-        var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, "contact": $scope.GuestSevice.Maintanance.phone, "describe": $scope.GuestSevice.Maintanance.ErrorDesc, "visiting_time": $scope.GuestSevice.Maintanance.arrivingTime };
-        var req = httpReqGen(url, reqd);
 
-        $http(req).success(function (data) {
-            //取返回值有效data
-            if (data.result.code == "0000") {
-                alert("报修已提交");
-                $state.go("app.nodes");
-            }
-            else
-                alert(data.result.msg);
-        }).error(function () {
-            alert("服务器请求故障");
-        });
+        //var url = '';
+        //var reqd = { };
+        //var req = httpReqGen(url, reqd);
+
+        //$http(req).success(function (data) {
+        //    //取返回值有效data
+        //    if (data.result.code == "0000") {
+        //        alert("报修已提交");
+        //        $state.go("app.nodes");
+        //    }
+        //    else
+        //        alert(data.result.msg);
+        //}).error(function () {
+        //    alert("服务器请求故障");
+        //});
 
     }
 })
@@ -826,11 +875,11 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.init = function () {
 
     }
-    $scope.editDevice = function (device) {
-        $scope.Temp.EditingDevice = null;
+    $scope.deviceTap = function (route, device) {
         $scope.Temp.EditingDevice = device;
-        $state.go('app.deviceedit');
+        $state.go(route);
     };
+
     //通过二维码添加主机
     $scope.addDevicebyBarcode = function () {
 
@@ -873,26 +922,10 @@ angular.module('starter.controllers', ['WifiServices'])
         });
     };
 })
-.controller('DeviceDetailsCtrl', function ($scope, $state, locals, $http) {
-    if (!locals.get("cust_id", ""))
-        $state.go("app.login");
-    $scope.thidDetailModel = { device: null };
-    $scope.init = function () {
-        //修改主机名字
-        var url = '/device/detail';
-        var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id };
-        var req = httpReqGen(url, reqd);
-
-        $http(req).success(function (data) {
-            //取返回值有效data
-            if (data.result.code == "0000") {
-                $scope.thidDetailModel.device = data.result.data;
-            }
-            else
-                alert(data.result.msg);
-        }).error(function () {
-            alert("服务器请求故障");
-        });
+.controller('DeviceDetailsCtrl', function ($scope, $state) {
+    $scope.temp = { name: $scope.Temp.EditingDevice.device_name, id: $scope.Temp.EditingDevice.device_id };
+    $scope.updateDeviceInfo = function () {
+        var datata = $scope.temp;
     }
 })
 //添加主机 app.deviceinfo deviceinfo.html
@@ -900,129 +933,6 @@ angular.module('starter.controllers', ['WifiServices'])
   $scope.init = function(){
     alert("添加主机接口尚未提供");
   }
-})
-
-//编辑主机 app.deviceedit deviceedit.html
-.controller('DeviceEditCtrl', function ($scope, $state, locals, $http) {
-    if (!locals.get("cust_id", ""))
-        $state.go("app.login");
-    $scope.thidEditModel = { device: null };
-    $scope.submitEdit = function () {
-        //修改主机名字
-        var url = '/device/name/update';
-        var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.Temp.EditingDevice.device_id, "device_name": $scope.thidEditModel.device.name };
-        var req = httpReqGen(url, reqd);
-        
-        $http(req).success(function (data) {
-            //取返回值有效data
-            if (data.result.code == "0000") {
-                alert("节点名称已更改");
-                
-                //////////////////////////更新devicelist 2 ViewModel///////////////////////////////
-                var devicelisturl = '/device/list';
-                var devicelistreqd = { "cust_id": $scope.global.cust_id };
-                var devicelistreq = httpReqGen(devicelisturl, devicelistreqd);
-
-                $http(devicelistreq).success(function (data) {
-                    //取返回值有效data
-                    var resdata = resResult(data);
-                    //DevicesViewModel.devices 用户下所有主机
-                    $scope.DevicesViewModel.devices = null;
-                    $scope.DevicesViewModel.devices = resdata;
-                    //UsingDeviceViewModel.device 当前使用主机
-                    $scope.UsingDeviceViewModel.device = resdata[0];
-                    //布防状态alert_status 1布防 0撤防
-                    if (resdata[0].alert_status == 0) {
-                        $scope.UsingDeviceViewModel.device.status = false;
-                        $scope.UsingDeviceViewModel.device.titleText = "撤防";
-                        $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
-                    }
-                    else {
-                        $scope.UsingDeviceViewModel.device.status = true;
-                        $scope.UsingDeviceViewModel.device.titleText = "布防";
-                        $scope.UsingDeviceViewModel.device.icon = "ion-locked";
-                    }
-
-                    //状态status 1在线 0掉线
-                    if (resdata[0].alertStatus == 1) {
-                        $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正在正常运行";
-                        $('#cubicCore').css("background-color", "#57a595");
-                    }
-                    else {
-                        $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机已掉线";
-                        $('#cubicCore').css("background-color", "#d43838");
-                    }
-                }).error(function () {
-                    alert("服务器请求故障");
-                });
-                /////////////////////////////////////////////////////////////////////////////
-
-                $state.go("app.devicemanage");
-            }
-            else
-                alert(data.result.msg);
-        }).error(function () {
-            alert("服务器请求故障");
-        });
-    }
-    $scope.disbinddevice = function () {
-        //主机解绑
-        var url = '/device/unbinding';
-        var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.Temp.EditingDevice.device_id};
-        var req = httpReqGen(url, reqd);
-
-        $http(req).success(function (data) {
-            //取返回值有效data
-            if (data.result.code == "0000") {
-                alert("该主机已解绑");
-
-                //////////////////////////更新devicelist 2 ViewModel///////////////////////////////
-                var devicelisturl = '/device/list';
-                var devicelistreqd = { "cust_id": $scope.global.cust_id };
-                var devicelistreq = httpReqGen(devicelisturl, devicelistreqd);
-
-                $http(devicelistreq).success(function (data) {
-                    //取返回值有效data
-                    var resdata = resResult(data);
-                    //DevicesViewModel.devices 用户下所有主机
-                    $scope.DevicesViewModel.devices = null;
-                    $scope.DevicesViewModel.devices = resdata;
-                    //UsingDeviceViewModel.device 当前使用主机
-                    $scope.UsingDeviceViewModel.device = resdata[0];
-                    //布防状态alert_status 1布防 0撤防
-                    if (resdata[0].alert_status == 0) {
-                        $scope.UsingDeviceViewModel.device.status = false;
-                        $scope.UsingDeviceViewModel.device.titleText = "撤防";
-                        $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
-                    }
-                    else {
-                        $scope.UsingDeviceViewModel.device.status = true;
-                        $scope.UsingDeviceViewModel.device.titleText = "布防";
-                        $scope.UsingDeviceViewModel.device.icon = "ion-locked";
-                    }
-
-                    //状态status 1在线 0掉线
-                    if (resdata[0].alertStatus == 1) {
-                        $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机正在正常运行";
-                        $('#cubicCore').css("background-color", "#57a595");
-                    }
-                    else {
-                        $scope.UsingDeviceViewModel.device.deviceStatus = "您当前的主机已掉线";
-                        $('#cubicCore').css("background-color", "#d43838");
-                    }
-                }).error(function () {
-                    alert("服务器请求故障");
-                });
-                /////////////////////////////////////////////////////////////////////////////
-
-                $state.go("app.devicemanage");
-            }
-            else
-                alert(data.result.msg);
-        }).error(function () {
-            alert("服务器请求故障");
-        });
-    }
 })
 ////////////////////
 /////////////////////////////////////////////////
@@ -1107,58 +1017,7 @@ angular.module('starter.controllers', ['WifiServices'])
         }).error(function () {
             alert("服务器请求故障");
         });
-    }
-
-    $scope.removeAlarm = function (alarm) {
-        //删除报警
-        var url = '/device/alert/delete';
-        var reqd = { "alert_id": alarm.alert_id };
-        var req = httpReqGen(url, reqd);
-
-        $http(req).success(function (data) {
-            //取返回值有效data
-            if (data.result.code == "0000") {
-                alert(data.result.msg);
-                $state.go("app.alarm");
-            }
-            else
-                alert(data.result.msg);
-        }).error(function () {
-            alert("服务器请求故障");
-        });
-    }
-
-    $scope.Detail = function (alarm) {
-        $scope.AlarmsViewModel.alarmdetail = null;
-        $scope.AlarmsViewModel.alarmdetail = alarm;
-        $state.go('app.alarmdetail');
-    }
-})
-
-//报警详情 app.alarmdetail alarmdetail.html
-.controller('AlarmDetailCtrl', function ($scope, $state, $http) {
-    $scope.AlarmDetail = { detail: null };
-
-    $scope.init = function () {
-        alert("报警数据结构尚未提供");
-        var alert_id = $scope.AlarmsViewModel.alarmdetail.alert_id;
-        //接口未实现
-        var alarmdetail = '/device/alert/detail';
-        var alarmreqd = { "alert_id": alert_id };
-        var alarmreq = httpReqGen(alarmdetail, alarmreqd);
-
-        $http(alarmreq).success(function (data) {
-            if (data.result.code == "0000") {
-                alert(data.result.msg);
-                $scope.AlarmDetail.detail = null;
-                $scope.AlarmDetail.detail = data.result.data;
-            }
-            else
-                alert(data.result.msg);
-        }).error(function () {
-            alert("服务器请求故障");
-        });
-    }
+  }
 })
 /////////////////////////////////////////////////
 ///
@@ -1206,27 +1065,7 @@ angular.module('starter.controllers', ['WifiServices'])
             alert("服务器请求故障");
         });
         
-    }
-
-    $scope.removeManu = function (piece) {
-        //删除记录
-        var url = '/device/opt/record/delete';
-        var reqd = { "opt_id": piece.opt_id };
-        var req = httpReqGen(url, reqd);
-
-        $http(req).success(function (data) {
-            //取返回值有效data
-            if (data.result.code == "0000") {
-                alert(data.result.msg);
-                $state.go("app.manustack");
-            }
-            else
-                alert(data.result.msg);
-        }).error(function () {
-            alert("服务器请求故障");
-        });
-
-    }
+  }
 })
 /////////////////////////////////////////////////
 ///
@@ -1344,6 +1183,63 @@ angular.module('starter.controllers', ['WifiServices'])
       }
   }])
 
+//极光推送===========================================
+.factory('jpushService',['$http','$window','$document',function($http,$window,$document){
+    var jpushServiceFactory={};
+
+    //var jpushapi=$window.plugins.jPushPlugin;
+
+    //启动极光推送
+    var _init=function(config){
+        $window.plugins.jPushPlugin.init();
+        //设置tag和Alias触发事件处理
+        document.addEventListener('jpush.setTagsWithAlias',config.stac,false);
+        //打开推送消息事件处理
+        $window.plugins.jPushPlugin.openNotificationInAndroidCallback = config.oniac;
+
+        $window.plugins.jPushPlugin.setDebugMode(true);
+    }
+    //获取状态
+    var _isPushStopped=function(fun){
+        $window.plugins.jPushPlugin.isPushStopped(fun)
+    }
+    //停止极光推送
+    var _stopPush=function(){
+        $window.plugins.jPushPlugin.stopPush();
+    }
+
+    //重启极光推送
+    var _resumePush=function(){
+        $window.plugins.jPushPlugin.resumePush();
+    }
+
+    //设置标签和别名
+    var _setTagsWithAlias=function(tags,alias){
+        $window.plugins.jPushPlugin.setTagsWithAlias(tags,alias);
+    }
+
+    //设置标签
+    var _setTags=function(tags){
+        $window.plugins.jPushPlugin.setTags(tags);
+    }
+
+    //设置别名
+    var _setAlias=function(alias){
+        $window.plugins.jPushPlugin.setAlias(alias);
+    }
+
+    jpushServiceFactory.init=_init;
+    jpushServiceFactory.isPushStopped=_isPushStopped;
+    jpushServiceFactory.stopPush=_stopPush;
+    jpushServiceFactory.resumePush=_resumePush;
+
+    jpushServiceFactory.setTagsWithAlias=_setTagsWithAlias;
+    jpushServiceFactory.setTags=_setTags;
+    jpushServiceFactory.setAlias=_setAlias;
+
+    return jpushServiceFactory;
+}])
+
 //登录
 .controller('login', function ($scope, $ionicSlideBoxDelegate, $ionicPopup, $http, $state, locals, $ionicSideMenuDelegate) {
     $ionicSideMenuDelegate.canDragContent(false);
@@ -1444,7 +1340,7 @@ function httpReqGen(apibranch,reqData){
 }
 function httpReqGETGen(apibranch){
     var code = getReqNo();
-    var url = 'http://t.xinlaihome.cn' + apibranch + '?req_no=' + code;
+    var url = 'http://139.196.13.82/xinlai' + apibranch + '?req_no=' + code;
     return req = {
       headers: {
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',

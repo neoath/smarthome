@@ -4,15 +4,18 @@
                    <h5 class="text-center">没有报警记录</h5>
                </div>
 
-
-               <ion-list can-swipe="true">
-                   <div ng-if="AlarmViewModel.alarms != null" ng-repeat="alarm in AlarmViewModel.alarms">
-                       <ion-item on-tap="Detail(alarm)">
-                           {{alarm.p11}} :{{alarm.p12}}
-                           <ion-option-button class="button-assertive" ng-click="removeAlarm(alarm)" style="line-height: 3.3;">Delete</ion-option-button>
-                       </ion-item>
+               <div ng-if="AlarmViewModel.alarms != null" ng-repeat="alarm in AlarmViewModel.alarms">
+                   <div ng-if="alarm.p1 != null">
+                       <div class="list">
+                           <div class="item item-icon-left">
+                               <i class="icon ion-flame"></i>
+                               {{alarm.p11}} :{{alarm.p12}}
+                               <span class="item-note">
+                                   {{alarm.p13}}
+                               </span>
+                           </div>
+                       </div>
                    </div>
-               </ion-list>
-
+               </div>
            </ion-content>
         </ion-view>
