@@ -1,0 +1,39 @@
+        <ion-view title="添加节点" ng-controller="addNode">
+            <ion-content>
+                <form name="addSensorForm" ng-init="setFormScope(this)" data-ng-submit="nodeSubmit()">
+                    <div class="list" style="background:#ffffff;">
+                        <div class="item item-divider">
+                            基本信息
+                        </div>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">节点名称</span>
+                            <input type="text" placeholder="Name" ng-model="newnode.name">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">节点ID</span>
+                            <input type="text" placeholder="id" ng-model="newnode.id">
+                        </label>                        
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                节点类型
+                            </div>
+                            <select ng-model="newnode.nodeSelect" ng-options="o.nodeType as o.name for o in NodesViewModel.nodes"></select>
+                        </label>
+                        <div class="item item-divider">
+                            主机信息
+                        </div>
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                选择主机
+                            </div>
+                            <select ng-model="newnode.deviceSelect" ng-options="o.name as o.name for o in DevicesViewModel.devices"></select>
+                        </label>
+                    </div>
+                    <div class="padding">
+                        <button class="button button-balanced">
+                            添加节点
+                        </button>
+                    </div>
+                </form>
+            </ion-content>
+        </ion-view>

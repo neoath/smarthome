@@ -1,0 +1,24 @@
+        <ion-view title="GateWay NetWork">
+            <ion-content class="padding-vertical">
+                <div ng-repeat="device in devices">
+                    <div class="col-lg-50">
+                        <div class="item item-icon-left" on-tap="deviceTap('app.device', device)">
+                            <i class="icon" ng-class="device.icon"></i>
+                            {{ device.name }}
+                            <span class="item-note" ng-class="device.color">
+                                {{ device.status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="list">
+                    <div class="item item-divider">
+                        Add a Subuser
+                    </div>
+                    <li class="item" on-tap="pageJump('app.gatewayinfo')">
+                        Add
+                    </li>
+                </div>
+                <div class="clearfix"></div>
+            </ion-content>
+        </ion-view>
