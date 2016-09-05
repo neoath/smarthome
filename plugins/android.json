@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "com.pylonproducts.wifiwizard": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
         "com.yoopoon.cordova.plugin.alipay": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
@@ -22,7 +25,13 @@
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
         "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
         "cordova.weixin.pay": {
@@ -31,20 +40,14 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
         "jpush-phonegap-plugin": {
             "API_KEY": "98ce269f58c86831f9ddbb5b",
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
-        "com.pylonproducts.wifiwizard": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "cordova-plugin-vibration": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
         "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "com.xinlaihome.smartconfig": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         }
     },

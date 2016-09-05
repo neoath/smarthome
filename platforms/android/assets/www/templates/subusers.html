@@ -1,0 +1,20 @@
+<ion-view title="子账号" ng-controller="subUserCtrl">
+  <ion-content class="padding-vertical">
+    <ion-list show-delete="false" show-reorder="false" can-swipe="true">
+      <ion-item ng-repeat="item in subUsers">
+        <h2>{{item.Name}}</h2>
+        <ion-option-button class="button-assertive" ng-click="delete(item)">删除</ion-option-button>
+        <ion-option-button class="button-info" ng-click="edit(item)">编辑</ion-option-button>
+        <ion-reorder-button class="ion-navicon" on-reorder="reorderItem(item, $fromIndex, $toIndex)"></ion-reorder-button>
+      </ion-item>
+    </ion-list>                
+
+    <div class="padding">
+      <button class="button button-block" on-tap="pageJump('app.subuserinfo')">
+        添加子账号
+      </button>
+    </div>                
+
+    <div class="clearfix"></div>
+  </ion-content>
+</ion-view>

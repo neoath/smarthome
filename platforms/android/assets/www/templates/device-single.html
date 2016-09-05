@@ -1,0 +1,32 @@
+        <ion-view title="{{detectorVM.detector.name}}" ng-controller="OverViewCtrl">
+            <ion-content class="padding">
+                <div ng-if="detectors.length === 0">
+                    <h5 class="text-center">No Devices to Show</h5>
+                </div>
+
+                    <div ng-if="detectorVM.detector.id != null">
+                        <div class="list">
+                            <div class="item item-icon-left">
+                                <i class="icon" ng-class="detectorVM.detector.icon"></i>
+                                {{detectorVM.detector.name}} :{{detectorVM.detector.detectorType}}
+                                <span class="item-note">
+                                    {{detectorVM.detector.status}}
+                                </span>
+                            </div>
+                            <div class="item item-divider">
+                                Device Info
+                            </div>
+                            <div class="item item-toggle" style="height: 48px;">
+                                <label class="toggle toggle-balanced">
+                                    <input type="checkbox" ng-checked="true">
+                                    <div class="track">
+                                        <div class="handle"></div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>                    
+
+
+            </ion-content>
+        </ion-view>

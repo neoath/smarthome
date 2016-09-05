@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+	xmlns:android="http://schemas.android.com/apk/res/android" id="com.xinlaihome.smartconfig"
+	version="5.3.0">
+	<name>SmartConfigPlugin</name>
+	<engines>
+		<engine name="cordova" version=">=3.5.0" />
+	</engines>
+
+	<js-module src="www/smartconfig.js" name="smartconfig">
+		<clobbers target="navigator.smartconfig" />
+	</js-module>
+
+	<!-- android -->
+	<platform name="android">
+
+		<source-file
+			src="src/android/com/amane/cordova/plugin/smartconfig/CC3XApiManager.java"
+			target-dir="src/com/amane/cordova/plugin/smartconfig" />
+		<source-file
+			src="src/android/com/amane/cordova/plugin/smartconfig/CC3XWifiManager.java"
+			target-dir="src/com/amane/cordova/plugin/smartconfig" />
+		<source-file
+			src="src/android/com/amane/cordova/plugin/smartconfig/SmartConfigPlugin.java"
+			target-dir="src/com/amane/cordova/plugin/smartconfig" />
+
+		<source-file src="src/android/smartconfiglib.jar" target-dir="libs" />
+
+		<config-file target="res/xml/config.xml" parent="/*">
+			<preference name="partner" value="" />
+			<preference name="rsa_private"
+				value="" />
+			<preference name="" />
+			<feature name="SmartConfigPlugin">
+				<param name="android-package" value="com.xinlaihome.smartconfig.SmartConfigPlugin" />
+				<param name="onload" value="true" />
+			</feature>
+		</config-file>
+
+		<config-file target="AndroidManifest.xml" parent="/manifest/application">
+		</config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        </config-file>		
+	</platform>
+</plugin>

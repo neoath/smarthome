@@ -1103,7 +1103,7 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //测试用功能 app.vib vib.html
-.controller('VibrationCtrl', function($scope, $cordovaVibration, $cordovaBarcodeScanner, $state, locals){ 
+.controller('VibrationCtrl', function($scope, $cordovaVibration, $cordovaBarcodeScanner, $state, locals, $ionicLoading){ 
  if (!locals.get("cust_id",""))
     $state.go("app.login"); 
 
@@ -1115,20 +1115,89 @@ angular.module('starter.controllers', ['WifiServices'])
 
   $scope.scanBarcode = function() {
 
-  $cordovaBarcodeScanner.scan().then(function(imageData) {
+      $cordovaBarcodeScanner.scan().then(function(imageData) {
 
-  alert(imageData.text);
+      alert(imageData.text);
 
-  console.log("Barcode Format -> " + imageData.format);
+      console.log("Barcode Format -> " + imageData.format);
 
-  console.log("Cancelled -> d" + imageData.cancelled);
+      console.log("Cancelled -> d" + imageData.cancelled);
 
-  }, function(error) {
+      }, function(error) {
 
-  console.log("An error happened -> " + error);
+      console.log("An error happened -> " + error);
 
-  });
+      });
 
+  };
+
+
+  $scope.sendNetInfo = function(){
+        alert("smartconfig demo");
+        var myDate = new Date();
+        var tradeNo = myDate.getTime();
+        var scClass = navigator.smartconfig;
+        if(scClass){
+          alert("success");
+
+          var data = {"ssid":"Xiaomi_C3AD", "password":"12345678", "gateway":"192.168.31.1"};
+          scClass.startSending(
+            data,
+            function(resultMsg){
+            alert(resultMsg);
+            $ionicLoading.show({
+              template:"成功",
+              noBackdrop: true,
+              duration: 500
+            });
+          },function(resultMsg){
+            alert(resultMsg);
+            $ionicLoading.show({
+              template:"失败",
+              noBackdrop: true,
+              duration: 500
+            });
+          });       
+        }
+
+        else{
+          alert("fail");
+        }
+  };
+
+
+
+  $scope.gIP = function(){
+      alert("gIP demo");
+      var myDate = new Date();
+      var tradeNo = myDate.getTime();
+      var scClass = navigator.smartconfig;
+      if(scClass){
+        alert("success");
+
+        var data = {};
+        scClass.gateWayIp(
+          data,
+          function(resultMsg){
+          alert(resultMsg);
+          $ionicLoading.show({
+            template:"成功",
+            noBackdrop: true,
+            duration: 500
+          });
+        },function(resultMsg){
+          alert(resultMsg);
+          $ionicLoading.show({
+            template:"失败",
+            noBackdrop: true,
+            duration: 500
+          });
+        });       
+      }
+
+      else{
+        alert("fail");
+      }
   };
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
