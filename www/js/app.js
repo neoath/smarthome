@@ -118,11 +118,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           }
       }
   })
-  .state('app.dashboard.messages', {
-      url: "/messages",
+  .state('app.dashboard.alarms', {
+      url: "/alarms",
       views: {
-          'messages-tab': {
-              templateUrl: "templates/messages.html"
+          'alarms-tab': {
+              templateUrl: "templates/alarms.html"
         }
       }
     })
@@ -267,6 +267,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           }
       }
   })
+.state('app.deviceedit', {
+    url: "/deviceedit",
+    views: {
+        'menuContent': {
+            templateUrl: "templates/deviceedit.html"
+        }
+    }
+})
   .state('app.deviceinfo', {
       url: "/deviceinfo",
       views: {
@@ -291,11 +299,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         }
       }
     })
-  .state('app.alarm', {
-      url: "/alarm",
+  .state('app.alarming', {
+      url: "/alarming",
       views: {
         'menuContent' :{
-          templateUrl: "templates/alarm.html"
+          templateUrl: "templates/alarming.html"
         }
       }
     })
@@ -331,6 +339,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         } 
       } 
     })
+  .state('app.manustackpre', { 
+      url: '/manustackpre', 
+      views: { 
+        'menuContent': { 
+          templateUrl: 'templates/manustackpre.html'
+        } 
+      } 
+    })     
   .state('app.manustack', { 
       url: '/manustack', 
       views: { 

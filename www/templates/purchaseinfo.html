@@ -1,45 +1,37 @@
         <ion-view title="支付信息" ng-init="init()" ng-controller="PurchaseCtrl">
             <ion-content class="padding">
-             <div class="list card">
+				<div ng-repeat="menu in MenuViewModel.menu">
+					<div class="list card" ng-click="intoPurchase(menu)">
+						<div class="item item-divider">
+							{{menu.name}}
+						</div>
+						<div class="item item-text-wrap">{{menu.desc}}
+						</div>
+					<div class="item item-body">
+						<p>
+						收款账户
+						<span class="item-note">
+							{{menu.account}}
+							</span>
+						</p>
+						<p>
+						有效时长
+						<span class="item-note">
+							{{menu.licencetime}}
+							</span>
+						</p>
+					</div>
+					<div class="item">
+						<h2>￥{{menu.payment}}
+							<span class="item-note">
+							{{menu.time}}
+							</span>
+						</h2>
+					</div>
+					</div>
+				</div>					
 
-			  <div class="item">
-			    <h2>￥60.00
-			    	<span class="item-note">
-                       2016年6月
-                    </span>
-			    </h2>
-			  </div>
-
-			  <div class="item item-body">
-			    <p>
-			    缴费单位
-			      <span class="item-note">
-                       收款账户
-                    </span>
-			    </p>
-			    <p>
-			    主机账号
-			      <span class="item-note">
-                       {{PurchasingDevice.device.deviceId}}
-                    </span>
-			    </p>
-			    <p>
-			    客户姓名
-			      <span class="item-note">
-                       客户{{PurchasingDevice.device.accountId}}
-                    </span>
-			    </p>
-			    <p>
-			    创建时间
-			      <span class="item-note">
-                       {{PurchasingDevice.device.createAt}}
-                    </span>
-			    </p>
-			  </div>
-
-			</div>
-
-            <button class="button button-block button-positive" ng-click="next()">立即缴费</button>
+            <!--<button class="button button-block button-positive" ng-click="next()">立即缴费</button>-->
 
             <div class="card">
 				<div class="item item-divider">
