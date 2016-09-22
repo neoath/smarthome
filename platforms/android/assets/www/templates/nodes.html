@@ -1,4 +1,4 @@
-<ion-view title="节点配对" ng-controller="NodesCtrl" ng-init="init()">
+<ion-view title="Node Manage" ng-controller="NodesCtrl" ng-init="init()">
     <ion-content class="padding-vertical">
         <div ng-if="UsingNodesViewModel.nodes.length === 0 || UsingNodesViewModel.nodes === null">
             <h5 class="text-center">No Nodes Info</h5>
@@ -14,8 +14,8 @@
         </ion-list>
 
         <div class="padding">
-            <button class="button button-balanced button-block" ng-click="startPairing()">
-                开始配对
+            <button class="button button-balanced button-block" style="border-color: #57a595;background-color: #57a595;" ng-click="startPairing()">
+                Start Pairing
             </button>
         </div>
     </ion-content>

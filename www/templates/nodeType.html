@@ -1,7 +1,7 @@
 ﻿        <ion-view title="{{UsingNodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
             <ion-content class="padding">
                 <div ng-if="UsingNodesViewModel.nodes.length === 0 || UsingNodesViewModel.nodes === null">
-                    <h5 class="text-center">No Nodes Info</h5>
+                    <h5 class="text-center">未绑定相应设备</h5>
                 </div>
 
                 <div ng-if="UsingNodesViewModel.nodes.length != 0" ng-repeat="node in UsingNodesViewModel.nodes | filter: { type: UsingNodesViewModel.nodeTypeId}">
@@ -19,7 +19,7 @@
                 </div>
 
                 <div ng-if="AlarmingViewModel.alarms.length === 0 || AlarmingViewModel.alarms == null">
-                    <h5 class="text-center">No Alarm Info</h5>
+                    <h5 class="text-center">设备正常运行</h5>
                 </div>
                 <div ng-if="AlarmingViewModel.alarms.length != 0" ng-repeat="alarm in AlarmingViewModel.alarms | filter: { node_type: UsingNodesViewModel.nodeTypeId, device_id:UsingDeviceViewModel.device.device_id}">
                     <div class="col-lg-33 disable-user-behavior" ng-click="sendAck(alarm)">

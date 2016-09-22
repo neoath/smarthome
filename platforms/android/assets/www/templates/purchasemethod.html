@@ -1,14 +1,5 @@
-        <ion-view title="缴费订单" ng-init="init()" ng-controller="PurchaseMethodCtrl">
+        <ion-view title="缴费订单"  ng-controller="PurchaseCtrl">
             <ion-content class="padding">
-			<div class="list card">
-
-			  <div class="item item-avatar">
-			    <img src="/img/doormagnet.jpg">
-			    <h2>￥60.00</h2>
-			    <p>主机缴费</p>
-			  </div>
-
-			</div>
             	<div class="item item-divider">
                     支付方式
                 </div>
@@ -28,7 +19,7 @@
                 </label>
 
 
-			<button class="button button-block button-assertive" ng-click="purchase()">确认支付 ￥60.00</button>
+			<button class="button button-block button-assertive" ng-click="purchase()">确认支付 ￥{{MenuViewModel.usingmenu.payment}}</button>
             </ion-content>
 
         </ion-view>

@@ -44,18 +44,7 @@
 </head>
 
 <body ng-controller="MainCtrl" class="platform-android platform-cordova platform-webview">
-    <script>
-        //(function (i, s, o, g, r, a, m) {
-        //    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-        //        (i[r].q = i[r].q || []).push(arguments)
-        //    }, i[r].l = 1 * new Date(); a = s.createElement(o),
-        //    m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        //})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-        //ga('create', 'UA-43849642-1', 'sergshepelevich.com');
-        //ga('send', 'pageview');
-
-    </script>
+    <script></script>
     <ion-nav-view animation="none"></ion-nav-view>
     
     <script id="templates/loading.html" type="text/ng-template">
@@ -67,15 +56,15 @@
         <div ng-click="closeModal()">
             <ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>
             <br />
-            <span>为了您的只能居家，我们正在拼命研发中，敬请期待 !</span>
+            <span>为了您的智能居家，我们正在拼命研发中，敬请期待 !</span>
         </div>
     </script>
 
     <script id="templates/dashboard.html" type="text/ng-template">
         <ion-view title="" >
             <ion-tabs class="nav-title-slide-ios7 tabs-striped tabs-icon-top tabs-bottom tabs-background-light tabs-balanced" animation="none">
-                <ion-tab title="Messages" icon-on="ion-ios7-star" icon-off="ion-ios7-star-outline" href="#/app/dashboard/messages">
-                    <ion-nav-view name="messages-tab"></ion-nav-view>
+                <ion-tab title="Alarms" icon-on="ion-ios7-star" icon-off="ion-ios7-star-outline" href="#/app/dashboard/alarms">
+                    <ion-nav-view name="alarms-tab"></ion-nav-view>
                 </ion-tab>
                 <ion-tab title="Home" icon-on="ion-ios7-home" icon-off="ion-ios7-home-outline" href="#/app/dashboard/overview">
                     <ion-nav-view name="overview-tab"></ion-nav-view>
@@ -86,25 +75,30 @@
             </ion-tabs>
         </ion-view>
     </script>
-    <script id="templates/messages.html" type="text/ng-template">
-        <ion-view title="消息通知" ng-controller="MessagesCtrl" ng-init="messageInit()">
+    <script id="templates/alarms.html" type="text/ng-template">
+        <ion-view title="报警通知" ng-controller="AlarmsCtrl" ng-init="alarmInit()">
             <ion-content class="padding">
-                <div ng-if="MessageViewModel.messages.length === 0 || MessageViewModel.messages == null">
+                <div ng-if="AllAlarmsViewModel.alarms.length === 0 || AllAlarmsViewModel.alarms == null">
                     <h5 class="text-center">No Message Info</h5>
                 </div>
-                <div ng-if="MessageViewModel.messages.length != 0" ng-repeat="message in MessageViewModel.messages">
-                    <div ng-if="message.id != null">
-                        <div class="list">
-                            <div class="item item-icon-left">
-                                <i class="icon ion-flame"></i>
-                                {{message.xxx}} :{{message.xxx2}}
-                                <span class="item-note">
-                                    {{message.xxx3}}
-                                </span>
+                <div ng-if="AllAlarmsViewModel.alarms.length != 0" ng-repeat="alarm in AllAlarmsViewModel.alarms">
+                    <div class="col-lg-33 disable-user-behavior" ng-click="sendAck(alarm)">
+
+                        <div class="card">
+                            <div class="item item-avatar">
+                                <h2>主机名: {{alarm.device_name}} <span ng-show="alarm.opt_result == 0" class="balanced ng-hide">unacked</span></h2>
+                                <p>节点类型: {{alarm.node_type_cn}}</p>
+                                <p>报警类型: {{alarm.alert_type_cn}}</p>
+                                <p>报警时间: {{alarm.alert_time}}</p>
                             </div>
                         </div>
+
+
                     </div>
-                </div>
+                </div>    
+                <button class="button button-balanced button-block" style="border-color: #57a595;background-color: #57a595;" ng-click="loadMoreAlarms()">
+                    Load More
+                </button>  
             </ion-content>
         </ion-view>
     </script>
@@ -142,7 +136,7 @@
 
                 <div class="card">
                     <div class="item" id="alarmDesc">
-                        {{UsingDeviceViewModel.device.deviceStatus}}
+                        {{OverViewViewModel.Status}}
                         <span class="item-note" on-tap="pageJump('app.deviceselect')">
                             切换主机
                         </span>
@@ -169,48 +163,43 @@
                     <div class="blockLine">
                         <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType',  '我的门磁',1)" id="megnetDevices">
                             <div class="blockLine-IconParent">
-                                <i id="megnetCore" class="icon ion-magnet blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="megnetCore" class="icon ion-magnet blockLine-Icon fontNormal"></i>
                             </div>
-                            <div class="blockLine-Desc">门磁</div>
+                            <div id="megnettxt" class="blockLine-Desc fontBlack">门磁</div>
                         </div>
                         <div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType', '我的红外监测',2)" id="infraDevices">
                             <div class="blockLine-IconParent">
-                                <i id="infraCore" class="icon ion-wifi blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="infraCore" class="icon ion-wifi blockLine-Icon fontNormal"></i>
                             </div>
-                            <div class="blockLine-Desc">红外探测</div>
+                            <div id="infratxt" class="blockLine-Desc fontBlack">红外探测</div>
                         </div>
-                        <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的水浸',5)" id="smokeDevices">
+                        <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的烟雾探测',3)" id="smokeDevices">
                             <div class="blockLine-IconParent">
-                                <i id="waterCore" class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="smokeCore" class="icon ion-no-smoking blockLine-Icon fontNormal" ></i>
                             </div>
-                            <div class="blockLine-Desc">水浸</div>
+                            <div id="smoketxt" class="blockLine-Desc fontBlack">烟雾探测</div>
                         </div>
+                        
 
                     </div>
                     <div class="blockLine">
-                        <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', '我的燃气探测',4)" id="gasDevices">
+                        <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', '我的电子钥匙', 0)" id="eKeyDevices">
                             <div class="blockLine-IconParent">
-                                <i id="gasCore" class="icon ion-bonfire blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="eKeyCore" class="icon ion-bonfire blockLine-Icon fontNormal"></i>
                             </div>
-                            <div class="blockLine-Desc">燃气探测</div>
+                            <div id="eKeytxt" class="blockLine-Desc fontBlack">电子钥匙</div>
                         </div>
-                        <!--<div class="item blockLine-middle" on-tap="nodeTypeTap('app.nodeType',  0)" id="eKeyDevices">
-                            <div class="blockLine-IconParent">
-                                <i class="icon ion-locked blockLine-Icon" style="color:#57a595;"></i>
-                            </div>
-                            <div class="blockLine-Desc">电子钥匙</div>
-                        </div>-->
-                        <div id="cubicCore" class="item blockLine-middle" style="background-color:#57a595;">
+                        <div id="cubicCore" ng-class="cssHelpViewModel.corecubicClass"  on-tap="pageJump('app.alarming')">
                             <div>
-                                <div class="blockLine-Desc" style="margin-top: 13px;height: 100%;color: white;font-size: 17px;">信来主机</div>
+                                <div class="blockLine-Desc fontBlack" style="margin-top: 13px;height: 100%;color: white;font-size: 17px;">信来主机</div>
                             </div>
                         </div>
 
-                        <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的烟雾探测',3)" id="smokeDevices">
+                        <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的温度监测', 4)" id="tempDevices">
                             <div class="blockLine-IconParent">
-                                <i id="smokeCore" class="icon ion-no-smoking blockLine-Icon" style="color:#57a595;"></i>
+                                <i id="tempCore" class="icon ion-no-smoking blockLine-Icon fontNormal" ></i>
                             </div>
-                            <div class="blockLine-Desc">烟雾探测</div>
+                            <div id="temptxt" class="blockLine-Desc fontBlack">温度监测</div>
                         </div>
 
                     </div>
@@ -227,24 +216,14 @@
                             </div>
                             <div class="blockLine-Desc">智能看护</div>
                         </div>
-                        <div class="item blockLine-right-bottom">
+                        <div class="item blockLine-right-bottom" on-tap="Emergency()">
                             <div class="blockLine-IconParent">
                                 <i class="icon ion-more blockLine-Icon" style="color:#57a595;"></i>
                             </div>
-                            <div class="blockLine-Desc">智能家居</div>
+                            <div class="blockLine-Desc">紧急报警</div>
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="card">
-                    <div class="item">
-                                上海
-                                <span class="item-note" style="color: #0a0a0a;">
-                                    {{weatherObj.TodayMin}} ~ {{weatherObj.TodayMax}} °C
-                                </span>
-                    </div>
-                </div>-->
-
                 <div class="clearfix"></div>
                 <div class="clearfix"></div>
 
@@ -266,7 +245,7 @@
                         <li class="item " on-tap="pageJump('app.devicemanage')">
                             <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>我的主机</span>
                         </li>
-                        <li class="item " on-tap="pageJump('app.subusers')">
+                        <li class="item " on-tap="pageJump('app.purchaseinfo')">
                             <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>支付业务</span>
                         </li>
                         

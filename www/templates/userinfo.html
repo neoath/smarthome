@@ -1,6 +1,5 @@
         <ion-view title="账号信息" ng-controller="updateUser">
             <ion-content>
-                <form name="addUserForm"  data-ng-submit="userSubmit()">
                     <div class="list">
                         <div class="item item-divider">
                             基本信息
@@ -46,10 +45,9 @@
                         </label>   
                     </div>
                     <div class="padding">
-                        <button class="button button-balanced button-block" ng-click="logout()" style="border-color: #57a595;background-color: #57a595;">
+                        <button class="button button-balanced button-block" ng-click="userSubmit()" style="border-color: #57a595;background-color: #57a595;">
                             保存修改
                         </button>
                     </div>
-                </form>
             </ion-content>
         </ion-view>

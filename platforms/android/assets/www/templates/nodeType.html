@@ -1,4 +1,4 @@
-        <ion-view title="{{UsingNodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
+﻿        <ion-view title="{{UsingNodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
             <ion-content class="padding">
                 <div ng-if="UsingNodesViewModel.nodes.length === 0 || UsingNodesViewModel.nodes === null">
                     <h5 class="text-center">No Nodes Info</h5>
@@ -13,6 +13,23 @@
                                 <span class="item-note">
                                     {{node.status}}
                                 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="AlarmingViewModel.alarms.length === 0 || AlarmingViewModel.alarms == null">
+                    <h5 class="text-center">No Alarm Info</h5>
+                </div>
+                <div ng-if="AlarmingViewModel.alarms.length != 0" ng-repeat="alarm in AlarmingViewModel.alarms | filter: { node_type: UsingNodesViewModel.nodeTypeId, device_id:UsingDeviceViewModel.device.device_id}">
+                    <div class="col-lg-33 disable-user-behavior" ng-click="sendAck(alarm)">
+
+                        <div class="card">
+                            <div class="item">
+                                <h2>主机名: {{alarm.device_name}} </h2>
+                                <p>节点类型: {{alarm.node_type_cn}}</p>
+                                <p>报警类型: {{alarm.alert_type_cn}}</p>
+                                <p>报警时间: {{alarm.alert_time}}</p>
                             </div>
                         </div>
                     </div>

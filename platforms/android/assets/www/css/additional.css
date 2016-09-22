@@ -28,3 +28,31 @@
 .blockLine-Desc{
   width:100%;height:30%;margin-top: -24px;font-size: 14px;
 }
+
+.cubicAlarm{
+    background-color:#d43838;
+}
+
+.cubicNormal{
+    background-color:#57a595;
+}
+.cubicWhite{
+    background-color:white;
+}
+.fontAlarm{
+    color:white;
+}
+
+.fontNormal{
+    color:#57a595;
+}
+.fontWhite{
+  color: white;
+}
+.fontBlack{
+  color: black;
+}
+
+.coretxtadd{
+  margin-top: 13px;height: 100%;font-size: 17px;
+}
