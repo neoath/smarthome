@@ -183,25 +183,31 @@
 
                     </div>
                     <div class="blockLine">
-                        <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', '我的电子钥匙', 0)" id="eKeyDevices">
+                        <div class="item blockLine-left" on-tap="nodeTypeTap('app.nodeType', '我的温度监测', 4)" id="tempDevices">
                             <div class="blockLine-IconParent">
-                                <i id="eKeyCore" class="icon ion-bonfire blockLine-Icon fontNormal"></i>
+                                <i id="tempCore" class="icon ion-no-smoking blockLine-Icon fontNormal"></i>
                             </div>
-                            <div id="eKeytxt" class="blockLine-Desc fontBlack">电子钥匙</div>
+                            <div id="temptxt" class="blockLine-Desc fontBlack">温度监测</div>
                         </div>
+
                         <div id="cubicCore" ng-class="cssHelpViewModel.corecubicClass"  on-tap="pageJump('app.alarming')">
                             <div>
                                 <div class="blockLine-Desc fontBlack" style="margin-top: 13px;height: 100%;color: white;font-size: 17px;">信来主机</div>
                             </div>
                         </div>
 
-                        <div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的温度监测', 4)" id="tempDevices">
+                        <!--<div class="item blockLine-right" on-tap="nodeTypeTap('app.nodeType', '我的电子钥匙', 0)" id="eKeyDevices">
                             <div class="blockLine-IconParent">
-                                <i id="tempCore" class="icon ion-no-smoking blockLine-Icon fontNormal" ></i>
+                                <i id="eKeyCore" class="icon ion-bonfire blockLine-Icon fontNormal"></i>
                             </div>
-                            <div id="temptxt" class="blockLine-Desc fontBlack">温度监测</div>
+                            <div id="eKeytxt" class="blockLine-Desc fontBlack">电子钥匙</div>
+                        </div>-->
+                        <div class="item blockLine-right" on-tap="openModal()">
+                            <div class="blockLine-IconParent">
+                                <i class="icon ion-more blockLine-Icon" style="color:#57a595;"></i>
+                            </div>
+                            <div class="blockLine-Desc">智能看护</div>
                         </div>
-
                     </div>
                     <div class="blockLine">
                         <div class="item blockLine-left-bottom" on-tap="pageJump('app.camera')" id="cameraDevices">
@@ -210,11 +216,8 @@
                             </div>
                             <div class="blockLine-Desc">视频监控</div>
                         </div>
-                        <div class="item blockLine-middle-bottom" on-tap="openModal()">
-                            <div class="blockLine-IconParent">
-                                <i class="icon ion-more blockLine-Icon" style="color:#57a595;"></i>
-                            </div>
-                            <div class="blockLine-Desc">智能看护</div>
+                        <div class="item blockLine-middle-bottom" >
+
                         </div>
                         <div class="item blockLine-right-bottom" on-tap="Emergency()">
                             <div class="blockLine-IconParent">

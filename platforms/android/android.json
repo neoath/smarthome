@@ -21,6 +21,14 @@
                             "count": 1
                         },
                         {
+                            "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+                            "count": 2
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 2
+                        },
+                        {
                             "xml": "<uses-permission android:name=\"android.permission.VIBRATE\" />",
                             "count": 2
                         },
@@ -31,10 +39,6 @@
                         {
                             "xml": "<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\" />",
                             "count": 1
-                        },
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
-                            "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
@@ -57,10 +61,6 @@
                             "count": 1
                         },
                         {
-                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
-                            "count": 2
-                        },
-                        {
                             "xml": "<uses-permission android:name=\"android.permission.SYSTEM_ALERT_WINDOW\" />",
                             "count": 1
                         },
@@ -70,18 +70,6 @@
                         },
                         {
                             "xml": "<permission android:name=\"com.ionicframework.xinlai.permission.JPUSH_MESSAGE\" android:protectionLevel=\"signature\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.CAMERA\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.FLASHLIGHT\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<uses-feature android:name=\"android.hardware.camera\" android:required=\"false\" />",
                             "count": 1
                         }
                     ],
@@ -129,18 +117,6 @@
                         {
                             "xml": "<meta-data android:name=\"JPUSH_APPKEY\" android:value=\"98ce269f58c86831f9ddbb5b\" />",
                             "count": 1
-                        },
-                        {
-                            "xml": "<activity android:clearTaskOnLaunch=\"true\" android:configChanges=\"orientation|keyboardHidden|screenSize\" android:exported=\"false\" android:name=\"com.google.zxing.client.android.CaptureActivity\" android:theme=\"@android:style/Theme.NoTitleBar.Fullscreen\" android:windowSoftInputMode=\"stateAlwaysHidden\"><intent-filter><action android:name=\"com.google.zxing.client.android.SCAN\" /><category android:name=\"android.intent.category.DEFAULT\" /></intent-filter></activity>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<activity android:label=\"Share\" android:name=\"com.google.zxing.client.android.encode.EncodeActivity\"><intent-filter><action android:name=\"com.phonegap.plugins.barcodescanner.ENCODE\" /><category android:name=\"android.intent.category.DEFAULT\" /></intent-filter></activity>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<activity android:label=\"Share\" android:name=\"com.google.zxing.client.android.HelpActivity\"><intent-filter><action android:name=\"android.intent.action.VIEW\" /><category android:name=\"android.intent.category.DEFAULT\" /></intent-filter></activity>",
-                            "count": 1
                         }
                     ]
                 }
@@ -150,6 +126,22 @@
                     "/*": [
                         {
                             "xml": "<feature name=\"WifiWizard\"><param name=\"android-package\" value=\"com.pylonproducts.wifiwizard.WifiWizard\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"partner\" value=\"\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"rsa_private\" value=\"\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SmartConfigPlugin\"><param name=\"android-package\" value=\"com.xinlaihome.smartconfig.SmartConfigPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
@@ -187,26 +179,6 @@
                         {
                             "xml": "<feature name=\"JPushPlugin\"><param name=\"android-package\" value=\"cn.jpush.phonegap.JPushPlugin\" /></feature>",
                             "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"BarcodeScanner\"><param name=\"android-package\" value=\"com.phonegap.plugins.barcodescanner.BarcodeScanner\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<preference name=\"partner\" value=\"\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<preference name=\"rsa_private\" value=\"\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<preference name=\"\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"SmartConfigPlugin\"><param name=\"android-package\" value=\"com.xinlaihome.smartconfig.SmartConfigPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
                         }
                     ]
                 }
@@ -215,6 +187,9 @@
     },
     "installed_plugins": {
         "com.pylonproducts.wifiwizard": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "com.xinlaihome.smartconfig": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
         "com.yoopoon.cordova.plugin.alipay": {
@@ -253,12 +228,6 @@
         "jpush-phonegap-plugin": {
             "API_KEY": "98ce269f58c86831f9ddbb5b",
             "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "com.xinlaihome.smartconfig": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
         }
     },
     "dependent_plugins": {},
@@ -268,6 +237,13 @@
             "id": "com.pylonproducts.wifiwizard.WifiWizard",
             "clobbers": [
                 "window.WifiWizard"
+            ]
+        },
+        {
+            "file": "plugins/com.xinlaihome.smartconfig/www/smartconfig.js",
+            "id": "com.xinlaihome.smartconfig.smartconfig",
+            "clobbers": [
+                "navigator.smartconfig"
             ]
         },
         {
@@ -334,24 +310,11 @@
             "clobbers": [
                 "JPush"
             ]
-        },
-        {
-            "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
-            "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
-            "clobbers": [
-                "cordova.plugins.barcodeScanner"
-            ]
-        },
-        {
-            "file": "plugins/com.xinlaihome.smartconfig/www/smartconfig.js",
-            "id": "com.xinlaihome.smartconfig.smartconfig",
-            "clobbers": [
-                "navigator.smartconfig"
-            ]
         }
     ],
     "plugin_metadata": {
         "com.pylonproducts.wifiwizard": "0.2.11",
+        "com.xinlaihome.smartconfig": "5.3.0",
         "com.yoopoon.cordova.plugin.alipay": "5.3.0",
         "cordova-plugin-compat": "1.0.0",
         "cordova-plugin-console": "1.0.3",
@@ -363,8 +326,6 @@
         "cordova-sqlite-storage": "1.4.7",
         "cordova.weixin.pay": "5.3.0",
         "ionic-plugin-keyboard": "2.2.1",
-        "jpush-phonegap-plugin": "2.2.4",
-        "phonegap-plugin-barcodescanner": "6.0.1",
-        "com.xinlaihome.smartconfig": "5.3.0"
+        "jpush-phonegap-plugin": "2.2.4"
     }
 }

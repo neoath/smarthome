@@ -8,6 +8,13 @@ module.exports = [
         ]
     },
     {
+        "file": "plugins/com.xinlaihome.smartconfig/www/smartconfig.js",
+        "id": "com.xinlaihome.smartconfig.smartconfig",
+        "clobbers": [
+            "navigator.smartconfig"
+        ]
+    },
+    {
         "file": "plugins/com.yoopoon.cordova.plugin.alipay/www/alipay.js",
         "id": "com.yoopoon.cordova.plugin.alipay.alipay",
         "clobbers": [
@@ -71,26 +78,13 @@ module.exports = [
         "clobbers": [
             "JPush"
         ]
-    },
-    {
-        "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
-        "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
-        "clobbers": [
-            "cordova.plugins.barcodeScanner"
-        ]
-    },
-    {
-        "file": "plugins/com.xinlaihome.smartconfig/www/smartconfig.js",
-        "id": "com.xinlaihome.smartconfig.smartconfig",
-        "clobbers": [
-            "navigator.smartconfig"
-        ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
     "com.pylonproducts.wifiwizard": "0.2.11",
+    "com.xinlaihome.smartconfig": "5.3.0",
     "com.yoopoon.cordova.plugin.alipay": "5.3.0",
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-console": "1.0.3",
@@ -102,9 +96,7 @@ module.exports.metadata =
     "cordova-sqlite-storage": "1.4.7",
     "cordova.weixin.pay": "5.3.0",
     "ionic-plugin-keyboard": "2.2.1",
-    "jpush-phonegap-plugin": "2.2.4",
-    "phonegap-plugin-barcodescanner": "6.0.1",
-    "com.xinlaihome.smartconfig": "5.3.0"
+    "jpush-phonegap-plugin": "2.2.4"
 };
 // BOTTOM OF METADATA
 });

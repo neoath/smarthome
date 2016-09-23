@@ -34,11 +34,10 @@
       "id": "jpush-phonegap-plugin"
     },
     "C:\\Sari\\Proj\\SmartHouse\\smarthome\\plugins\\com.pylonproducts.wifiwizard",
-    "cordova-plugin-vibration",
-    "phonegap-plugin-barcodescanner"
+    "cordova-plugin-vibration"
   ],
   "cordovaPlatforms": [
-    "android",
-    "ios"
+    "ios",
+    "android"
   ]
 }

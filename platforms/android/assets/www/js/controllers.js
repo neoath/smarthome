@@ -242,7 +242,7 @@ angular.module('starter.controllers', ['WifiServices'])
 
 
 //首页 app.overview overview.html
-.controller('OverViewCtrl', function ($q, $scope, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover, $state, $timeout,$interval, $http, $ionicLoading, locals) {
+.controller('OverViewCtrl', function ($q, $scope, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover, $state, $timeout, $interval, $http, $ionicLoading, locals, $ionicNavBarDelegate) {
 
     //页面初始化方法
     $scope.DataReq = function () {
@@ -329,13 +329,14 @@ angular.module('starter.controllers', ['WifiServices'])
                 }
                     //布防失败
                 else {
-                    alert("布防请求失败");
+                    alert("撤防请求失败");
                 }
                 //显示文字和锁图标
                 $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
                 $scope.UsingDeviceViewModel.device.icon = $scope.UsingDeviceViewModel.device.alert_status ? "ion-locked" : "ion-unlocked";
             }).error(function () {
-                alert("服务器请求故障");
+                alert("布防撤防服务器请求故障");
+                console.log("布防撤防服务器请求故障");
             });
         }
     };
@@ -364,6 +365,9 @@ angular.module('starter.controllers', ['WifiServices'])
             $ionicLoading.hide();
         }, 2000);
     }
+    $scope.myGoBack = function () {
+        $ionicNavBarDelegate.back();
+    };
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -441,6 +445,9 @@ angular.module('starter.controllers', ['WifiServices'])
             });
         }
         $scope.startPairing = function(){
+            //获取当前节点list
+            var beforeLength = $scope.NodesViewModel.nodes.length;
+
             startLoading($ionicLoading);
 
             $timeout(function () {
@@ -452,10 +459,17 @@ angular.module('starter.controllers', ['WifiServices'])
                 $http(nodelistreq).success(function (data) {
                     //取返回值有效data
                     var nodesdata = resResult(data);
+                    //新节点list
+                    var afterLength = nodesdata.length;
                     //NodesViewModel.nodes 当前主机下所有节点
                     $scope.NodesViewModel.nodes = nodesdata;
                     //UsingNodesViewModel.nodes 正在使用的当前主机下所有节点
                     $scope.UsingNodesViewModel.nodes = nodesdata;
+
+                    if (beforeLength == afterLength)
+                        alert("无节点更新");
+                    else
+                        alert("节点信息已更新");
                 }).error(function () {
                     alert("服务器请求故障");
                 });
@@ -727,16 +741,20 @@ angular.module('starter.controllers', ['WifiServices'])
   //$scope.newuser = $scope.user;
   $scope.userSubmit = function() {
       var url = '/account/upgrade';
-      var reqd = { "cust_id": $scope.global.cust_id,"tel":$scope.UserViewModel.user.tel, "email":$scope.UserViewModel.user.email,"address":$scope.UserViewModel.user.address };
+      var reqd = { "cust_id": $scope.global.cust_id, "tel": $scope.UserViewModel.user.phone, "email": $scope.UserViewModel.user.email, "address": $scope.UserViewModel.user.address };
       var req = httpReqGen(url, reqd);
       $http(req).success(function (data) {
           var validData = resResult(data);
           if (validData) {
-              $state.go("app.usersetting");
+              alert("用户信息已更改");
+              $state.go("app.dashboard.usersetting");
           }
-      }).error(function () { });
-      $scope.UserViewModel.user
-
+          else {
+              alert(data.result.msg);
+          }
+      }).error(function () {
+          alert("更新用户信息服务器请求故障")
+      });
   };
 })
 //子账号 app.subusers subusers.html
@@ -934,6 +952,11 @@ angular.module('starter.controllers', ['WifiServices'])
   }
   $scope.currentDeviceChange = function (device) {
       $scope.UsingDeviceViewModel.device = device;
+      //var desc = "当前主机切换至  " + device.device_name;
+      //alert(desc);
+  };
+  $scope.stateJump = function (route) {
+      $state.go(route);
   };
 })
 //主机管理 app.devicemanage devicemanage.html
@@ -1007,7 +1030,7 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(req).success(function (data) {
             //取返回值有效data
             if (data.result.code == "0000") {
-                alert("节点名称已更改");
+                alert("主机名称已更改");
 
                 $scope.updateDeviceData();
                 $state.go("app.devicemanage");
