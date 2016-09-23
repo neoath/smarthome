@@ -3,7 +3,7 @@ angular.module('starter.controllers', ['WifiServices'])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //数据
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
-
+    var timer;
     $scope.global = { cust_id : 0 };
     $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', 
         EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', 
@@ -104,7 +104,10 @@ angular.module('starter.controllers', ['WifiServices'])
       menu:null,
       usingmenu:null  
     };
-    
+    //验证码
+    $scope.ValidInfoViewModel ={
+        PhoneNum: null, ValidCode: null, newPW: null
+    };
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -246,6 +249,12 @@ angular.module('starter.controllers', ['WifiServices'])
 
     //页面初始化方法
     $scope.DataReq = function () {
+        //刷新data
+        timer = $interval($scope.updateDeviceData, 5000);
+
+        ////取消刷新
+        //$timeout(function () { $interval.cancel(timer) }, 15000);
+
         startLoading($ionicLoading);
         console.log(locals.get("cust_id","0"));
         if (locals.get("cust_id","0") == "0")
@@ -288,8 +297,7 @@ angular.module('starter.controllers', ['WifiServices'])
         $ionicLoading.hide();
     }, 1000);
 
-    //刷新data
-    $interval($scope.updateDeviceData, 5000);
+    
     //布防撤防方法
     $scope.armStatusBtnChange = function () {
         //若当前撤防状态则布防
@@ -534,11 +542,13 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //用户 app.usersetting usersetting.html
-.controller('usersettingCtrl', function ($scope, $state, locals, $ionicSideMenuDelegate) {
+.controller('usersettingCtrl', function ($scope, $state, locals, $ionicSideMenuDelegate, $interval) {
   if (!locals.get("cust_id",""))
     $state.go("app.login"); 
 
-  $scope.logout = function() {
+  $scope.logout = function () {
+    ////取消刷新
+      $interval.cancel(timer);
     alert(locals.get("cust_id",""));
     //存储数据
     //locals.set("username","0");
@@ -786,39 +796,68 @@ angular.module('starter.controllers', ['WifiServices'])
 })
 /////////////////////////////////////////////////
 ///
-.controller('findPasswordCtrl', function($scope, $q, $http, $state, locals){
-  $scope.findData = {};
-  $scope.findPassword = function() {
-    if(!$scope.findData.mobileNo || !$scope.findData.password || !$scope.findData.passwordConfirm
-      || !$scope.findData.code) {
-      alert("请填写");
+.controller('findPasswordCtrl', function ($scope, $q, $http, $state, locals, $ionicNavBarDelegate) {
+    
+  $scope.changePW2 = function () {
+      if (!$scope.ValidInfoViewModel.newPW) {
+      alert("请输入新密码");
       return;
     }
-    if($scope.findData.password != $scope.findData.passwordConfirm) {
-      alert('新密码输入不一致');
-      return;
-    }    
+      if (!$scope.ValidInfoViewModel.ValidCode) {
+            alert("请输入验证码");
+            return;
+        }
+        var url = '/account/findpwd';
+        var reqd = {
+            "phone": $scope.ValidInfoViewModel.PhoneNum,
+            "login_pwd": $scope.ValidInfoViewModel.newPW,
+            "sms_captcha": $scope.ValidInfoViewModel.ValidCode
+        };
+        var req = httpReqGen(url, reqd);
+        $http(req).success(function (data) {
+            var validData = resResult(data);
+            if (validData) {
+                alert("用户信息已更改");
+                $state.go("app.login");
+            }
+            else {
+                alert(data.result.msg);
+            }
+        }).error(function () {
+            alert("发送短信验证码重置密码服务器请求故障")
+        });
 
-    var apibranch = '/account/findpwd';
-    var newpw = hex_md5($scope.findData.password).toUpperCase();
-    var requestObject = {
-        phone: $scope.findData.mobileNo,
-        login_pwd: newpw,
-        sms_captcha: $scope.findData.code
-    };
-    var req = httpReqGen(apibranch,requestObject);
 
-    $http(req).then(function(response) {
-      console.log(response);     
-      var result = $.parseJSON(response.data.result);
-      if (result.code == 0000){
-        $state.go('app.login');
-      } else {
-        alert(result.msg);
-      }
-    }, function(error) {    
-      console.log(error);
-    });
+
+
+  };
+
+  $scope.sendValid = function () {
+      var apibranch = 'sms/captcha/findpwd';
+      var requestObject = {
+          phone: $scope.ValidInfoViewModel.PhoneNum
+      };
+      var req = httpReqGen(apibranch, requestObject);
+
+      $http(req).then(function (response) {
+          console.log(response);
+          var result = response.data.result;
+          if (result.code == 0000) {
+              
+          } else {
+              alert(result.msg);
+          }
+      }, function (error) {
+          alert("验证码服务器请求失败");
+      });
+  };
+
+  $scope.pageJump = function (url) {
+      $state.go(url);
+  };
+
+  $scope.myGoBack = function () {
+      $ionicNavBarDelegate.back();
   };
 })
 /////////////////////////////////////////////////
