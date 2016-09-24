@@ -85,8 +85,8 @@
                     <div class="col-lg-33 disable-user-behavior" ng-click="sendAck(alarm)">
 
                         <div class="card">
-                            <div class="item item-avatar" ng-class="('allalarmsstatus' + alarm.opt_result)">
-                                <h2>主机名: {{alarm.device_name}} <span ng-show="alarm.opt_result == 0" class="balanced ng-hide">新报警</span></h2>
+                            <div class="item item-avatar">
+                                <h2>主机名: {{alarm.device_name}} <span ng-show="alarm.opt_result == 0" class="balanced ng-hide">unacked</span></h2>
                                 <p>节点类型: {{alarm.node_type_cn}}</p>
                                 <p>报警类型: {{alarm.alert_type_cn}}</p>
                                 <p>报警时间: {{alarm.alert_time}}</p>
@@ -96,7 +96,7 @@
 
                     </div>
                 </div>    
-                <button class="button button-balanced button-block" ng-show="AllAlarmsViewModel.enableMore" style="border-color: #57a595;background-color: #57a595;" ng-click="loadMoreAlarms()">
+                <button class="button button-balanced button-block" style="border-color: #57a595;background-color: #57a595;" ng-click="loadMoreAlarms()">
                     Load More
                 </button>  
             </ion-content>
