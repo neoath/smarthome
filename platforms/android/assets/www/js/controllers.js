@@ -841,7 +841,7 @@ angular.module('starter.controllers', ['WifiServices'])
         var url = '/account/findpwd';
         var reqd = {
             "phone": $scope.ValidInfoViewModel.PhoneNum,
-            "login_pwd": hex_md5($scope.ValidInfoViewModel.newPW).toUpperCase() ,
+            "login_pwd": hex_md5($scope.ValidInfoViewModel.newPW).toUpperCase(),
             "sms_captcha": $scope.ValidInfoViewModel.ValidCode
         };
         var req = httpReqGen(url, reqd);
@@ -1685,7 +1685,7 @@ function getReqNo(){
 }
 function httpReqGen(apibranch,reqData){
     var code = getReqNo();
-    var url = 'http://192.168.2.9:8081/xinlai/' + apibranch + '?req_no=' + code;
+    var url = 'http://t.xinlaihome.cn:8081/xinlai/' + apibranch + '?req_no=' + code;
     return req = {
       headers: {
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -1698,7 +1698,7 @@ function httpReqGen(apibranch,reqData){
 }
 function httpReqGETGen(apibranch){
     var code = getReqNo();
-    var url = 'http://192.168.2.9:8081/xinlai/' + apibranch + '?req_no=' + code;
+    var url = 'http://t.xinlaihome.cn:8081/xinlai/' + apibranch + '?req_no=' + code;
     return req = {
       headers: {
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
