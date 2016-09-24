@@ -376,7 +376,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         } 
       } 
     }) 
-
+  .state('app.changepasswordout', {
+      url: '/changepasswordout',
+      views: {
+          'menuContent': {
+              templateUrl: 'templates/changepasswordout.html',
+              //绑定controller 
+              //controller: 'VibrationCtrl' 
+          }
+      }
+  })
   .state('app.version', { 
     url: '/version', 
     views: { 

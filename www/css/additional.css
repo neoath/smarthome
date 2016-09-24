@@ -56,3 +56,11 @@
 .coretxtadd{
   margin-top: 13px;height: 100%;font-size: 17px;
 }
+
+
+.allalarmsstatus0{
+  background: #e0eac8;
+}
+.allalarmsstatus1{
+  background: white;
+}
