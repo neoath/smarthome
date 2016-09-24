@@ -841,7 +841,7 @@ angular.module('starter.controllers', ['WifiServices'])
         var url = '/account/findpwd';
         var reqd = {
             "phone": $scope.ValidInfoViewModel.PhoneNum,
-            "login_pwd": hex_md5($scope.ValidInfoViewModel.newPW).toUpperCase() ,
+            "login_pwd": hex_md5($scope.ValidInfoViewModel.newPW).toUpperCase(),
             "sms_captcha": $scope.ValidInfoViewModel.ValidCode
         };
         var req = httpReqGen(url, reqd);
