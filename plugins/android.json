@@ -22,9 +22,6 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
@@ -45,6 +42,9 @@
         },
         "jpush-phonegap-plugin": {
             "API_KEY": "98ce269f58c86831f9ddbb5b",
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         }
     },

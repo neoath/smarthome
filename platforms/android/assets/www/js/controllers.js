@@ -66,7 +66,6 @@ angular.module('starter.controllers', ['WifiServices'])
                         { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '3'},
                         { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '4'}
         ]
-    
     }
 
     //所有节点
@@ -146,6 +145,9 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(devicelistreq).success(function (data) {
             //取返回值有效data
             var resdata = resResult(data);
+            console.log(resdata);
+            if (resdata == false)
+                return;
             //DevicesViewModel.devices 用户下所有主机
             $scope.DevicesViewModel.devices = null;
             $scope.DevicesViewModel.devices = resdata;
@@ -1284,7 +1286,7 @@ angular.module('starter.controllers', ['WifiServices'])
         pageCount ++;
     };
     $scope.selectUpdated = function(selValue){
-        $scope.StackViewModel.options = selValue;
+        //$scope.StackViewModel.options = selValue;
     };
     $scope.init = function(){
             alert("操作记录数据结构尚未提供");
