@@ -89,7 +89,42 @@ public class Alipay extends CordovaPlugin{
 		};
 	};
 
-	
+	/**
+	 * call alipay sdk sign pay. 调用SDK支付
+	 * 
+	 */
+	// private boolean pay(CordovaArgs args) {
+	// 	try {
+	// 		JSONObject orderInfoArgs =  args.getJSONObject(0);
+	// 		String payInfo = orderInfoArgs.getString("payInfo");
+
+	// 		Runnable payRunnable = new Runnable() {
+
+	// 			@Override
+	// 			public void run() {
+	// 				// 构造PayTask 对象
+	// 				PayTask alipay = new PayTask(cordova.getActivity());
+	// 				// 调用支付接口
+	// 				String result = alipay.pay(payInfo,true);
+
+	// 				Message msg = new Message();
+	// 				msg.what = SDK_PAY_FLAG;
+	// 				msg.obj = result;
+	// 				mHandler.sendMessage(msg);
+	// 			}
+	// 		};
+
+	// 		Thread payThread = new Thread(payRunnable);
+	// 		payThread.start();
+			
+			
+	// 	} catch (JSONException e1) {
+	// 		e1.printStackTrace();
+	// 		currentCallbackContext.error("订单参数不正确");
+	// 	}
+		
+	// 	return true;
+	// }
 
 	/**
 	 * call alipay sdk pay. 调用SDK支付
@@ -98,29 +133,31 @@ public class Alipay extends CordovaPlugin{
 	private  boolean pay(CordovaArgs args) {
 		try {
 			JSONObject orderInfoArgs =  args.getJSONObject(0);
-			String subject = orderInfoArgs.getString("subject");
-			String body = orderInfoArgs.getString("body");
-			String price = orderInfoArgs.getString("price");
-			String tradeNo = orderInfoArgs.getString("tradeNo");
-			String timeout = orderInfoArgs.getString("timeout");
-			String notifyUrl = orderInfoArgs.getString("notifyUrl");
-			String seller = orderInfoArgs.getString("seller");
+			// String subject = orderInfoArgs.getString("subject");
+			// String body = orderInfoArgs.getString("body");
+			// String price = orderInfoArgs.getString("price");
+			// String tradeNo = orderInfoArgs.getString("tradeNo");
+			// String timeout = orderInfoArgs.getString("timeout");
+			// String notifyUrl = orderInfoArgs.getString("notifyUrl");
+			// String seller = orderInfoArgs.getString("seller");
 			
-			partner = orderInfoArgs.optString("partner", "");
-			rsa_private = orderInfoArgs.optString("rsa_private", "");
-			rsa_public = orderInfoArgs.optString("rsa_public", "");
+			// partner = orderInfoArgs.optString("partner", "");
+			// rsa_private = orderInfoArgs.optString("rsa_private", "");
+			// rsa_public = orderInfoArgs.optString("rsa_public", "");
 			
-			//"测试的商品", "该测试商品的详细描述", "0.01","30m","www.justep.com"
-			String orderInfo = getOrderInfo(seller,subject,body,price,tradeNo,timeout,notifyUrl);
-			String sign = sign(orderInfo);
-			try {
-				// 仅需对sign 做URL编码
-				sign = URLEncoder.encode(sign, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			final String payInfo = orderInfo + "&sign=\"" + sign + "\"&"
-					+ getSignType();
+			// //"测试的商品", "该测试商品的详细描述", "0.01","30m","www.justep.com"
+			// String orderInfo = getOrderInfo(seller,subject,body,price,tradeNo,timeout,notifyUrl);
+			// String sign = sign(orderInfo);
+			// try {
+			// 	// 仅需对sign 做URL编码
+			// 	sign = URLEncoder.encode(sign, "UTF-8");
+			// } catch (UnsupportedEncodingException e) {
+			// 	e.printStackTrace();
+			// }
+			// final String payInfo = orderInfo + "&sign=\"" + sign + "\"&"
+			// 		+ getSignType();
+
+			final String payInfo = orderInfoArgs.getString("payInfo");
 
 			Runnable payRunnable = new Runnable() {
 
@@ -146,7 +183,6 @@ public class Alipay extends CordovaPlugin{
 			e1.printStackTrace();
 			currentCallbackContext.error("订单参数不正确");
 		}
-		
 		
 		return true;
 	}

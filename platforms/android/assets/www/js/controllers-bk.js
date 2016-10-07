@@ -1144,12 +1144,23 @@ angular.module('starter.controllers', ['WifiServices'])
   }
 })
 //支付 app.purchaseinfo purchaseinfo.html
-.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading,$http) {
+.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading) {
   $scope.init = function(){
                 var simuloptiondata = [{"name":"套餐1", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"},
                 {"name":"套餐2", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"},
                 {"name":"套餐3", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"}];
-                       $scope.MenuViewModel.menu = simuloptiondata;
+            // //套餐api
+            // var url = '';
+            // var reqd = { };
+            // var req = httpReqGen(url, reqd);
+
+            // $http(req).success(function (data) {
+            //     var validData = resResult(data);
+            //     if (validData) {
+            //     }
+            // }).error(function () { });
+            
+            $scope.MenuViewModel.menu = simuloptiondata;
   }
     
   $scope.intoPurchase = function(menu){
@@ -1168,49 +1179,45 @@ angular.module('starter.controllers', ['WifiServices'])
                     }
                 });
      };
-
-    //测试套餐ID: "736070745670844416", "736264452149002240"
+     
     $scope.purchase = function(){
-        //alert("alipay");
-        var requestData = {
-          cust_id: '739463644126191616',
-          pay_channel: 'alipay',
-          plan_id: '736264452149002240'
-        };
 
-        var apibranch = '/trade/submit';
-        var request = httpReqGen(apibranch,requestData);
+    alert("alipay demo");
+    var myDate = new Date();
+    var tradeNo = myDate.getTime();
+    var alipayClass = navigator.alipay;
 
-        $http(request).then(function(response) {
-            var purdata = response.data.result;
-            console.log(purdata);
-            var signStr = purdata.data.sign;
-            console.log(signStr);
-
-            //调用支付宝接口，传入payInfo = signStr.
-            var alipayClass = navigator.alipay;
-
-            alipayClass.pay({
-                    "payInfo":signStr  
-            },function(resultStatus){
-              alert(resultStatus);
-              $ionicLoading.show({
-                template:"支付宝测试返回结果＝" + resultStatus,
-                noBackdrop: true,
-                duration: 500
-              });
-            },function(message){
-              alert(message);
-              $ionicLoading.show({
-                template:"支付宝支付失败＝" + message,
-                noBackdrop: true,
-                duration: 500
-              });
-            });
-        }, function(error) {
-            alert("error");
-        });
+    //支付宝公钥
+    var pubRsa = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
+    var rsa = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMrmQGgiRA56RA60TAoOO16gFTHIXPyNElcuMLlBQ0TzIGI83RC9vgWLmOmrN5r34VzWM7DIdyHf8u16B32T0LDKr/veUXkrwzXeNAPycqqRasodxE9BU4bSRdKxzc2/T+eraLsXhCcROi4pG/02PUwBht2HA3gOmYbUcUoxHQ91AgMBAAECgYApz5LcIpuFpDpcEVlOBSrE0BYuAQzwWh26a2FM+57iGXvF4qbnaUI8IE0tccPuokAFgnp6ZoTuLRkBSNE8VnZ9acCdUfbV5qiD4AZYVALlR3iI+QOEHMd3YZZ4iitcsTQqaS8RttG+6Cu2ma+GsWtXggvBBUE4QAr7b8lLr9p37QJBAPZLZebBZE8tGfLgrUow3SVpsp3aOsHZ2tZPYfzNMGhyVVApdqBtwjBrQeKETCBqT+VTAaRX1wwDKLPDHhZUUosCQQDS5RY2RCCpb3Kh565XN1VPYmJdgATpGxQgjOj9Q6oWAD/aghunuD69idoSC1WzHrI7RDKb09gIwzoxC16jamX/AkEAhFpMLk7qqqmf8ibOuLm9fWdpdu5Y+OcrdFNAYuuZAee+9M7zUo7o9cANrb5OcnTu7ltG3JvfkjL4YnGN743stQJAfyXO9nismHqwyhw8aCjcLjhKxcRhMYk54UYTUl5xNUKBPOQkeEIE0ZFDAI4E5TEkk8bSHFDkdqP9eYQ5UpzbUQJBAKKIEZg7zxnMI4BFPGUT7P4SrEe8NgScjZpySvZAhQeTzTEPBmy702c1A7QFy7TzxDf/7gG9KHVBiMemfyDMyIw=";
+    alipayClass.pay({
+                    "partner":"2088421286292033",    //商户ID
+                    "rsa_private":rsa,               //私钥
+                    "rsa_public":pubRsa,                //公钥
+                    "seller":"2088421286292033",    //收款支付宝账号或对应的支付宝唯一用户号
+                    "subject":"测试文件",             //商品名称
+                    "body":"支付宝支付",        //商品详情
+                    "price":"0.01",                  //金额
+                    "tradeNo":tradeNo,             
+                    "timeout":"30m",                 //超时设置
+                    "notifyUrl":"http://www.baidu.com"
+    },function(resultStatus){
+      alert(resultStatus);
+      $ionicLoading.show({
+        template:"支付宝测试返回结果＝" + resultStatus,
+        noBackdrop: true,
+        duration: 500
+      });
+    },function(message){
+      alert(message);
+      $ionicLoading.show({
+        template:"支付宝支付失败＝" + message,
+        noBackdrop: true,
+        duration: 500
+      });
+    });
   };
+  
 })
 
 /////////////////////////////////////////////////
