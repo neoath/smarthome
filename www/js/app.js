@@ -64,7 +64,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     var setTagsWithAliasCallback = function(event){
       window.alert('result code:'+event.resultCode+' tags:'+event.tags+' alias:'+event.alias);
     }
-    var openNotificationInAndroidCallback=function(data){
+    var openNotificationInAndroidCallback = function(data){
       var json=data;
       window.alert(json);
       if(typeof data === 'string'){

@@ -46,6 +46,9 @@
         "jpush-phonegap-plugin": {
             "API_KEY": "98ce269f58c86831f9ddbb5b",
             "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
         }
     },
     "dependent_plugins": {
