@@ -60,11 +60,11 @@ angular.module('starter.controllers', ['WifiServices'])
         nodeType:"",
         nodes:null,
         nodeList:[
-                        { id: '0', name: '电子钥匙', icon: 'ion-locked',  nodeType: '0'},
-                        { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '1'},
-                        { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '2'},
-                        { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '3'},
-                        { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '4'}
+                    { id: '0', name: '电子钥匙', icon: 'ion-locked',  nodeType: '0'},
+                    { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '1'},
+                    { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '2'},
+                    { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '3'},
+                    { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '4'}
         ]
     
     }
@@ -1221,6 +1221,7 @@ angular.module('starter.controllers', ['WifiServices'])
         $cordovaBarcodeScanner.scan().then(function (imageData) {
 
             var deviceId = imageData.text;
+            alert("主机号码: " + deviceId);
             var devicename = ""
             var customerId = $scope.global.cust_id;
             //添加主机
@@ -1535,25 +1536,17 @@ angular.module('starter.controllers', ['WifiServices'])
     $cordovaVibration.vibrate(1000); 
   };
 
-
   $scope.scanBarcode = function() {
-
+        alert("start scan");
       $cordovaBarcodeScanner.scan().then(function(imageData) {
-
-      alert(imageData.text);
-
-      console.log("Barcode Format -> " + imageData.format);
-
-      console.log("Cancelled -> d" + imageData.cancelled);
-
+        alert(imageData.text);
+        console.log("Barcode Format -> " + imageData.format);
+        console.log("Cancelled -> d" + imageData.cancelled);
       }, function(error) {
-
-      console.log("An error happened -> " + error);
-
+        alert(error);
+        console.log("An error happened -> " + error);
       });
-
   };
-
 
   $scope.sendNetInfo = function(){
         alert("smartconfig demo");

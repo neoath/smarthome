@@ -78,6 +78,13 @@ module.exports = [
         "clobbers": [
             "JPush"
         ]
+    },
+    {
+        "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
+        "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
+        "clobbers": [
+            "cordova.plugins.barcodeScanner"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -96,7 +103,8 @@ module.exports.metadata =
     "cordova-sqlite-storage": "1.4.7",
     "cordova.weixin.pay": "5.3.0",
     "ionic-plugin-keyboard": "2.2.1",
-    "jpush-phonegap-plugin": "2.2.4"
+    "jpush-phonegap-plugin": "2.2.4",
+    "phonegap-plugin-barcodescanner": "4.0.1"
 };
 // BOTTOM OF METADATA
 });
