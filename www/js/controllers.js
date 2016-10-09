@@ -66,12 +66,14 @@ angular.module('starter.controllers', ['WifiServices'])
                         { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '3'},
                         { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '4'}
         ]
+    
     }
 
     //所有节点
     $scope.AllAlarmsViewModel = {
         alarms: null,
-        rows:null
+        rows:null,
+        enableMore:true
     };
     //正在报警
     $scope.AlarmingViewModel = {
@@ -85,8 +87,8 @@ angular.module('starter.controllers', ['WifiServices'])
     //提醒toggle
     $scope.TempToggle = {
         notifyVersion: false,
-        notifyVib: false,
-        notifyPush :false
+        notifyVib: 0,
+        notifyPush :0
     };
     //正在编辑用户类
     $scope.UserViewModel = { user: null };
@@ -96,7 +98,8 @@ angular.module('starter.controllers', ['WifiServices'])
     //操作记录条数
     $scope.StackViewModel = {
         manustack:null,
-        options:null
+        options:10,
+        enableMore:true
     };
     //套餐list
     $scope.MenuViewModel ={
@@ -106,6 +109,14 @@ angular.module('starter.controllers', ['WifiServices'])
     //验证码
     $scope.ValidInfoViewModel ={
         PhoneNum: null, ValidCode: null, newPW: null
+    };
+    //smartconfig
+    $scope.NetConfigViewModel = {
+      SSID:null,password:null,GatewayIP:null  
+    };
+    
+    $scope.AdvertiseViewModel = {
+      ADs:null  
     };
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
@@ -134,10 +145,10 @@ angular.module('starter.controllers', ['WifiServices'])
     $timeout(function () {
         ionic.EventController.trigger("resize", "", true, false);
     }, 1500);
-    var timespaned = 0;
+   // var timespaned = 0;
     //更新device信息
     $scope.updateDeviceData = function () {
-        timespaned++;
+        //timespaned++;
         var devicelisturl = '/device/list';
         var devicelistreqd = { "cust_id": $scope.global.cust_id };
         var devicelistreq = httpReqGen(devicelisturl, devicelistreqd);
@@ -145,36 +156,49 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(devicelistreq).success(function (data) {
             //取返回值有效data
             var resdata = resResult(data);
-            console.log(resdata);
-            if (resdata == false)
-                return;
             //DevicesViewModel.devices 用户下所有主机
             $scope.DevicesViewModel.devices = null;
             $scope.DevicesViewModel.devices = resdata;
+            var sResData = null;
+            if($scope.UsingDeviceViewModel.device == null){
+                $scope.UsingDeviceViewModel.device = resdata[0];
+                sResData = resdata[0];
+            }
+            else{
+                var queryResult = Enumerable.From(resdata)
+                    .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
+                    .ToArray();
+                    if(queryResult == null)
+                     alert("切换主机信息请求失败");
+                sResData = queryResult[0];
+                // console.log(queryResult[0].device_id);
+                // console.log(queryResult[0].device_name);
+            }
             //UsingDeviceViewModel.device 当前使用主机
-            $scope.UsingDeviceViewModel.device = resdata[0];
+            
             //布防状态alert_status 1布防 0撤防
-            if (resdata[0].alert_status == 0) {
+            if (sResData.alert_status == 0) {
                 $scope.UsingDeviceViewModel.device.alert_status = false;
                 $scope.UsingDeviceViewModel.device.titleText = "撤防";
-                $scope.UsingDeviceViewModel.device.icon = "ion-unlocked";
             }
             else {
                 $scope.UsingDeviceViewModel.device.alert_status = true;
                 $scope.UsingDeviceViewModel.device.titleText = "布防";
-                $scope.UsingDeviceViewModel.device.icon = "ion-locked";
             }
+
 
             //状态status 1在线 0掉线
-            if (resdata[0].status == 1) {
-                $scope.OverViewViewModel.Status = "您当前的主机正在正常运行";
-                $scope.UsingDeviceViewModel.device.status = true;
-            }
-            else {
-                $scope.OverViewViewModel.Status = "您当前的主机已掉线";
-                $scope.UsingDeviceViewModel.device.status = false;
+            if (sResData.status == 1) {
+              $scope.UsingDeviceViewModel.device.status = true;    
+              $scope.OverViewViewModel.Status = "您当前的主机正在正常运行";
+              $scope.UsingDeviceViewModel.device.icon = "ion-connection-bars";
             }
 
+            else {
+                $scope.UsingDeviceViewModel.device.status = false;    
+                $scope.OverViewViewModel.Status = "您当前的主机已经失联";
+                $scope.UsingDeviceViewModel.device.icon = "ion-alert";
+            }
 
             //主机信息返回后请求节点信息
             var nodelisturl = '/node/list';
@@ -201,34 +225,34 @@ angular.module('starter.controllers', ['WifiServices'])
                     //取返回值有效data
                     var alarmsdata = resResult(data);
                     
-                    //模拟数据
-                    alarmsdata = [{ "device_id": "7CEC793924C3", "node_type": 4, "node_id": 1, "alert_type": 1, "alert_time": "2011-03-09 12:23:31", "device_name": "fakename" }
-                                            , { "device_id": "7CEC793924C3", "node_type": 3, "node_id": 2, "alert_type": 2, "alert_time": "2012-03-09 12:23:31", "device_name": "fakename" },
-                                            { "device_id": "7CEC793924C3", "node_type": 1, "node_id": 3, "alert_type": 3, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" },
-                                            { "device_id": "7CEC793924C2", "node_type": 1, "node_id": 4, "alert_type": 4, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" }];
-                    if (timespaned > 2)
-                       alarmsdata = [];
+                    // //模拟数据
+                    alarmsdata = [{ "device_id": "7CEC793924B8", "node_type": 4, "node_id": 1, "alert_type": 1, "alert_time": "2011-03-09 12:23:31", "device_name": "fakename" }
+                                             , { "device_id": "7CEC793924B8", "node_type": 3, "node_id": 2, "alert_type": 2, "alert_time": "2012-03-09 12:23:31", "device_name": "fakename" },
+                                             { "device_id": "7CEC793924B8", "node_type": 1, "node_id": 3, "alert_type": 3, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" },
+                                             { "device_id": "7CEC793924B8", "node_type": 1, "node_id": 4, "alert_type": 4, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" }];
+                     //if (timespaned > 2)
+                     //   alarmsdata = [];
                     //报警数据map
                     alarmDataMap(alarmsdata);
                     //AlarmsViewModel.nodes 当前主机下所有报警节点
                     $scope.AlarmingViewModel.alarms = alarmsdata;
 
-                    //根据alarm更新overview页面blcok
-                    if (alarmsdata.length != 0) {
-                        $scope.cssHelpViewModel.corecubicClass = "item blockLine-middle cubicAlarm";
-                        $scope.cssHelpViewModel.corecubicTxt = "blockLine-Desc fontBlack coretxtadd";
-                    }
-                    else{
-                        $scope.cssHelpViewModel.corecubicClass = "item blockLine-middle cubicNormal";
-                        $scope.cssHelpViewModel.corecubicTxt = "blockLine-Desc fontBlack coretxtadd";
-                    }
+                    // //根据alarm更新overview页面blcok
+                    // if (alarmsdata.length != 0) {
+                    //     $scope.cssHelpViewModel.corecubicClass = "item blockLine-middle cubicAlarm";
+                    //     $scope.cssHelpViewModel.corecubicTxt = "blockLine-Desc fontBlack coretxtadd";
+                    // }
+                    // else{
+                    //     $scope.cssHelpViewModel.corecubicClass = "item blockLine-middle cubicNormal";
+                    //     $scope.cssHelpViewModel.corecubicTxt = "blockLine-Desc fontBlack coretxtadd";
+                    // }
                         
 
                     //首页设备报警颜色
                     alarmCoreJudge(alarmsdata);
 
-                    //报警概要
-                    alarmDescGen(alarmsdata, $scope);
+                    // //报警概要
+                    // alarmDescGen(alarmsdata, $scope);
 
                 }).error(function () {
                     alert("节点报警信息Error，服务器请求故障");
@@ -251,6 +275,8 @@ angular.module('starter.controllers', ['WifiServices'])
 
     //页面初始化方法
     $scope.DataReq = function () {
+        //初始化cubiccore
+        $('#cubicCore').addClass("blockLine-middle").addClass("item").addClass("cubicNormal");        
         //刷新data
         timer = $interval($scope.updateDeviceData, 5000);
 
@@ -268,24 +294,24 @@ angular.module('starter.controllers', ['WifiServices'])
         $scope.updateDeviceData();
 
 
-            //加载TempToggle配置文件
-            var n_versionStr = locals.get("n_version", "false");
-            if (n_versionStr == "false")
-                $scope.TempToggle.notifyVersion = false;
-            else
-                $scope.TempToggle.notifyVersion = true;
+            // //加载TempToggle配置文件
+            // var n_versionStr = locals.get("n_version", "false");
+            // if (n_versionStr == "false")
+            //     $scope.TempToggle.notifyVersion = false;
+            // else
+            //     $scope.TempToggle.notifyVersion = true;
 
-            var n_vibStr = locals.get("n_vib", "false");
-            if (n_vibStr == "false")
-                $scope.TempToggle.notifyVib = false;
-            else
-                $scope.TempToggle.notifyVib = true;
+            // var n_vibStr = locals.get("n_vib", "false");
+            // if (n_vibStr == "false")
+            //     $scope.TempToggle.notifyVib = false;
+            // else
+            //     $scope.TempToggle.notifyVib = true;
 
-            var n_pushStr = locals.get("n_push", "false");
-            if (n_pushStr == "false")
-                $scope.TempToggle.notifyPush = false;
-            else
-                $scope.TempToggle.notifyPush = true;
+            // var n_pushStr = locals.get("n_push", "false");
+            // if (n_pushStr == "false")
+            //     $scope.TempToggle.notifyPush = false;
+            // else
+            //     $scope.TempToggle.notifyPush = true;
             //
             $scope.OverViewViewModel.JustLogin = false;
 
@@ -294,12 +320,24 @@ angular.module('starter.controllers', ['WifiServices'])
         //九宫格css
         //circleCss();
         //DataReq end
+        
+
     }
     $timeout(function () {
         $ionicLoading.hide();
     }, 1000);
 
     
+    //InAppBrowser
+    $scope.openUrl=function(url){
+        if (!cordova.InAppBrowser) {
+            return;
+        }
+        // toolbar=yes 仅iOS有效,提供关闭、返回、前进三个按钮
+        // toolbarposition=top/bottom 仅iOS有效,决定toolbar的位置
+        // closebuttoncaption=关闭 仅iOS有效
+        cordova.InAppBrowser.open(url, '_blank', 'location=no,toolbar=yes,toolbarposition=top,closebuttoncaption=关闭');
+        }
     //布防撤防方法
     $scope.armStatusBtnChange = function () {
         //若当前撤防状态则布防
@@ -350,23 +388,107 @@ angular.module('starter.controllers', ['WifiServices'])
             });
         }
     };
+    $scope.armStatusToggleChanged = function () {
+        //若当前撤防状态则布防
+        if ($scope.UsingDeviceViewModel.device.alert_status) {
+            var armurl = '/device/arming';
+            var armreqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id };
+            var armreq = httpReqGen(armurl, armreqd);
 
-    $scope.Emergency = function () {
-        ////紧急报警api
-        //var armurl = '';
-        //var armreqd = {};
-        //var armreq = httpReqGen(armurl, armreqd);
+            $http(armreq).success(function (data) {
+                //返回0000
+                if (data.result.code == "0000") {
+                    //更新device node alarm
+                    $scope.updateDeviceData();
+                }
+                    //布防失败
+                else {
+                    alert("布防请求失败");
+                }
+                //显示文字和锁图标
+                $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
+            }).error(function () {
+                alert("布防撤防服务器请求故障");
+            });
+        }
+            //若当前布防状态则撤防
+        else {
+            var armurl = '/device/unarming';
+            var armreqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id };
+            var armreq = httpReqGen(armurl, armreqd);
 
-        //$http(armreq).success(function (data) {
-        //    if (data.result.code == "0000") {
-        //    }
-        //    else {
-        //        alert("");
-        //    }
-        //}).error(function () {
-        //    alert("紧急报警服务器请求故障");
-        //});
+            $http(armreq).success(function (data) {
+                //返回0000
+                if (data.result.code == "0000") {
+                    //更新device node alarm
+                    $scope.updateDeviceData();
+                }
+                    //布防失败
+                else {
+                    alert("撤防请求失败");
+                }
+                //显示文字和锁图标
+                $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
+            }).error(function () {
+                alert("布防撤防服务器请求故障");
+                console.log("布防撤防服务器请求故障");
+            });
+        }
+    };
+
+    $scope.Emergency = function (idx,alertMain,alertSub) {
+        var xsel = "#item-" + idx + " .sector";
+        $(xsel).css("fill","#fff");
+           var confirmPopup = $ionicPopup.confirm({
+             title: alertMain,
+             template: alertSub,
+             cancelText: '取消',
+             okText: '好的'
+           });
+
+           confirmPopup.then(function(res) {
+             if(res) {
+               console.log('yep');
+             } else {
+               console.log('nope');
+             }
+           });
+    };
+    $scope.qazxsw = function(){
+        alert("qazxsw");
+        console.log("qazxsw");
     }
+    $scope.testfunc = function(e){
+        e.preventDefault(); 
+        console.log("clicked");
+    }
+    $scope.touchEv = function(idx){
+        var xsel = "#item-" + idx + " .sector";
+        $(xsel).css("fill","#c5c3c3");
+        console.log("just touch");
+    }
+    $scope.releaseEv = function(idx){
+        var xsel = "#item-" + idx + " .sector";
+        $(xsel).css("fill","#fff");
+        console.log("released");
+    }
+    $scope.clickEv = function(idx){
+        var xsel = "#item-" + idx + " .sector";
+        $(xsel).css("fill","#fff");
+        console.log("clicked");
+    }
+     // An alert dialog
+     $scope.showAlert = function(alertMain,alertSub) {
+       var alertPopup = $ionicPopup.alert({
+         title: alertMain,
+         template: alertSub,
+         okText: '好的'
+       });
+
+       alertPopup.then(function(res) {
+         console.log('an alert called');
+       });
+     };
     //说明modal
     $scope.openModal = function () {
         startModal($ionicLoading);
@@ -381,8 +503,10 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
-    $scope.nodeTypeTap = function(route, detType,detTypeId) {
+    $scope.nodeTypeTap = function(idx,route, detType,detTypeId) {
         //$scope.UsingNodesViewModel.nodes = nodes;
+        var xsel = "#item-" + idx + " .sector";
+        $(xsel).css("fill","#fff");
         $scope.UsingNodesViewModel.nodeType = detType;
         $scope.UsingNodesViewModel.nodeTypeId = detTypeId;
         
@@ -550,7 +674,9 @@ angular.module('starter.controllers', ['WifiServices'])
 
   $scope.logout = function () {
     ////取消刷新
-      $interval.cancel(timer);
+        if("undefined" != typeof(timer)){
+            $interval.cancel(timer);
+        }
     alert(locals.get("cust_id",""));
     //存储数据
     //locals.set("username","0");
@@ -560,39 +686,38 @@ angular.module('starter.controllers', ['WifiServices'])
     $state.go('app.login');
   }
 })
-.controller('MaintananceCtrl', function ($scope, $state, locals) {
+.controller('MaintananceCtrl', function ($scope, $state, locals,$http) {
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
 
-    $scope.init = function () {
-        alert("报修借口未实现");
-    }
     $scope.GuestSevice = { Maintanance: null };
 
     $scope.maintananceSubmit = function () {
         alert(locals.get("cust_id", ""));
         //报修申请
+        var url = '/device/repairs';
+        var reqd = {cust_id:$scope.global.cust_id, device_id:$scope.UsingDeviceViewModel.device.device_id,
+            contact:$scope.GuestSevice.Maintanance.phone,
+            describe:$scope.GuestSevice.Maintanance.deviceAddress,
+            visiting_time:$scope.GuestSevice.Maintanance.time};
+        var req = httpReqGen(url, reqd);
 
-        //var url = '';
-        //var reqd = { };
-        //var req = httpReqGen(url, reqd);
-
-        //$http(req).success(function (data) {
-        //    //取返回值有效data
-        //    if (data.result.code == "0000") {
-        //        alert("报修已提交");
-        //        $state.go("app.nodes");
-        //    }
-        //    else
-        //        alert(data.result.msg);
-        //}).error(function () {
-        //    alert("服务器请求故障");
-        //});
+        $http(req).success(function (data) {
+           //取返回值有效data
+           if (data.result.code == "0000") {
+               alert("报修已提交");
+               $state.go("app.settings");
+           }
+           else
+               alert(data.result.msg);
+        }).error(function () {
+           alert("服务器请求故障");
+        });
 
     }
 })
 
-.controller('AlarmsCtrl', function ($scope, $state, locals, $http,$ionicActionSheet) {
+.controller('AlarmsCtrl', function ($scope, $state, locals, $http,$ionicActionSheet,$timeout) {
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
     var simuldata = {
@@ -633,9 +758,10 @@ angular.module('starter.controllers', ['WifiServices'])
            var validData = resResult(data);
            if (validData) {
                //simul
-               totalPages = simuldata.totalPage;
-               data = simuldata.dataList;
+               totalPages = validData.totalPage;
+               data = validData.dataList;
                 $scope.AllAlarmsViewModel.alarms = data;
+                $scope.AllAlarmsViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
            }
            else
                alert(data.result.msg);
@@ -664,7 +790,7 @@ angular.module('starter.controllers', ['WifiServices'])
            var validData = resResult(data);
            if(validData){
                //simul
-               data = simuldata;
+               data = validData;
                
                 $scope.AlarmingViewModel.alarms = data;
            }
@@ -687,9 +813,11 @@ angular.module('starter.controllers', ['WifiServices'])
                     buttonClicked: function(index) {
                                  var url = '/device/alert/handle';
                                 var reqd = {"alert_id": alarm.alert_id};
+                                
                                 var req = httpReqGen(url, reqd);
 
                                 $http(req).success(function (data) {
+                                    alarm.opt_result = 1;
                                    //取返回值有效data
                                    if(data.result.code == "0000")
                                     alert("acknowledged");
@@ -699,33 +827,70 @@ angular.module('starter.controllers', ['WifiServices'])
                                    alert("服务器请求故障");
                                 });
                         
-                            //再次获取alarm list
-                            //获取所有报警记录
-                            var url = '/device/alert';
-                            var reqd = {"cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id};
-                            var req = httpReqGen(url, reqd);
+                            // //再次获取alarm list
+                            // //获取所有报警记录
+                            // var url = '/device/alert';
+                            // var reqd = {"cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id};
+                            // var req = httpReqGen(url, reqd);
 
-                            $http(req).success(function (data) {
-                            //取返回值有效data
-                            var validData = resResult(data);
-                            if(validData){
-                                //simul
-                                data = simuldata;
-                                
-                                    $scope.AlarmingViewModel.alarms = data;
-                            }
-                            else
-                                alert(data.result.msg);
-                            }).error(function () {
-                            alert("服务器请求故障");
-                            });
+                            // $http(req).success(function (data) {
+                            //         //获取所有报警记录
+                            //         var url = '/device/alert/record';
+                            //         var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, 
+                            //         "page": currentPage, "rows": $scope.AllAlarmsViewModel.rows };
+                            //         var req = httpReqGen(url, reqd);
+
+                            //         $http(req).success(function (data) {
+                            //         //取返回值有效data
+                            //         var validData = resResult(data);
+                            //         if (validData) {
+                            //             //simul
+                            //             totalPages = validData.totalPage;
+                            //             data = validData.dataList;
+                            //                 $scope.AllAlarmsViewModel.alarms = data;
+                            //         }
+                            //         else
+                            //             alert(data.result.msg);
+                            //         }).error(function () {
+                            //         alert("服务器请求故障");
+                            //         });
+                            // }).error(function () {
+                            // alert("服务器请求故障");
+                            // });
                             
                         return true;
                     }
                 });
         //$state.go("app.alarms");
     }
+    $scope.doRefresh = function() {  
+        $timeout( function() {  
+                //获取所有报警记录
+            var url = '/device/alert/record';
+            var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, "page": 1, "rows": $scope.AllAlarmsViewModel.rows };
+            var req = httpReqGen(url, reqd);
 
+            $http(req).success(function (data) {
+            //取返回值有效data
+            var validData = resResult(data);
+            if (validData) {
+                //simul
+                totalPages = validData.totalPage;
+                data = validData.dataList;
+                    $scope.AllAlarmsViewModel.alarms = data;
+                    $scope.AllAlarmsViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
+            }
+            else
+                alert(data.result.msg);
+            }).error(function () {
+            alert("服务器请求故障");
+            });
+            console.log("added");
+            $scope.$broadcast('scroll.refreshComplete');  
+        
+        }, 3000);  
+            
+    };  
 })
 
 /////////////////////////////////////////////////       
@@ -957,6 +1122,7 @@ angular.module('starter.controllers', ['WifiServices'])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //设置 app.settings settings.html
 .controller('settingsCtrl', function($scope, $state, locals) {
+    ///account/setting push vib
   if (!locals.get("cust_id",""))
       $state.go("app.login");
 
@@ -967,16 +1133,53 @@ angular.module('starter.controllers', ['WifiServices'])
   }
 
 })
-.controller('MessageSettingCtrl', function ($scope, $state, locals) {
+.controller('MessageSettingCtrl', function ($scope, $state, locals,$http) {
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
     $scope.vibToggleChanged = function () {
-        var result = ($scope.TempToggle.notifyVib) ? true : false;
-        locals.set("n_vib", result);
+        var pushr = ($scope.TempToggle.notifyPush) ? 1 : 0;
+        var vibr = ($scope.TempToggle.notifyVib) ? 1 : 0;
+        
+        var url = '/account/setting';
+        var reqd = {"cust_id":$scope.global.cust_id , "push": pushr, "vib": vibr };
+        var req = httpReqGen(url, reqd);
+
+        $http(req).success(function (data) {
+            if(data.result.code == '0000'){
+                alert("震动设置已保存");
+            }
+            else{
+                alert(data.result.msg);
+                $scope.TempToggle.notifyVib = !$scope.TempToggle.notifyVib;
+            }
+
+        }).error(function () { 
+            alert("服务器请求失败");
+            $scope.TempToggle.notifyVib = !$scope.TempToggle.notifyVib;
+        });
     }
     $scope.pushToggleChanged = function () {
-        var result = ($scope.TempToggle.notifyPush) ? true : false;
-        locals.set("n_push", result);
+        var pushr = ($scope.TempToggle.notifyPush) ? 1 : 0;
+        var vibr = ($scope.TempToggle.notifyVib) ? 1 : 0;
+        
+        var url = '/account/setting';
+        var reqd = {"cust_id":$scope.global.cust_id , "push": pushr, "vib": vibr };
+        var req = httpReqGen(url, reqd);
+
+        $http(req).success(function (data) {
+
+            if(data.result.code == '0000'){
+                alert("震动设置已保存");
+            }
+            else{
+                alert(data.result.msg);
+                $scope.TempToggle.notifyPush = !$scope.TempToggle.notifyPush;
+            }
+
+        }).error(function () { 
+            alert("服务器请求失败");
+            $scope.TempToggle.notifyPush = !$scope.TempToggle.notifyPush;
+        });
     }
 })
 /////////////////////////////////////////////////
@@ -1001,7 +1204,7 @@ angular.module('starter.controllers', ['WifiServices'])
   };
 })
 //主机管理 app.devicemanage devicemanage.html
-.controller('DeviceMangeCtrl', function ($scope, $state,$http) {
+.controller('DeviceMangeCtrl', function ($scope, $state,$http,$cordovaBarcodeScanner) {
     $scope.data = {};
     //console.log($scope.UsingDeviceViewModel.name);
     $scope.init = function () {
@@ -1144,12 +1347,23 @@ angular.module('starter.controllers', ['WifiServices'])
   }
 })
 //支付 app.purchaseinfo purchaseinfo.html
-.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading,$http) {
+.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading) {
   $scope.init = function(){
                 var simuloptiondata = [{"name":"套餐1", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"},
                 {"name":"套餐2", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"},
                 {"name":"套餐3", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"}];
-                       $scope.MenuViewModel.menu = simuloptiondata;
+            // //套餐api
+            // var url = '';
+            // var reqd = { };
+            // var req = httpReqGen(url, reqd);
+
+            // $http(req).success(function (data) {
+            //     var validData = resResult(data);
+            //     if (validData) {
+            //     }
+            // }).error(function () { });
+            
+            $scope.MenuViewModel.menu = simuloptiondata;
   }
     
   $scope.intoPurchase = function(menu){
@@ -1168,48 +1382,42 @@ angular.module('starter.controllers', ['WifiServices'])
                     }
                 });
      };
+     
+       $scope.purchase = function(){
+    alert("alipay demo");
+    var myDate = new Date();
+    var tradeNo = myDate.getTime();
+    var alipayClass = navigator.alipay;
 
-    //测试套餐ID: "736070745670844416", "736264452149002240"
-    $scope.purchase = function(){
-        //alert("alipay");
-        var requestData = {
-          cust_id: '739463644126191616',
-          pay_channel: 'alipay',
-          plan_id: '736264452149002240'
-        };
-
-        var apibranch = '/trade/submit';
-        var request = httpReqGen(apibranch,requestData);
-
-        $http(request).then(function(response) {
-            var purdata = response.data.result;
-            console.log(purdata);
-            var signStr = purdata.data.sign;
-            console.log(signStr);
-
-            //调用支付宝接口，传入payInfo = signStr.
-            var alipayClass = navigator.alipay;
-
-            alipayClass.pay({
-                    "payInfo":signStr  
-            },function(resultStatus){
-              alert(resultStatus);
-              $ionicLoading.show({
-                template:"支付宝测试返回结果＝" + resultStatus,
-                noBackdrop: true,
-                duration: 500
-              });
-            },function(message){
-              alert(message);
-              $ionicLoading.show({
-                template:"支付宝支付失败＝" + message,
-                noBackdrop: true,
-                duration: 500
-              });
-            });
-        }, function(error) {
-            alert("error");
-        });
+    //支付宝公钥
+    var pubRsa = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
+    var rsa = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMrmQGgiRA56RA60TAoOO16gFTHIXPyNElcuMLlBQ0TzIGI83RC9vgWLmOmrN5r34VzWM7DIdyHf8u16B32T0LDKr/veUXkrwzXeNAPycqqRasodxE9BU4bSRdKxzc2/T+eraLsXhCcROi4pG/02PUwBht2HA3gOmYbUcUoxHQ91AgMBAAECgYApz5LcIpuFpDpcEVlOBSrE0BYuAQzwWh26a2FM+57iGXvF4qbnaUI8IE0tccPuokAFgnp6ZoTuLRkBSNE8VnZ9acCdUfbV5qiD4AZYVALlR3iI+QOEHMd3YZZ4iitcsTQqaS8RttG+6Cu2ma+GsWtXggvBBUE4QAr7b8lLr9p37QJBAPZLZebBZE8tGfLgrUow3SVpsp3aOsHZ2tZPYfzNMGhyVVApdqBtwjBrQeKETCBqT+VTAaRX1wwDKLPDHhZUUosCQQDS5RY2RCCpb3Kh565XN1VPYmJdgATpGxQgjOj9Q6oWAD/aghunuD69idoSC1WzHrI7RDKb09gIwzoxC16jamX/AkEAhFpMLk7qqqmf8ibOuLm9fWdpdu5Y+OcrdFNAYuuZAee+9M7zUo7o9cANrb5OcnTu7ltG3JvfkjL4YnGN743stQJAfyXO9nismHqwyhw8aCjcLjhKxcRhMYk54UYTUl5xNUKBPOQkeEIE0ZFDAI4E5TEkk8bSHFDkdqP9eYQ5UpzbUQJBAKKIEZg7zxnMI4BFPGUT7P4SrEe8NgScjZpySvZAhQeTzTEPBmy702c1A7QFy7TzxDf/7gG9KHVBiMemfyDMyIw=";
+    alipayClass.pay({
+                    "partner":"2088421286292033",    //商户ID
+                    "rsa_private":rsa,               //私钥
+                    "rsa_public":pubRsa,                //公钥
+                    "seller":"2088421286292033",    //收款支付宝账号或对应的支付宝唯一用户号
+                    "subject":"测试文件",             //商品名称
+                    "body":"支付宝支付",        //商品详情
+                    "price":"0.01",                  //金额
+                    "tradeNo":tradeNo,             
+                    "timeout":"30m",                 //超时设置
+                    "notifyUrl":"http://www.baidu.com"
+    },function(resultStatus){
+      alert(resultStatus);
+      $ionicLoading.show({
+        template:"支付宝测试返回结果＝" + resultStatus,
+        noBackdrop: true,
+        duration: 500
+      });
+    },function(message){
+      alert(message);
+      $ionicLoading.show({
+        template:"支付宝支付失败＝" + message,
+        noBackdrop: true,
+        duration: 500
+      });
+    });
   };
 })
 
@@ -1277,30 +1485,42 @@ angular.module('starter.controllers', ['WifiServices'])
     };
     var totalPage = 1;
     var pageCount = 1;  
-    $scope.loadMore = function(){
-        pageCount ++;
-    };
     $scope.selectUpdated = function(selValue){
         $scope.StackViewModel.options = selValue;
     };
     $scope.init = function(){
-            alert("操作记录数据结构尚未提供");
+        var manulisturl = '/device/opt/record';
+                        var manulistreqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, 
+                        "page": pageCount, "rows": $scope.StackViewModel.options};
+                        var manulistreq = httpReqGen(manulisturl, manulistreqd);
 
-            var manulisturl = '/device/opt/record';
-            var manulistreqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, 
-            "page": pageCount, "rows": $scope.StackViewModel.options};
-            var manulistreq = httpReqGen(manulisturl, manulistreqd);
+                        $http(manulistreq).success(function (data) {
+                            //取返回值有效data
+                            var validData = resResult(data);
+                                if (validData) {
+                                    totalPage = validData.totalPage;
+                                    data = validData.dataList;
+                                    $scope.StackViewModel.manustack = data;
+                                    $scope.StackViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
+                                }
+                                else
+                                    alert(data.result.msg);                
+                            //更新内存的操作记录
 
-            // $http(manulistreq).success(function (data) {
-            //     //取返回值有效data
-            //     var manudata = resResult(data);
-            //     //更新内存的操作记录
-            //     $scope.StackViewModel.manustack = manudata;
-            // }).error(function () {
-            //     alert("服务器请求故障");
-            // });
-            $scope.StackViewModel.manustack = simuloptiondata;
-        };    
+                            
+                            
+                        }).error(function () {
+                            alert("服务器请求故障");
+                        });        
+    };       
+
+    $scope.loadMoreStackManus = function () {
+                pageCount++;
+                if (pageCount > totalPage)
+                    alert("No more alarms");
+                else
+                    loadMoreStackmanus(pageCount, $scope, $http);
+            }
 })
 /////////////////////////////////////////////////
 ///
@@ -1343,7 +1563,10 @@ angular.module('starter.controllers', ['WifiServices'])
         if(scClass){
           alert("success");
 
-          var data = {"ssid":"Xiaomi_C3AD", "password":"12345678", "gateway":"192.168.31.1"};
+          var data = {
+              "ssid":$scope.NetConfigViewModel.SSID, 
+          "password":$scope.NetConfigViewModel.password, 
+          "gateway":$scope.NetConfigViewModel.GatewayIP};
           scClass.startSending(
             data,
             function(resultMsg){
@@ -1451,11 +1674,14 @@ angular.module('starter.controllers', ['WifiServices'])
 
     $http(request).then(function(response) {
         //取返回值有效data
-        var nodesdata = resResult(response.data);
-        $scope.global.cust_id = nodesdata;
-        $state.go('app.userinfo');
-
+        if (response.data.result.code == "0000"){
+            alert("注册成功");
+            $state.go('app.login');
+        }
+        else
+            alert(response.data.result.msg);
     }, function(error) {
+        alert("注册用户服务器请求故障");
     });
   }
   $scope.pageJump = function (route) {
@@ -1586,6 +1812,11 @@ angular.module('starter.controllers', ['WifiServices'])
               //console.log(locals.get("username", ""));
               //console.log(locals.get("cust_id", ""));
               $scope.OverViewViewModel.JustLogin = true;
+              
+              
+              $scope.TempToggle.notifyPush = (result.data.push == 1)? true:false;
+              $scope.TempToggle.notifyVib = (result.data.vib == 1)? true:false;
+              
               $state.go('app.dashboard.overview');
           } else {
               alert(result.msg);
@@ -1602,7 +1833,41 @@ angular.module('starter.controllers', ['WifiServices'])
   }
   $scope.setFormScope = function(scope){
     this.formScope = scope;
-  }
+  };
+      //AD
+    $scope.adRequire = function(){
+                //广告image src
+            var srcurl = '/app/launcher';
+            var srcreqd = { "platform": "iOS"};
+            var srcreq = httpReqGen(srcurl, srcreqd);
+            var simulAd = [{ "ad_img":"http://i1.pixiv.net/c/600x600/img-master/img/2016/09/18/21/16/45/59049424_p0_master1200.jpg",
+                                        "stop_time":3,
+                                        "ad_href":"http://www.qq.com",
+                                        "title":"test1"},
+                                    { "ad_img":"http://i2.pixiv.net/c/600x600/img-master/img/2016/10/04/21/33/24/59307581_p0_master1200.jpg",
+                                    "stop_time":3,
+                                    "ad_href":"http://www.qq.com",
+                                    "title":"test2"},
+                                    { "ad_img":"http://i4.pixiv.net/c/600x600/img-master/img/2016/09/22/20/37/19/59114807_p0_master1200.jpg",
+                                    "stop_time":3,
+                                    "ad_href":"http://www.qq.com",
+                                    "title":"test3"}];
+
+            $http(srcreq).success(function (data) {
+                //返回0000
+                if (data.result.code == "0000") {
+                    //更新device node alarm
+                    // AdvertiseViewModel.ADs = data.result.data;
+                    $scope.AdvertiseViewModel.ADs = simulAd;
+                }
+                  
+                else {
+                    alert(data.result.msg);
+                }
+            }).error(function () {
+                alert("广告服务器请求故障");
+            });
+    };
 })
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1639,7 +1904,7 @@ function getReqNo(){
 }
 function httpReqGen(apibranch,reqData){
     var code = getReqNo();
-    var url = 'http://t.xinlaihome.cn:8081/xinlai/' + apibranch + '?req_no=' + code;
+    var url = 'http://t.xinlaihome.cn:8081/xinlai' + apibranch + '?req_no=' + code;
     return req = {
       headers: {
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -1652,7 +1917,7 @@ function httpReqGen(apibranch,reqData){
 }
 function httpReqGETGen(apibranch){
     var code = getReqNo();
-    var url = 'http://t.xinlaihome.cn:8081/xinlai/' + apibranch + '?req_no=' + code;
+    var url = 'http://t.xinlaihome.cn:8081/xinlai' + apibranch + '?req_no=' + code;
     return req = {
       headers: {
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -1742,32 +2007,48 @@ function startModal($ionicLoading) {
 //首页报警颜色显示
 function alarmCoreJudge(alarmdata) {
     if (alarmdata.length != 0) {
+        if($('#trigger').css("fill") != "rgb(204, 35, 17)"){
+                        $('#trigger').css("fill","rgb(204, 35, 17)");
+                    }
         $.each(alarmdata, function () {
             switch (this.node_type) {
                 case 0:
-                    $('#eKeyDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    $('#eKeyCore').removeClass("fontNormal").addClass("fontAlarm");
-                    $('#eKeytxt').removeClass("fontBlack").addClass("fontWhite");
+                    //$('#item-1 use').removeClass("citemNormal").addClass("citemAlarm");
+                    // $('#eKeyDevices').removeClass("cubicWhite").addClass("cubicAlarm");
+                    // $('#eKeyCore').removeClass("fontNormal").addClass("fontAlarm");
+                    // $('#eKeytxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 1:
-                    $('#megnetDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    $('#megnetCore').removeClass("fontNormal").addClass("fontAlarm");
-                    $('#megnettxt').removeClass("fontBlack").addClass("fontWhite");
+                    if($('#item-1 use').css("fill") != "rgb(204, 35, 17)"){
+                        $('#item-1 use').css("fill","rgb(204, 35, 17)");
+                    }
+                    // $('#megnetDevices').removeClass("cubicWhite").addClass("cubicAlarm");
+                    // $('#megnetCore').removeClass("fontNormal").addClass("fontAlarm");
+                    // $('#megnettxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 2:
-                    $('#infraDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    $('#infraCore').removeClass("fontNormal").addClass("fontAlarm");
-                    $('#infratxt').removeClass("fontBlack").addClass("fontWhite");
+                    if($('#item-2 use').css("fill") != "rgb(204, 35, 17)"){
+                        $('#item-2 use').css("fill","rgb(204, 35, 17)");
+                    }
+                    // $('#infraDevices').removeClass("cubicWhite").addClass("cubicAlarm");
+                    // $('#infraCore').removeClass("fontNormal").addClass("fontAlarm");
+                    // $('#infratxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 3:
-                    $('#smokeDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    $('#smokeCore').removeClass("fontNormal").addClass("fontAlarm");
-                    $('#smoketxt').removeClass("fontBlack").addClass("fontWhite");
+                     if($('#item-3 use').css("fill") != "rgb(204, 35, 17)"){
+                        $('#item-3 use').css("fill","rgb(204, 35, 17)");
+                    }
+                    // $('#smokeDevices').removeClass("cubicWhite").addClass("cubicAlarm");
+                    // $('#smokeCore').removeClass("fontNormal").addClass("fontAlarm");
+                    // $('#smoketxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 4:
-                    $('#tempDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    $('#tempCore').removeClass("fontNormal").addClass("fontAlarm");
-                    $('#temptxt').removeClass("fontBlack").addClass("fontWhite");
+                    if($('#item-8 use').css("fill") != "rgb(204, 35, 17)"){
+                        $('#item-8 use').css("fill","rgb(204, 35, 17)");
+                    }
+                    // $('#tempDevices').removeClass("cubicWhite").addClass("cubicAlarm");
+                    // $('#tempCore').removeClass("fontNormal").addClass("fontAlarm");
+                    // $('#temptxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
 
                 default:
@@ -1776,33 +2057,35 @@ function alarmCoreJudge(alarmdata) {
         });
     }
     else {
-        $('#eKeyDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        $('#eKeyCore').removeClass("fontAlarm").addClass("fontNormal");
-        $('#eKeytxt').removeClass("fontWhite").addClass("fontBlack");         
+        $('#trigger').css("fill","rgb(87, 165, 149)");
+        $('.citem use').css("fill","rgb(87, 165, 149)");
+        // $('#eKeyDevices').removeClass("cubicAlarm").addClass("cubicWhite");
+        // $('#eKeyCore').removeClass("fontAlarm").addClass("fontNormal");
+        // $('#eKeytxt').removeClass("fontWhite").addClass("fontBlack");         
                   
-        $('#megnetDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        $('#megnetCore').removeClass("fontAlarm").addClass("fontNormal");
-        $('#megnettxt').removeClass("fontWhite").addClass("fontBlack");    
+        // $('#megnetDevices').removeClass("cubicAlarm").addClass("cubicWhite");
+        // $('#megnetCore').removeClass("fontAlarm").addClass("fontNormal");
+        // $('#megnettxt').removeClass("fontWhite").addClass("fontBlack");    
         
-        $('#infraDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        $('#infraCore').removeClass("fontAlarm").addClass("fontNormal");
-        $('#infratxt').removeClass("fontWhite").addClass("fontBlack");   
+        // $('#infraDevices').removeClass("cubicAlarm").addClass("cubicWhite");
+        // $('#infraCore').removeClass("fontAlarm").addClass("fontNormal");
+        // $('#infratxt').removeClass("fontWhite").addClass("fontBlack");   
                 
-        $('#smokeDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        $('#smokeCore').removeClass("fontAlarm").addClass("fontNormal");
-        $('#smoketxt').removeClass("fontWhite").addClass("fontBlack");          
+        // $('#smokeDevices').removeClass("cubicAlarm").addClass("cubicWhite");
+        // $('#smokeCore').removeClass("fontAlarm").addClass("fontNormal");
+        // $('#smoketxt').removeClass("fontWhite").addClass("fontBlack");          
         
-        $('#tempDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        $('#tempCore').removeClass("fontAlarm").addClass("fontNormal");
-        $('#temptxt').removeClass("fontWhite").addClass("fontBlack");          
+        // $('#tempDevices').removeClass("cubicAlarm").addClass("cubicWhite");
+        // $('#tempCore').removeClass("fontAlarm").addClass("fontNormal");
+        // $('#temptxt').removeClass("fontWhite").addClass("fontBlack");          
     }
 }
 
-//首页报警概要
-function alarmDescGen(alarmdata, $scope) {
-    if (alarmdata.length != 0)
-        $scope.OverViewViewModel.Status = "您的主机正在报警";
-}
+// //首页报警概要
+// function alarmDescGen(alarmdata, $scope) {
+//     if (alarmdata.length != 0)
+//         $scope.OverViewViewModel.Status = "您的主机正在报警";
+// }
 
 
 
@@ -1890,12 +2173,13 @@ function loadMoreAlarms(currentPage, $scope, $http) {
         if (validData) {
             //simul
             var datar = $scope.AllAlarmsViewModel.alarms;
-            var datas = simuldata.dataList;
+            var datas = validData.dataList;
 
             $.each(datas, function () {
                 datar.push(this);
             });
             $scope.AllAlarmsViewModel.alarms = datar;
+            $scope.AllAlarmsViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
         }
         else
             alert(data.result.msg);
@@ -1904,4 +2188,28 @@ function loadMoreAlarms(currentPage, $scope, $http) {
     });
 };
 
+function loadMoreStackmanus(currentPage, $scope, $http) {
+    //获取所有操作记录
+    var url = '/device/opt/record';
+    var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, "page": currentPage, "rows": $scope.StackViewModel.options };
+    var req = httpReqGen(url, reqd);
+    $http(req).success(function (data) {
+        //取返回值有效data
+        var validData = resResult(data);
+        if (validData) {
+            //simul
+            var datar = $scope.StackViewModel.manustack;
+            var datas = validData.dataList;
 
+            $.each(datas, function () {
+                datar.push(this);
+            });
+            $scope.StackViewModel.manustack = datar;
+            $scope.StackViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
+        }
+        else
+            alert(data.result.msg);
+    }).error(function () {
+        alert("服务器请求故障");
+    });
+};

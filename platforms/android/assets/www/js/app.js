@@ -7,7 +7,7 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova',
  'WifiServices'])
 
-.controller('WifiController', ['$scope', 'WifiService', function ($scope, WifiService) {
+.controller('WifiController', ['$scope', 'WifiService','$state', function ($scope, WifiService,$state) {
 
     $scope.wifiList = [];
 
@@ -23,6 +23,44 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
 
     $scope.connectWifi = function (name) {
         WifiService.connectionToWifi(name);
+    }
+    $scope.jumptoSender = function(ssid){
+          $scope.NetConfigViewModel.SSID = ssid;
+          $scope.NetConfigViewModel.password = ssid;
+
+
+
+          var scClass = navigator.smartconfig;
+          if(scClass){
+            alert("class linked");
+
+            var data = {};
+            scClass.gateWayIp(
+              data,
+              function(resultMsg){
+              alert(resultMsg);
+              $ionicLoading.show({
+                template:"成功",
+                noBackdrop: true,
+                duration: 500
+              });
+            },function(resultMsg){
+              alert(resultMsg);
+              $ionicLoading.show({
+                template:"失败",
+                noBackdrop: true,
+                duration: 500
+              });
+            });       
+          }
+
+          else{
+            alert("class link fail");
+          }
+
+          $scope.NetConfigViewModel.GatewayIP = resultMsg;
+          
+          $state.go('app.devicenetworkconnect');
     }
 }])
 
@@ -52,9 +90,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
-      //延迟splash screnn 隐藏时间,不然会有短暂的白屏出现  
-      setTimeout(function () {  navigator.splashscreen.hide();  }, 1000); 
     }
     if(window.StatusBar) {
       StatusBar.styleDefault();
@@ -293,7 +328,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           templateUrl: "templates/devicenetwork.html"
         }
       }
-    })                   
+    })  
+  .state('app.devicenetworkconnect', {
+      url: "/devicenetworkconnect",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/devicenetworkconnect.html"
+        }
+      }
+    })                         
   .state('app.notifies', {
       url: "/notifies",
       views: {

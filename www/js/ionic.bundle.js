@@ -2479,6 +2479,10 @@ ionic.tap = {
   },
 
   ignoreScrollStart: function(e) {
+    if(e.target.nodeName == "use"){
+      return false;
+    }
+    if("undefined" != typeof(e)) return false;
     return (e.defaultPrevented) ||  // defaultPrevented has been assigned by another component handling the event
            (/^(file|range)$/i).test(e.target.type) ||
            (e.target.dataset ? e.target.dataset.preventScroll : e.target.getAttribute('data-prevent-scroll')) == 'true' || // manually set within an elements attributes
@@ -2876,6 +2880,9 @@ function tapHasPointerMoved(endEvent) {
   if(!endEvent || endEvent.target.nodeType !== 1 || !tapPointerStart || ( tapPointerStart.x === 0 && tapPointerStart.y === 0 )) {
     return false;
   }
+
+  if( endEvent.target.nodeName == "path") return false;
+  if( endEvent.target.nodeName == "circle") return false;
   var endCoordinates = ionic.tap.pointerCoord(endEvent);
 
   var hasClassList = !!(endEvent.target.classList && endEvent.target.classList.contains);
@@ -2937,6 +2944,9 @@ ionic.DomUtil.ready(function(){
         if ( ionic.tap.requiresNativeClick(e.target) ) return;
         var ele = e.target;
         var eleToActivate;
+
+        if( ele.nodeName == "path") return;
+        if( ele.nodeName == "circle") return;
 
         for(var x=0; x<6; x++) {
           if(!ele || ele.nodeType !== 1) break;
