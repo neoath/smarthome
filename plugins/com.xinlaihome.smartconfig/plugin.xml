@@ -15,14 +15,14 @@
 	<platform name="android">
 
 		<source-file
-			src="src/android/com/amane/cordova/plugin/smartconfig/CC3XApiManager.java"
-			target-dir="src/com/amane/cordova/plugin/smartconfig" />
+			src="src/android/com/xinlaihome/smartconfig/CC3XApiManager.java"
+			target-dir="src/com/xinlaihome/smartconfig" />
 		<source-file
-			src="src/android/com/amane/cordova/plugin/smartconfig/CC3XWifiManager.java"
-			target-dir="src/com/amane/cordova/plugin/smartconfig" />
+			src="src/android/com/xinlaihome/smartconfig/CC3XWifiManager.java"
+			target-dir="src/com/xinlaihome/smartconfig" />
 		<source-file
-			src="src/android/com/amane/cordova/plugin/smartconfig/SmartConfigPlugin.java"
-			target-dir="src/com/amane/cordova/plugin/smartconfig" />
+			src="src/android/com/xinlaihome/smartconfig/SmartConfigPlugin.java"
+			target-dir="src/com/xinlaihome/smartconfig" />
 
 		<source-file src="src/android/smartconfiglib.jar" target-dir="libs" />
 

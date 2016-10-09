@@ -506,7 +506,7 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.nodeTypeTap = function(idx,route, detType,detTypeId) {
         //$scope.UsingNodesViewModel.nodes = nodes;
         var xsel = "#item-" + idx + " .sector";
-        $(xsel).css("fill","#fff");
+        $(xsel).css("fill","#c5c3c3");
         $scope.UsingNodesViewModel.nodeType = detType;
         $scope.UsingNodesViewModel.nodeTypeId = detTypeId;
         
