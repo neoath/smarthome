@@ -3,67 +3,30 @@
 				<div ng-repeat="menu in MenuViewModel.menu">
 					<div class="list card" ng-click="intoPurchase(menu)">
 						<div class="item item-divider">
-							{{menu.name}}
+							套餐: {{menu.name}}
 						</div>
-						<div class="item item-text-wrap">{{menu.desc}}
+						<div class="item item-text-wrap">详细描述: {{menu.name}}
 						</div>
 					<div class="item item-body">
 						<p>
-						收款账户
+						套餐编号
 						<span class="item-note">
-							{{menu.account}}
+							{{menu.plan_id}}
 							</span>
 						</p>
 						<p>
-						有效时长
+						有效时长(月)
 						<span class="item-note">
-							{{menu.licencetime}}
+							{{menu.cycle}}
 							</span>
 						</p>
 					</div>
 					<div class="item">
-						<h2>￥{{menu.payment}}
-							<span class="item-note">
-							{{menu.time}}
-							</span>
+						<h2>￥{{menu.expenses}}
 						</h2>
 					</div>
 					</div>
 				</div>					
-
-            <!--<button class="button button-block button-positive" ng-click="next()">立即缴费</button>-->
-
-            <div class="card">
-				<div class="item item-divider">
-	                详情
-	            </div>
-	            <div class="item item-text-wrap">支付详情介绍
-				</div>
-			</div>				
-			<div class="card">
-				<div class="item item-divider">
-                	须知
-            	</div>
-	            <p class="item item-text-wrap">用户须知
-				</p>
-			</div>	
-			<div class="card">
-				<div class="item item-divider">
-	                通知
-	            </div>
-	            <p class="item item-text-wrap">最新通知
-				</p>	
-			</div>	
-			<div class="card">
-				<div class="item item-divider">
-	                推广
-	            </div>
-	            <p class="item item-text-wrap">推广信息
-				</p>	
-			</div>									
-                     
-
-		       
             </ion-content>
 
         </ion-view>

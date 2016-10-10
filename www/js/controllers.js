@@ -2,7 +2,7 @@ angular.module('starter.controllers', ['WifiServices'])
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //数据
-.controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http) {
+.controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http,$ionicPopup) {
     var timer;
     $scope.global = { cust_id : 0 };
     $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', 
@@ -178,29 +178,29 @@ angular.module('starter.controllers', ['WifiServices'])
                 // console.log(queryResult[0].device_name);
             }
             //UsingDeviceViewModel.device 当前使用主机
-            
-            //布防状态alert_status 1布防 0撤防
-            if (sResData.alert_status == 0) {
-                $scope.UsingDeviceViewModel.device.alert_status = false;
-                $scope.UsingDeviceViewModel.device.titleText = "撤防";
-            }
-            else {
-                $scope.UsingDeviceViewModel.device.alert_status = true;
-                $scope.UsingDeviceViewModel.device.titleText = "布防";
-            }
+            if (sResData)
+            {
+                //布防状态alert_status 1布防 0撤防
+                if (sResData.alert_status == 0) {
+                    $scope.UsingDeviceViewModel.device.alert_status = false;
+                    $scope.UsingDeviceViewModel.device.titleText = "撤防";
+                }
+                else {
+                    $scope.UsingDeviceViewModel.device.alert_status = true;
+                    $scope.UsingDeviceViewModel.device.titleText = "布防";
+                }
+                //状态status 1在线 0掉线
+                if (sResData.status == 1) {
+                  $scope.UsingDeviceViewModel.device.status = true;    
+                  $scope.OverViewViewModel.Status = "您当前的主机正在正常运行";
+                  $scope.UsingDeviceViewModel.device.icon = "ion-connection-bars";
+                }
 
-
-            //状态status 1在线 0掉线
-            if (sResData.status == 1) {
-              $scope.UsingDeviceViewModel.device.status = true;    
-              $scope.OverViewViewModel.Status = "您当前的主机正在正常运行";
-              $scope.UsingDeviceViewModel.device.icon = "ion-connection-bars";
-            }
-
-            else {
-                $scope.UsingDeviceViewModel.device.status = false;    
-                $scope.OverViewViewModel.Status = "您当前的主机已经失联";
-                $scope.UsingDeviceViewModel.device.icon = "ion-alert";
+                else {
+                    $scope.UsingDeviceViewModel.device.status = false;    
+                    $scope.OverViewViewModel.Status = "您当前的主机已经失联";
+                    $scope.UsingDeviceViewModel.device.icon = "ion-alert";
+                }
             }
 
             //主机信息返回后请求节点信息
@@ -267,6 +267,18 @@ angular.module('starter.controllers', ['WifiServices'])
             alert("服务器请求故障");
         });
     };
+    // An alert dialog
+    $scope.showAlert = function(alertMain,alertSub) {
+       var alertPopup = $ionicPopup.alert({
+         title: alertMain,
+         template: alertSub,
+         okText: '好的'
+       });
+
+       alertPopup.then(function(res) {
+         console.log('an alert called');
+       });
+    };    
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -514,14 +526,11 @@ angular.module('starter.controllers', ['WifiServices'])
              }
            });
     };
-    $scope.qazxsw = function(){
-        var gsf = $('ion-nav-view').css("height");
-        alert(gsf);
-        console.log(gsf);
-    }
-    $scope.testfunc = function(e){
-        e.preventDefault(); 
-        console.log("clicked");
+    $scope.logandalert = function(){
+        $scope.showAlert("nothing","asd");
+        // var msg = $('ion-nav-view').css("height");
+        // alert(msg);
+        // console.log(msg);
     }
     $scope.touchEv = function(idx){
         var xsel = "#item-" + idx + " .sector";
@@ -538,18 +547,7 @@ angular.module('starter.controllers', ['WifiServices'])
         $(xsel).css("fill","#fff");
         console.log("clicked");
     }
-     // An alert dialog
-     $scope.showAlert = function(alertMain,alertSub) {
-       var alertPopup = $ionicPopup.alert({
-         title: alertMain,
-         template: alertSub,
-         okText: '好的'
-       });
 
-       alertPopup.then(function(res) {
-         console.log('an alert called');
-       });
-     };
 
     $scope.intBrowser = function(url){
         window.open(url, '_blank', 'location=yes');
@@ -1467,41 +1465,47 @@ angular.module('starter.controllers', ['WifiServices'])
                 });
      };
      
-       $scope.purchase = function(){
-    alert("alipay demo");
-    var myDate = new Date();
-    var tradeNo = myDate.getTime();
-    var alipayClass = navigator.alipay;
+   //测试套餐ID: "736070745670844416", "736264452149002240"
+    $scope.purchase = function(){
+        //alert("alipay");
+        var requestData = {
+          cust_id: $scope.global.cust_id,
+          pay_channel: 'alipay',
+          plan_id: '736264452149002240'
+        };
 
-    //支付宝公钥
-    var pubRsa = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
-    var rsa = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMrmQGgiRA56RA60TAoOO16gFTHIXPyNElcuMLlBQ0TzIGI83RC9vgWLmOmrN5r34VzWM7DIdyHf8u16B32T0LDKr/veUXkrwzXeNAPycqqRasodxE9BU4bSRdKxzc2/T+eraLsXhCcROi4pG/02PUwBht2HA3gOmYbUcUoxHQ91AgMBAAECgYApz5LcIpuFpDpcEVlOBSrE0BYuAQzwWh26a2FM+57iGXvF4qbnaUI8IE0tccPuokAFgnp6ZoTuLRkBSNE8VnZ9acCdUfbV5qiD4AZYVALlR3iI+QOEHMd3YZZ4iitcsTQqaS8RttG+6Cu2ma+GsWtXggvBBUE4QAr7b8lLr9p37QJBAPZLZebBZE8tGfLgrUow3SVpsp3aOsHZ2tZPYfzNMGhyVVApdqBtwjBrQeKETCBqT+VTAaRX1wwDKLPDHhZUUosCQQDS5RY2RCCpb3Kh565XN1VPYmJdgATpGxQgjOj9Q6oWAD/aghunuD69idoSC1WzHrI7RDKb09gIwzoxC16jamX/AkEAhFpMLk7qqqmf8ibOuLm9fWdpdu5Y+OcrdFNAYuuZAee+9M7zUo7o9cANrb5OcnTu7ltG3JvfkjL4YnGN743stQJAfyXO9nismHqwyhw8aCjcLjhKxcRhMYk54UYTUl5xNUKBPOQkeEIE0ZFDAI4E5TEkk8bSHFDkdqP9eYQ5UpzbUQJBAKKIEZg7zxnMI4BFPGUT7P4SrEe8NgScjZpySvZAhQeTzTEPBmy702c1A7QFy7TzxDf/7gG9KHVBiMemfyDMyIw=";
-    alipayClass.pay({
-                    "partner":"2088421286292033",    //商户ID
-                    "rsa_private":rsa,               //私钥
-                    "rsa_public":pubRsa,                //公钥
-                    "seller":"2088421286292033",    //收款支付宝账号或对应的支付宝唯一用户号
-                    "subject":"测试文件",             //商品名称
-                    "body":"支付宝支付",        //商品详情
-                    "price":"0.01",                  //金额
-                    "tradeNo":tradeNo,             
-                    "timeout":"30m",                 //超时设置
-                    "notifyUrl":"http://www.baidu.com"
-    },function(resultStatus){
-      alert(resultStatus);
-      $ionicLoading.show({
-        template:"支付宝测试返回结果＝" + resultStatus,
-        noBackdrop: true,
-        duration: 500
-      });
-    },function(message){
-      alert(message);
-      $ionicLoading.show({
-        template:"支付宝支付失败＝" + message,
-        noBackdrop: true,
-        duration: 500
-      });
-    });
+        var apibranch = '/trade/submit';
+        var request = httpReqGen(apibranch,requestData);
+
+        $http(request).then(function(response) {
+            var purdata = response.data.result;
+            console.log(purdata);
+            var signStr = purdata.data.sign;
+            console.log(signStr);
+
+            //调用支付宝接口，传入payInfo = signStr.
+            var alipayClass = navigator.alipay;
+
+            alipayClass.pay({
+                    "payInfo":signStr  
+            },function(resultStatus){
+              alert(resultStatus);
+              $ionicLoading.show({
+                template:"支付宝测试返回结果＝" + resultStatus,
+                noBackdrop: true,
+                duration: 500
+              });
+            },function(message){
+              alert(message);
+              $ionicLoading.show({
+                template:"支付宝支付失败＝" + message,
+                noBackdrop: true,
+                duration: 500
+              });
+            });
+        }, function(error) {
+            alert("error");
+        });
   };
 })
 

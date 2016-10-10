@@ -34,7 +34,11 @@
     },
     "C:\\Sari\\Proj\\SmartHouse\\smarthome\\plugins\\com.pylonproducts.wifiwizard",
     "cordova-plugin-vibration",
-    "cordova-plugin-splashscreen"
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-app-version",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-file-opener2"
   ],
   "cordovaPlatforms": [
     "ios",

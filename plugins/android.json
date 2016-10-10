@@ -52,6 +52,18 @@
         },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-app-version": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-file-opener2": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
         }
     },
     "dependent_plugins": {
