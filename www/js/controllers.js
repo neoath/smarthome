@@ -5,22 +5,7 @@ angular.module('starter.controllers', ['WifiServices'])
 .controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http,$ionicPopup) {
     var timer;
     $scope.global = { cust_id : 0 };
-    $scope.user = { Id: 1, Name: 'Admin', Email: 'admin@test.domain', Phone: '13609876543', Tel: '02129807893', 
-        EmergMan1: 'AdminEmerg1', EmergMan1Phone: '13609876542',EmergMan2: 'AdminEmerg2', 
-        EmergMan2Phone: '13609876541', address: '浦东新区耀华路120弄121号102' };
 
-
-    //当前使用主机
-    //var usdvm = {
-    //    "alert_status": 1,
-    //    "device_name": "一个主机",
-    //    "device_id": "7CEC793924C3",
-    //    "last_hearbeat": null,
-    //    "expire_time": "2016-10-11",
-    //    "device_addr": null,
-    //    "id": "598735761148997633",
-    //    "status": 1
-    //};
     $scope.UsingDeviceViewModel = { device: null };
     //当前使用主机的节点
     $scope.UsingNodesViewModel = {
@@ -35,10 +20,6 @@ angular.module('starter.controllers', ['WifiServices'])
                         { id: '4', name: '温度传感器', icon: 'ion-bonfire', nodeType: '4' }
         ]
     };
-    
-    //$scope.nodeViewModel = {
-    //  node:""
-    // };
     //OverView帮助用VM
     $scope.OverViewViewModel = {
         OverStatus:"normal",
@@ -49,8 +30,6 @@ angular.module('starter.controllers', ['WifiServices'])
         corecubicClass:null,
         corecubicTxt:null
     };
-    //$scope.ArmViewModel = { checked: true };
-
     //该账号所有主机
     $scope.DevicesViewModel = {
         devices:null
@@ -68,7 +47,6 @@ angular.module('starter.controllers', ['WifiServices'])
         ]
     
     }
-
     //所有节点
     $scope.AllAlarmsViewModel = {
         alarms: null,
@@ -92,6 +70,7 @@ angular.module('starter.controllers', ['WifiServices'])
     };
     //正在编辑用户类
     $scope.UserViewModel = { user: null };
+    $scope.LoginUserViewModel = {loginuser:null};
     //支付类
     $scope.PurchasingDevice = {device:{}};
 
@@ -172,7 +151,7 @@ angular.module('starter.controllers', ['WifiServices'])
                     .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
                     .ToArray();
                     if(queryResult == null)
-                     alert("切换主机信息请求失败");
+                        $scope.showAlert("服务器故障","Main-updateDeviceData-主机列表被恶意改动");
                 sResData = queryResult[0];
                 // console.log(queryResult[0].device_id);
                 // console.log(queryResult[0].device_name);
@@ -240,17 +219,6 @@ angular.module('starter.controllers', ['WifiServices'])
                     //AlarmsViewModel.nodes 当前主机下所有报警节点
                     $scope.AlarmingViewModel.alarms = alarmsdata;
 
-                    // //根据alarm更新overview页面blcok
-                    // if (alarmsdata.length != 0) {
-                    //     $scope.cssHelpViewModel.corecubicClass = "item blockLine-middle cubicAlarm";
-                    //     $scope.cssHelpViewModel.corecubicTxt = "blockLine-Desc fontBlack coretxtadd";
-                    // }
-                    // else{
-                    //     $scope.cssHelpViewModel.corecubicClass = "item blockLine-middle cubicNormal";
-                    //     $scope.cssHelpViewModel.corecubicTxt = "blockLine-Desc fontBlack coretxtadd";
-                    // }
-                        
-
                     //首页设备报警颜色
                     alarmCoreJudge(alarmsdata);
 
@@ -258,13 +226,13 @@ angular.module('starter.controllers', ['WifiServices'])
                     // alarmDescGen(alarmsdata, $scope);
 
                 }).error(function () {
-                    alert("节点报警信息Error，服务器请求故障");
+                    $scope.showAlert("frame-error","overview-updateDeviceData-alarmlist");
                 });
             }).error(function () {
-                alert("服务器请求故障");
+                $scope.showAlert("frame-error","overview-updateDeviceData-nodelist");
             });
         }).error(function () {
-            alert("服务器请求故障");
+            $scope.showAlert("frame-error","overview-updateDeviceData-devicelist");
         });
     };
     // An alert dialog
@@ -303,7 +271,7 @@ angular.module('starter.controllers', ['WifiServices'])
                     if($scope.UsingDeviceViewModel.device == null){
                         //deviceList为空 没有绑定主机
                         if(data.result.data.length == 0){
-                            alert("您的用户未绑定任何主机，请先绑定一台主机");
+                            $scope.showAlert("系统提示","您的用户未绑定任何主机，请先绑定一台主机");
                             $state.go('app.devicemanage');
                         }
                         //只有1台主机
@@ -311,7 +279,7 @@ angular.module('starter.controllers', ['WifiServices'])
                             var expdate = new Date(data.result.data[0].expire_time);
                             var today = new Date();
                             if(expdate < today){
-                                alert("当前的主机套餐已经过期，请购买套餐以保证继续使用");
+                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请购买套餐以保证继续使用");
                                 $state.go("app.purchaseinfo");
                             }
                         }
@@ -319,7 +287,7 @@ angular.module('starter.controllers', ['WifiServices'])
                             var expdate = new Date(data.result.data[0].expire_time);
                             var today = new Date();
                             if(expdate < today){
-                                alert("当前的主机套餐已经过期，请切换其他主机或购买套餐");
+                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请切换其他主机或购买套餐");
                                 $state.go("app.devicemanage");
                             }
                         }                        
@@ -328,7 +296,7 @@ angular.module('starter.controllers', ['WifiServices'])
                     else{
                         //deviceList为空 没有绑定主机
                         if(data.result.data.length == 0){
-                            alert("您的用户未绑定任何主机，请先绑定一台主机");
+                            $scope.showAlert("系统提示","您的用户未绑定任何主机，请先绑定一台主机");
                             $state.go('app.devicemanage');
                         }
                         //只有1台主机
@@ -336,14 +304,14 @@ angular.module('starter.controllers', ['WifiServices'])
                             var queryResult = Enumerable.From(data.result.data)
                                 .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
                                 .ToArray();
-                                if(queryResult == null)
-                                 alert("切换主机信息请求失败");
+                                if(queryResult == null) 
+                                    $scope.showAlert("系统提示","切换主机信息请求失败");
                             var sResData = queryResult[0];
 
                             var expdate = new Date(sResData.expire_time);
                             var today = new Date();
                             if(expdate < today){
-                                alert("当前的主机套餐已经过期，请购买套餐以保证继续使用");
+                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请购买套餐以保证继续使用");
                                 $state.go("app.purchaseinfo");
                             }
                         }
@@ -351,14 +319,14 @@ angular.module('starter.controllers', ['WifiServices'])
                             var queryResult = Enumerable.From(data.result.data)
                                 .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
                                 .ToArray();
-                                if(queryResult == null)
-                                 alert("切换主机信息请求失败");
+                                if(queryResult == null) 
+                                    $scope.showAlert("系统提示","切换主机信息请求失败");
                             var sResData = queryResult[0];
 
                             var expdate = new Date(sResData.expire_time);
                             var today = new Date();
                             if(expdate < today){
-                                alert("当前的主机套餐已经过期，请切换其他主机或购买套餐");
+                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请切换其他主机或购买套餐");
                                 $state.go("app.devicemanage");
                             }
                         }  
@@ -367,16 +335,17 @@ angular.module('starter.controllers', ['WifiServices'])
 
                 }
                 else {
-                    alert("服务器数据请求失败");
+                    $scope.showAlert("服务器故障",data.result.msg);
                 }
             }).error(function () {
-                alert("服务器数据请求失败");
+                $scope.showAlert("frame-error","OverViewCtrl-DataReq-device-expaire-time-request-error");
             });       
 
 
 
-        //初始化cubiccore
-        $('#cubicCore').addClass("blockLine-middle").addClass("item").addClass("cubicNormal");        
+        ////初始化cubiccore 九宫格布局组件
+        //$('#cubicCore').addClass("blockLine-middle").addClass("item").addClass("cubicNormal");  
+
         //刷新data
         timer = $interval($scope.updateDeviceData, 5000);
 
@@ -426,13 +395,13 @@ angular.module('starter.controllers', ['WifiServices'])
                 }
                     //布防失败
                 else {
-                    alert("布防请求失败");
+                    $scope.showAlert("服务器故障",data.result.msg);
                 }
                 //显示文字和锁图标
                 $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
                 $scope.UsingDeviceViewModel.device.icon = $scope.UsingDeviceViewModel.device.alert_status ? "ion-locked" : "ion-unlocked";
             }).error(function () {
-                alert("布防撤防服务器请求故障");
+                $scope.showAlert("服务器故障",data.result.msg);
             });
         }
             //若当前布防状态则撤防
@@ -448,15 +417,14 @@ angular.module('starter.controllers', ['WifiServices'])
                     $scope.updateDeviceData();
                 }
                     //布防失败
-                else {
-                    alert("撤防请求失败");
-                }
+                else
+                    $scope.showAlert("用户信息",data.result.msg);
+
                 //显示文字和锁图标
                 $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
                 $scope.UsingDeviceViewModel.device.icon = $scope.UsingDeviceViewModel.device.alert_status ? "ion-locked" : "ion-unlocked";
             }).error(function () {
-                alert("布防撤防服务器请求故障");
-                console.log("布防撤防服务器请求故障");
+                $scope.showAlert("frame-error","OverViewCtrl-armStatusBtnChange-request-error");
             });
         }
     };
@@ -474,13 +442,12 @@ angular.module('starter.controllers', ['WifiServices'])
                     $scope.updateDeviceData();
                 }
                     //布防失败
-                else {
-                    alert("布防请求失败");
-                }
+                else
+                    $scope.showAlert("用户信息",data.result.msg);
                 //显示文字和锁图标
                 $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
             }).error(function () {
-                alert("布防撤防服务器请求故障");
+                $scope.showAlert("frame-error","OverViewCtrl-armStatusBtnChange-request-error");
             });
         }
             //若当前布防状态则撤防
@@ -496,14 +463,12 @@ angular.module('starter.controllers', ['WifiServices'])
                     $scope.updateDeviceData();
                 }
                     //布防失败
-                else {
-                    alert("撤防请求失败");
-                }
+                else
+                    $scope.showAlert("用户信息",data.result.msg);
                 //显示文字和锁图标
                 $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
             }).error(function () {
-                alert("布防撤防服务器请求故障");
-                console.log("布防撤防服务器请求故障");
+                $scope.showAlert("frame-error","OverViewCtrl-armStatusBtnChange-request-error");
             });
         }
     };
@@ -527,10 +492,7 @@ angular.module('starter.controllers', ['WifiServices'])
            });
     };
     $scope.logandalert = function(){
-        $scope.showAlert("nothing","asd");
-        // var msg = $('ion-nav-view').css("height");
-        // alert(msg);
-        // console.log(msg);
+        $scope.showAlert("nothing","for show");
     }
     $scope.touchEv = function(idx){
         var xsel = "#item-" + idx + " .sector";
@@ -612,7 +574,7 @@ angular.module('starter.controllers', ['WifiServices'])
         $state.go("app.login"); 
 
     $scope.init = function() {
-        alert("尚未提供添加摄像头接口");
+        
     };
 })
 
@@ -638,7 +600,7 @@ angular.module('starter.controllers', ['WifiServices'])
                 //UsingNodesViewModel.nodes 正在使用的当前主机下所有节点
                 $scope.UsingNodesViewModel.nodes = nodesdata;
             }).error(function () {
-                alert("服务器请求故障");
+                $scope.showAlert("frame-error","NodesCtrl-init-request-error");
             });
         }
         $scope.startPairing = function(){
@@ -665,11 +627,11 @@ angular.module('starter.controllers', ['WifiServices'])
                     $scope.UsingNodesViewModel.nodes = nodesdata;
 
                     if (beforeLength == afterLength)
-                        alert("无节点更新");
+                        $scope.showAlert("用户信息","无节点更新");
                     else
-                        alert("节点信息已更新");
+                        $scope.showAlert("用户信息","节点信息已更新");
                 }).error(function () {
-                    alert("服务器请求故障");
+                    $scope.showAlert("frame-error","NodesCtrl-startPairing-request-error");
                 });
 
                 $ionicLoading.hide();
@@ -689,13 +651,13 @@ angular.module('starter.controllers', ['WifiServices'])
             $http(req).success(function (data) {
                 //取返回值有效data
                 if (data.result.code == "0000") {
-                    alert(data.result.msg);
+                    
                     $state.go("app.nodes");
                 }
                 else
-                    alert(data.result.msg);
+                    $scope.showAlert("用户信息",data.result.msg);
             }).error(function () {
-                alert("服务器请求故障");
+                $scope.showAlert("frame-error","NodesCtrl-removeNode-request-error");
             });
             
             
@@ -718,13 +680,13 @@ angular.module('starter.controllers', ['WifiServices'])
       $http(req).success(function (data) {
           //取返回值有效data
           if (data.result.code == "0000") {
-              alert("节点名称已更改");
-              $state.go("app.nodes");
+                $scope.showAlert("用户信息","节点名称已更改");
+                $state.go("app.nodes");
           }
           else
-              alert(data.result.msg);
+            $scope.showAlert("用户信息",data.result.msg);
       }).error(function () {
-          alert("服务器请求故障");
+          $scope.showAlert("frame-error","NodesCtrl-submitEdit-request-error");
       });
   }
 })
@@ -741,7 +703,7 @@ angular.module('starter.controllers', ['WifiServices'])
         if("undefined" != typeof(timer)){
             $interval.cancel(timer);
         }
-    alert(locals.get("cust_id",""));
+    //alert(locals.get("cust_id",""));
     //存储数据
     //locals.set("username","0");
     locals.set("cust_id", "0");
@@ -757,7 +719,7 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.GuestSevice = { Maintanance: null };
 
     $scope.maintananceSubmit = function () {
-        alert(locals.get("cust_id", ""));
+        //alert(locals.get("cust_id", ""));
         //报修申请
         var url = '/device/repairs';
         var reqd = {cust_id:$scope.global.cust_id, device_id:$scope.UsingDeviceViewModel.device.device_id,
@@ -769,13 +731,13 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(req).success(function (data) {
            //取返回值有效data
            if (data.result.code == "0000") {
-               alert("报修已提交");
+               $scope.showAlert("用户信息","报修已提交");
                $state.go("app.settings");
            }
            else
-               alert(data.result.msg);
+               $scope.showAlert("用户信息",data.result.msg);
         }).error(function () {
-           alert("服务器请求故障");
+           $scope.showAlert("frame-error","NodesCtrl-maintananceSubmit-request-error");
         });
 
     }
@@ -828,9 +790,9 @@ angular.module('starter.controllers', ['WifiServices'])
                 $scope.AllAlarmsViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
            }
            else
-               alert(data.result.msg);
+            $scope.showAlert("用户信息","data.result.msg");
         }).error(function () {
-           alert("服务器请求故障");
+            $scope.showAlert("frame-error","AlarmsCtrl-alarmInit-request-error");
         });
 
     }
@@ -855,13 +817,12 @@ angular.module('starter.controllers', ['WifiServices'])
            if(validData){
                //simul
                data = validData;
-               
                 $scope.AlarmingViewModel.alarms = data;
            }
            else
-               alert(data.result.msg);
+               $scope.showAlert("用户信息","data.result.msg");
         }).error(function () {
-           alert("服务器请求故障");
+           $scope.showAlert("frame-error","AlarmsCtrl-alarmInit-request-error");
         });
 
     }    
@@ -884,11 +845,11 @@ angular.module('starter.controllers', ['WifiServices'])
                                     alarm.opt_result = 1;
                                    //取返回值有效data
                                    if(data.result.code == "0000")
-                                    alert("acknowledged");
+                                        $scope.showAlert("用户信息","报警已获悉");
                                    else
                                        alert(data.result.msg);
                                 }).error(function () {
-                                   alert("服务器请求故障");
+                                   $scope.showAlert("frame-error","AlarmsCtrl-sendAck-request-error");
                                 });
                         
                             // //再次获取alarm list
@@ -945,11 +906,10 @@ angular.module('starter.controllers', ['WifiServices'])
                     $scope.AllAlarmsViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
             }
             else
-                alert(data.result.msg);
+                $scope.showAlert("用户信息",data.result.msg);
             }).error(function () {
-            alert("服务器请求故障");
+                $scope.showAlert("frame-error","AlarmsCtrl-doRefresh-request-error");
             });
-            console.log("added");
             $scope.$broadcast('scroll.refreshComplete');  
         
         }, 3000);  
@@ -987,42 +947,15 @@ angular.module('starter.controllers', ['WifiServices'])
       $http(req).success(function (data) {
           var validData = resResult(data);
           if (validData) {
-              alert("用户信息已更改");
-              $state.go("app.dashboard.usersetting");
+            $scope.showAlert("用户信息","用户信息已更改");
+            $state.go("app.dashboard.usersetting");
           }
           else {
-              alert(data.result.msg);
+              $scope.showAlert("用户信息",data.result.msg);
           }
       }).error(function () {
-          alert("更新用户信息服务器请求故障")
+          $scope.showAlert("frame-error","AlarmsCtrl-userSubmit-request-error");
       });
-  };
-})
-//子账号 app.subusers subusers.html
-.controller('subUserCtrl', function($scope, $state, $http) {
-
-  $scope.delete = function(item){
-    //删除子账号业务
-  }
-  $scope.edit = function(item){
-    //编辑子账号业务
-  }  
-
-  $scope.pageJump = function(route) {
-    $state.go(route);
-  };  
-})
-//子账号 app.subuserinfo subuserinfo.html
-.controller('addSubUser', function($scope, locals) {
-  if (!locals.get("cust_id",""))
-    $state.go("app.login"); 
-
-  $scope.setFormScope = function(scope){
-    this.formScope = scope;
-  }
-  $scope.newuser = {};
-  $scope.userSubmit = function() {
-    alert("尚未提供添加子账户接口");
   };
 })
 /////////////////////////////////////////////////
@@ -1031,11 +964,11 @@ angular.module('starter.controllers', ['WifiServices'])
     
   $scope.changePW2 = function () {
       if (!$scope.ValidInfoViewModel.newPW) {
-      alert("请输入新密码");
+        $scope.showAlert("用户信息","请输入新密码");
       return;
     }
       if (!$scope.ValidInfoViewModel.ValidCode) {
-            alert("请输入验证码");
+            $scope.showAlert("用户信息","请输入验证码");
             return;
         }
         var url = '/account/findpwd';
@@ -1048,14 +981,14 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(req).success(function (data) {
             var validData = resResult(data);
             if (validData) {
-                alert("用户信息已更改");
+                $scope.showAlert("用户信息","用户信息已修改");
                 $state.go("app.login");
             }
             else {
-                alert(data.result.msg);
+                $scope.showAlert("用户信息",data.result.msg);
             }
         }).error(function () {
-            alert("发送短信验证码重置密码服务器请求故障")
+            $scope.showAlert("frame-error","findPasswordCtrl-changePW2-request-error");
         });
 
 
@@ -1076,10 +1009,10 @@ angular.module('starter.controllers', ['WifiServices'])
           if (result.code == 0000) {
               
           } else {
-              alert(result.msg);
+            $scope.showAlert("用户信息",result.msg);
           }
       }, function (error) {
-          alert("验证码服务器请求失败");
+          $scope.showAlert("frame-error","findPasswordCtrl-sendValid-request-error");
       });
   };
 
@@ -1104,12 +1037,12 @@ angular.module('starter.controllers', ['WifiServices'])
   $scope.codeform = {};
   $scope.changePW = function() {
     if(!$scope.codeform.oldPW || !$scope.codeform.newPW || !$scope.codeform.confirmPW) {
-      alert('请填写');
-      return;
+        $scope.showAlert("用户信息","请填写");
+        return;
     }
     if($scope.codeform.newPW != $scope.codeform.confirmPW) {
-      alert('新密码输入不一致');
-      return;
+        $scope.showAlert("用户信息","新密码输入不一致");
+        return;
     }    
     var apibranch = '/account/updatepwd';
 
@@ -1129,18 +1062,18 @@ angular.module('starter.controllers', ['WifiServices'])
       if(response.status == 200){
         var resData = $.parseJSON(response.data.result);
         if(resData.code == "0000"){
-          alert('密码已修改');
-          $state.go("app.usersetting");           
+            $scope.showAlert("用户信息","密码已修改");
+            $state.go("app.usersetting");           
         }
         else{
-          alert('密码修改失败');
+            $scope.showAlert("用户信息",response.data.msg);
         }
       }
       else
-        alert('密码修改失败');
+        $scope.showAlert("用户信息","PasswordCtrl-changePW-request-error");
       deferred.resolve();
     }, function(error) {
-        deferred.reject();
+        $scope.showAlert("frame-error","PasswordCtrl-changePW-request-error");
     });
   };
 })  
@@ -1170,7 +1103,9 @@ angular.module('starter.controllers', ['WifiServices'])
           else
               $scope.VersionViewModel.version = versiondata;
 
-      }).error(function () { });
+      }).error(function () {
+        $scope.showAlert("frame-error","VersionCtrl-init-request-error");
+       });
 
   }
 })
@@ -1193,7 +1128,7 @@ angular.module('starter.controllers', ['WifiServices'])
   $scope.versionToggleChanged = function () {
       var result = ($scope.TempToggle.notifyVersion) ? true : false;
       locals.set("n_version", result);
-      alert($scope.TempToggle.notifyVersion);
+      $scope.showAlert("用户信息",$scope.TempToggle.notifyVersion);
   }
 
 })
@@ -1210,15 +1145,15 @@ angular.module('starter.controllers', ['WifiServices'])
 
         $http(req).success(function (data) {
             if(data.result.code == '0000'){
-                alert("震动设置已保存");
+                $scope.showAlert("用户信息","震动设置已保存");
             }
             else{
-                alert(data.result.msg);
+                $scope.showAlert("用户信息",data.result.msg);
                 $scope.TempToggle.notifyVib = !$scope.TempToggle.notifyVib;
             }
 
         }).error(function () { 
-            alert("服务器请求失败");
+            $scope.showAlert("frame-error","MessageSettingCtrl-vibToggleChanged-request-error");
             $scope.TempToggle.notifyVib = !$scope.TempToggle.notifyVib;
         });
     }
@@ -1233,15 +1168,15 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(req).success(function (data) {
 
             if(data.result.code == '0000'){
-                alert("震动设置已保存");
+                $scope.showAlert("用户信息","震动设置已保存");
             }
             else{
-                alert(data.result.msg);
+                $scope.showAlert("用户信息",data.result.msg);
                 $scope.TempToggle.notifyPush = !$scope.TempToggle.notifyPush;
             }
 
         }).error(function () { 
-            alert("服务器请求失败");
+            $scope.showAlert("frame-error","MessageSettingCtrl-pushToggleChanged-request-error");
             $scope.TempToggle.notifyPush = !$scope.TempToggle.notifyPush;
         });
     }
@@ -1263,7 +1198,7 @@ angular.module('starter.controllers', ['WifiServices'])
     var expdate = new Date(device.expire_time);
     var today = new Date();
     if(expdate < today){
-        alert("您所选的主机套餐已经过期，请购买套餐或更换其它主机");
+        $scope.showAlert("用户信息","您所选的主机套餐已经过期，请购买套餐或更换其它主机");
     }
 
       $scope.UsingDeviceViewModel.device = device;
@@ -1307,14 +1242,13 @@ angular.module('starter.controllers', ['WifiServices'])
                 if (data.result.code == "0000") {
                     //更新device node alarm
                     $scope.updateDeviceData();
-                    alert("主机添加并绑定成功");
+                    $scope.showAlert("用户信息","主机添加并绑定成功");
                 }
                 else{
-                    alert("主机添加并绑定失败 " + data.result.msg);
+                    $scope.showAlert("用户信息","主机添加并绑定失败"+data.result.msg);
                 }
             }).error(function () {
-                alert("主机添加并绑定失败");
-
+                $scope.showAlert("frame-error","DeviceMangeCtrl-addDevicebyBarcode-request-error");
             });
 
 
@@ -1323,7 +1257,7 @@ angular.module('starter.controllers', ['WifiServices'])
             console.log("Cancelled -> d" + imageData.cancelled);
 
         }, function (error) {
-            alert("主机添加并绑定失败，扫描错误");
+            $scope.showAlert("用户信息","主机添加并绑定失败，扫描错误");
             console.log("An error happened -> " + error);
         });
     };
@@ -1333,12 +1267,6 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.updateDeviceInfo = function () {
         var datata = $scope.temp;
     }
-})
-//添加主机 app.deviceinfo deviceinfo.html
-.controller('addDevice', function($scope) {
-  $scope.init = function(){
-    alert("添加主机接口尚未提供");
-  }
 })
 
 //编辑主机 app.deviceedit deviceedit.html
@@ -1355,15 +1283,14 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(req).success(function (data) {
             //取返回值有效data
             if (data.result.code == "0000") {
-                alert("主机名称已更改");
-
+                $scope.showAlert("用户信息","主机名称已更改");
                 $scope.updateDeviceData();
                 $state.go("app.devicemanage");
             }
             else
-                alert(data.result.msg);
+                $scope.showAlert("用户信息",data.result.msg);
         }).error(function () {
-            alert("服务器请求故障");
+            $scope.showAlert("frame-error","DeviceEditCtrl-submitEdit-request-error");
         });
     }
     $scope.disbinddevice = function () {
@@ -1375,15 +1302,14 @@ angular.module('starter.controllers', ['WifiServices'])
         $http(req).success(function (data) {
             //取返回值有效data
             if (data.result.code == "0000") {
-                alert("该主机已解绑");
-
+                $scope.showAlert("用户信息","该主机已解绑");
                 $scope.updateDeviceData();
                 $state.go("app.devicemanage");
             }
             else
-                alert(data.result.msg);
+                $scope.showAlert("用户信息",data.result.msg);
         }).error(function () {
-            alert("服务器请求故障");
+            $scope.showAlert("frame-error","DeviceEditCtrl-disbinddevice-request-error");
         });
     }
 })
@@ -1398,19 +1324,7 @@ angular.module('starter.controllers', ['WifiServices'])
 })
 /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//通知 app.notifies notifies.html
-.controller('NotificationCtrl', function($scope, $state, $ionicPopup, locals) {
-  if (!locals.get("cust_id",""))
-    $state.go("app.login"); 
 
-  $scope.deviceSelect = function() {
-
-  };     
-})
-/////////////////////////////////////////////////
-///
 /////////////////////////////////////////////////
 //支付 app.purchaseinfo purchaseinfo.html
 .controller('PurchaseDevicesCtrl', function($scope,$state) {
@@ -1443,7 +1357,9 @@ angular.module('starter.controllers', ['WifiServices'])
                 if (validData) {
                     $scope.MenuViewModel.menu = validData;
                 }
-            }).error(function () { });
+            }).error(function () { 
+                $scope.showAlert("frame-error","PurchaseCtrl-init-request-error");
+            });
             
             $scope.MenuViewModel.menu = simuloptiondata;
   }
@@ -1489,14 +1405,14 @@ angular.module('starter.controllers', ['WifiServices'])
             alipayClass.pay({
                     "payInfo":signStr  
             },function(resultStatus){
-              alert(resultStatus);
+                $scope.showAlert("用户信息",resultStatus);
               $ionicLoading.show({
                 template:"支付宝测试返回结果＝" + resultStatus,
                 noBackdrop: true,
                 duration: 500
               });
             },function(message){
-              alert(message);
+                $scope.showAlert("用户信息",message);
               $ionicLoading.show({
                 template:"支付宝支付失败＝" + message,
                 noBackdrop: true,
@@ -1504,7 +1420,7 @@ angular.module('starter.controllers', ['WifiServices'])
               });
             });
         }, function(error) {
-            alert("error");
+            $scope.showAlert("frame-error","PurchaseCtrl-purchase-request-error");
         });
   };
 })
@@ -1534,30 +1450,6 @@ angular.module('starter.controllers', ['WifiServices'])
 //  }
 //})
 /////////////////////////////////////////////////
-///
-/////////////////////////////////////////////////
-//主板电池信息 app.battery battery.html
-.controller('BatteryCtrl', function($scope,$state) {
-    $scope.BatteryViewModel = { battery: null };
-    $scope.init = function () {
-        alert("节点电量接口尚未提供");
-
-        ////接口未实现
-        //var manulisturl = '/电量/电量list';
-        //var manulistreqd = {};
-        //var manulistreq = httpReqGen(manulisturl, manulistreqd);
-
-        //$http(manulistreq).success(function (data) {
-        //    //取返回值有效data
-        //    var batterydata = resResult(data);
-        //    //更新内存的操作记录
-        //    $scope.BatteryViewModel.battery = batterydata;
-        //}).error(function () { });
-
-    }
-})
-/////////////////////////////////////////////////
-///
 ///
 /////////////////////////////////////////////////
 //操作栈 app.manustack manustack.html
@@ -1592,20 +1484,20 @@ angular.module('starter.controllers', ['WifiServices'])
                                     $scope.StackViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
                                 }
                                 else
-                                    alert(data.result.msg);                
+                                    $scope.showAlert("用户信息",data.result.msg);
                             //更新内存的操作记录
 
                             
                             
                         }).error(function () {
-                            alert("服务器请求故障");
+                            $scope.showAlert("frame-error","ManuStackCtrl-init-request-error");
                         });        
     };       
 
     $scope.loadMoreStackManus = function () {
                 pageCount++;
                 if (pageCount > totalPage)
-                    alert("No more alarms");
+                    $scope.showAlert("用户信息","无更多报警");
                 else
                     loadMoreStackmanus(pageCount, $scope, $http);
             }
@@ -1624,7 +1516,6 @@ angular.module('starter.controllers', ['WifiServices'])
   };
 
   $scope.scanBarcode = function() {
-        alert("start scan");
       $cordovaBarcodeScanner.scan().then(function(imageData) {
         alert(imageData.text);
         console.log("Barcode Format -> " + imageData.format);
@@ -1722,25 +1613,24 @@ angular.module('starter.controllers', ['WifiServices'])
       $http(req).success(function (data) {
           //发送成功0000
           if (data.result.code == "0000")
-              alert("手机验证码发送成功");
-              //手机号码已经注册1002
+            $scope.showAlert("用户信息","手机验证码发送成功");
           else
-              alert("该手机号码已经注册");
+            $scope.showAlert("用户信息","该手机号码已经注册");
       }).error(function () {
-          alert("服务器请求故障");
+          $scope.showAlert("frame-error","register-sendSMS-request-error");
       });
   }
   $scope.submit = function() {
     if(!$scope.registerData.mobileNo) {
-      alert('mobileNo required');
+      $scope.showAlert("用户信息","请填写手机号码");
       return;
     }
     if(!$scope.registerData.password) {
-      alert('password required');
+      $scope.showAlert("用户信息","请填写密码");
       return;
     }
     if(!$scope.registerData.code) {
-      alert('code required');
+      $scope.showAlert("用户信息","请填写验证码");
       return;
     }
 
@@ -1756,13 +1646,13 @@ angular.module('starter.controllers', ['WifiServices'])
     $http(request).then(function(response) {
         //取返回值有效data
         if (response.data.result.code == "0000"){
-            alert("注册成功");
+            $scope.showAlert("用户信息","注册成功");
             $state.go('app.login');
         }
         else
-            alert(response.data.result.msg);
+            $scope.showAlert("用户信息",response.data.result.msg);
     }, function(error) {
-        alert("注册用户服务器请求故障");
+        $scope.showAlert("frame-error","register-submit-request-error");
     });
   }
   $scope.pageJump = function (route) {
@@ -1864,11 +1754,11 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.loginData = { "username": name , "password":pw};
   $scope.login = function () {
       if (!$scope.loginData.username) {
-          alert('请输入用户名。');
+          $scope.showAlert("用户信息","请输入用户名");
           return;
       }
       if (!$scope.loginData.password) {
-          alert('请输入密码。');
+          $scope.showAlert("用户信息","请输入密码");
           return;
       }
       var requestData = {
@@ -1884,7 +1774,7 @@ angular.module('starter.controllers', ['WifiServices'])
           var result = response.data.result;
           if (result.code == 0000) {
               $scope.global.cust_id = result.data.cust_id;
-
+              $scope.LoginUserViewModel.loginuser = result.data;
               //存储数据
               locals.set("username", requestData.phone);
               locals.set("password", $scope.loginData.password);
@@ -1902,10 +1792,10 @@ angular.module('starter.controllers', ['WifiServices'])
 
               $state.go('app.dashboard.overview');
           } else {
-              alert(result.msg);
+              $scope.showAlert("用户信息",result.msg);
           }
       }, function (error) {
-          console.log(error);
+          $scope.showAlert("frame-error","login-login-request-error");
       });
   }
   $scope.nextSlide = function() {
@@ -1945,10 +1835,10 @@ angular.module('starter.controllers', ['WifiServices'])
                 }
                   
                 else {
-                    alert(data.result.msg);
+                    $scope.showAlert("用户信息",data.result.msg);
                 }
             }).error(function () {
-                alert("广告服务器请求故障");
+                $scope.showAlert("frame-error","login-adRequire-request-error");
             });
     };
 })
@@ -2188,9 +2078,9 @@ function loadMoreAlarms(currentPage, $scope, $http) {
             $scope.AllAlarmsViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
         }
         else
-            alert(data.result.msg);
+            $scope.showAlert("用户信息",data.result.msg);
     }).error(function () {
-        alert("服务器请求故障");
+        $scope.showAlert("frame-error","AlarmsCtrl-loadMoreAlarms-request-error");
     });
 };
 
@@ -2214,9 +2104,9 @@ function loadMoreStackmanus(currentPage, $scope, $http) {
             $scope.StackViewModel.enableMore = (validData.totalCount > validData.page * validData.pageSize);
         }
         else
-            alert(data.result.msg);
+            $scope.showAlert("用户信息",data.result.msg);
     }).error(function () {
-        alert("服务器请求故障");
+        $scope.showAlert("frame-error","StackMenuCtrl-loadMoreStackmanus-request-error");
     });
 };
 

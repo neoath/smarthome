@@ -1,21 +1,21 @@
-<ion-view title="Node Manage" ng-controller="NodesCtrl" ng-init="init()">
+<ion-view title="节点配对" ng-controller="NodesCtrl" ng-init="init()">
     <ion-content class="padding-vertical">
         <div ng-if="UsingNodesViewModel.nodes.length === 0 || UsingNodesViewModel.nodes === null">
-            <h5 class="text-center">No Nodes Info</h5>
+            <h5 class="text-center">暂无节点信息</h5>
         </div>
 
         <ion-list can-swipe="true">
             <div ng-repeat="node in UsingNodesViewModel.nodes">
                 <ion-item on-tap="nodeEdit(node)">
                     {{node.name}}
-                    <ion-option-button class="button-assertive" ng-click="removeNode(node)" style="line-height: 3.3;">Delete</ion-option-button>
+                    <ion-option-button class="button-assertive" ng-click="removeNode(node)" style="line-height: 3.3;">移除</ion-option-button>
                 </ion-item>
             </div>
         </ion-list>
 
         <div class="padding">
             <button class="button button-balanced button-block" style="border-color: #57a595;background-color: #57a595;" ng-click="startPairing()">
-                Start Pairing
+                开始配对
             </button>
         </div>
     </ion-content>

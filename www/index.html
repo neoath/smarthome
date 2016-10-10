@@ -63,7 +63,7 @@
     <script id="templates/dashboard.html" type="text/ng-template">
         <ion-view title="" animation="slide-right-left">
             <ion-tabs class="nav-title-slide-ios7 tabs-striped tabs-icon-top tabs-bottom tabs-background-light tabs-balanced" animation="none">
-                <ion-tab title="Alarms" icon-on="ion-ios7-star" icon-off="ion-ios7-star-outline" href="#/app/dashboard/alarms">
+                <ion-tab title="Alarms" icon-on="ion-chatbox" icon-off="ion-chatbox-working" href="#/app/dashboard/alarms">
                     <ion-nav-view name="alarms-tab"></ion-nav-view>
                 </ion-tab>
                 <ion-tab title="Home" icon-on="ion-ios7-home" icon-off="ion-ios7-home-outline" href="#/app/dashboard/overview">
@@ -109,7 +109,7 @@
         </ion-view>
     </script>
     <script id="templates/overview.html" type="text/ng-template">
-        <ion-view title="【{{UsingDeviceViewModel.device.titleText}}】" ng-controller="OverViewCtrl" ng-init="DataReq()">
+        <ion-view title="信来智家【{{UsingDeviceViewModel.device.titleText}}】" ng-controller="OverViewCtrl" ng-init="DataReq()">
             <ion-nav-buttons side="right">
                 <button class="button-clear" ><i class="icon" ng-class="UsingDeviceViewModel.device.icon" style="font-size: 22px;color: white;"></i></button>
             </ion-nav-buttons>
@@ -247,8 +247,7 @@
                 </div>
 
                 <div class="card" >
-                            <div class="item item-icon-left ng-binding disable-user-behavior" on-tap="pageJump('app.deviceselect')">
-                                <i class="icon ion-thermometer" ng-class="device.icon"></i>
+                            <div class="item ng-binding disable-user-behavior" on-tap="pageJump('app.deviceselect')">
                                 切换主机
                             </div>
                 </div>
@@ -262,30 +261,22 @@
     <script id="templates/usersetting.html" type="text/ng-template">
         <ion-view title="用户" ng-controller="usersettingCtrl">
             <ion-content>
-                <div style="padding: 5% 40% 1% 40%; background-color: #70b7a8;">
-                    <img style="width: 80px;height: 80px;" src="img/logo.png" />
+                <div style="padding: 5% 40% 3% 38%; background-color: #70b7a8;">
+                    <img style="width: 100px;height: 80px;" src="img/logo.png" />
                     
                 </div>
-                <div style="text-align: center; color: antiquewhite; font-size: 16px; background-color: #70b7a8;">Cia_Name</div>
+                <div style="text-align: center; color: antiquewhite; font-size: 16px; background-color: #70b7a8;">{{LoginUserViewModel.loginuser.name}}</div>
                     <div class="list">
                         <li class="item" on-tap="pageJump('app.userinfo')">
-                            <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>账号信息</span>
+                            <i class="icon ion-person blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>账号信息</span>
                         </li>
                         <li class="item " on-tap="pageJump('app.purchaseinfo')">
-                            <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>支付业务</span>
-                        </li>
-                        <li class="item " on-tap="pageJump('app.help')">
-                            <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>帮助</span>
+                            <i class="icon ion-card blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>支付业务</span>
                         </li>
                         <li class="item " on-tap="pageJump('app.about')">
-                            <i class="icon ion-bonfire blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>关于</span>
+                            <i class="icon ion-aperture blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>关于</span>
                         </li>                   
                     </div>
-                <div class="padding">
-                    <button class="button button-balanced button-block" ng-click="logout()" style="border-color: #57a595;background-color: #57a595;">
-                        安全退出
-                    </button>
-                </div>
 
             </ion-content>
         </ion-view>
