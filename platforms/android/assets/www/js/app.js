@@ -64,38 +64,72 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     }
 }])
 
-// .run(function($ionicPlatform) {
-//   $ionicPlatform.ready(function() {
-//     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-//     // for form inputs)
-//     if (window.cordova && window.cordova.plugins.Keyboard) {
-//       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-//       cordova.plugins.Keyboard.disableScroll(true);
-//     }
-//     if (window.StatusBar) {
-//       // org.apache.cordova.statusbar required
-//       StatusBar.styleDefault();
-//     }
-
-//     //启动极光推送服务
-//     window.plugins.jPushPlugin.init();
-//     //调试模式
-//     window.plugins.jPushPlugin.setDebugMode(true);
-//   });
-// })
-
-.run(function($ionicPlatform,$state,jpushService) {
+.run(function($ionicPlatform, $state, $cordovaAppVersion, $http, $cordovaFileTransfer,
+     $cordovaFile, $cordovaFileOpener2, $ionicLoading, jpushService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
+      cordova.plugins.Keyboard.disableScroll(true);  
+    
+      //延迟splash screnn 隐藏时间,不然会有短暂的白屏出现  
+      setTimeout(function () {  navigator.splashscreen.hide();  }, 1000); 
     }
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
 
-    //推送初始化
+    //自动更新;
+    var url = '/app/upgrade';
+    var platform = "Android";
+
+    $cordovaAppVersion.getVersionNumber().then(function(version) {   
+
+      var reqd = { "platform": platform, "app_version": version };
+      var req = httpReqGen(url, reqd);
+
+      $http(req).success(function (data) {
+          //取返回值有效data
+          var versiondata = resResult(data);
+          alert("versionData: " + versiondata.platform);
+          var serverAppVersion = versiondata.version_no;
+          if (version != serverAppVersion) {
+              $ionicLoading.show({    
+                  template: "已经下载：0%"    
+              }); 
+
+              var url = versiondata.down_addr;     
+              var targetPath = "file:///mnt/sdcard/Download/xinlai-debug.apk";     
+              var trustHosts = true;    
+              var options = {};    
+
+              $cordovaFileTransfer.download(url, targetPath, options, trustHosts).then(function (result) {    
+                      $cordovaFileOpener2.open(targetPath, 'application/vnd.android.package-archive'    
+                      ).then(function () {    
+                          }, function (err) {    
+                          });    
+                      $ionicLoading.hide();    
+                  }, function (err) {    
+                      alert('下载失败');    
+                  }, function (progress) {                               
+                      $timeout(function () {    
+                          var downloadProgress = (progress.loaded / progress.total) * 100;    
+                          $ionicLoading.show({    
+                              template: "已经下载：" + Math.floor(downloadProgress) + "%"    
+                          });    
+                          if (downloadProgress > 99) {    
+                              $ionicLoading.hide();    
+                          }    
+                      })    
+                  });    
+        }
+      }).error(function (error) { alert(error) });
+    });
+    
+
+    //推送初始化;
     var setTagsWithAliasCallback = function(event){
       window.alert('result code:'+event.resultCode+' tags:'+event.tags+' alias:'+event.alias);
     }
@@ -123,7 +157,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
    if(idx > -1) {  
     url = url.substring(idx+1);  
    }  
-   alert("ERROR in " + url + " (line #" + line + "): " + msg);  
+   //alert("ERROR in " + url + " (line #" + line + "): " + msg);  
    return false;  
   };
 })
@@ -513,3 +547,38 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
   $urlRouterProvider.otherwise('/app/dashboard/overview');
   $httpProvider.defaults.headers.post['Content-Type'] = 'text/plain;charset=UTF-8';
 });
+
+function getReqNo(){
+    var newuuid = UUID.prototype.createUUID();
+    var aesKey = "XinLaiWitHome___";
+    var newAesKey = null;
+    var aesEncrypt = function(data, keyStr, ivStr) {
+                var sendData = CryptoJS.enc.Utf8.parse(data);
+                var key = CryptoJS.enc.Utf8.parse(keyStr);
+                var iv  = CryptoJS.enc.Utf8.parse(ivStr);
+                var encrypted = CryptoJS.AES.encrypt(sendData, key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Iso10126});
+                return CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
+    };
+    var aesDecrypt = function(data, keyStr, ivStr) {
+      var key = CryptoJS.enc.Utf8.parse(keyStr);
+      var iv  = CryptoJS.enc.Utf8.parse(ivStr);
+      var decrypted = CryptoJS.AES.decrypt(data, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Iso10126});
+      return decrypted.toString(CryptoJS.enc.Utf8);
+    };
+    var code = aesEncrypt(newuuid, aesKey, aesKey);   
+    return code;
+}
+
+function httpReqGen(apibranch,reqData){
+    var code = getReqNo();
+    var url = 'http://t.xinlaihome.cn:8081/xinlai' + apibranch + '?req_no=' + code;
+    return req = {
+      headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*'
+                  },
+      method: 'POST',
+      url: url,
+      data: reqData
+    };  
+}
