@@ -1,0 +1,15 @@
+        <ion-view title="绑定新主机" ng-controller="DeviceMangeCtrl" >
+            <ion-content class="padding-vertical">
+                <div class="card" ng-model="thidEditModel.device">
+                    <label class="item item-input">
+                        <span class="input-label">新主机编号</span>
+                        <input type="text" ng-model="NewDeviceViewModel.deviceId">
+                    </label>
+                </div>
+                <div class="padding">
+                    <button class="button button-balanced button-block" ng-click="bindDevice()" style="border-color: #57a595;background-color: #57a595;">
+                        绑定
+                    </button>
+                </div>
+            </ion-content>
+        </ion-view>

@@ -118,6 +118,9 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.AdvertiseViewModel = {
       ADs:null  
     };
+    $scope.NewDeviceViewModel = {
+      deviceId:null    
+    };
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -274,7 +277,92 @@ angular.module('starter.controllers', ['WifiServices'])
 .controller('OverViewCtrl', function ($q, $scope, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover, $state, $timeout, $interval, $http, $ionicLoading, locals, $ionicNavBarDelegate) {
 
     //页面初始化方法
-    $scope.DataReq = function () {
+    $scope.DataReq = function () {      
+        //预处理主机过期信息以及主机绑定信息 
+        //该方法不做更新VM
+            var armurl = '/device/list';
+            var armreqd = { "cust_id": $scope.global.cust_id};
+            var armreq = httpReqGen(armurl, armreqd);
+
+            $http(armreq).success(function (data) {
+                //返回0000
+                if (data.result.code == "0000") {
+                    //首次登入(UsingDeviceViewModel == null)
+                    if($scope.UsingDeviceViewModel.device == null){
+                        //deviceList为空 没有绑定主机
+                        if(data.result.data.length == 0){
+                            alert("您的用户未绑定任何主机，请先绑定一台主机");
+                            $state.go('app.devicemanage');
+                        }
+                        //只有1台主机
+                        else if(data.result.data.length == 1){
+                            var expdate = new Date(data.result.data[0].expire_time);
+                            var today = new Date();
+                            if(expdate < today){
+                                alert("当前的主机套餐已经过期，请购买套餐以保证继续使用");
+                                $state.go("app.purchaseinfo");
+                            }
+                        }
+                        else{
+                            var expdate = new Date(data.result.data[0].expire_time);
+                            var today = new Date();
+                            if(expdate < today){
+                                alert("当前的主机套餐已经过期，请切换其他主机或购买套餐");
+                                $state.go("app.devicemanage");
+                            }
+                        }                        
+                    }
+                    //再次进入(UsingDeviceViewModel != null)
+                    else{
+                        //deviceList为空 没有绑定主机
+                        if(data.result.data.length == 0){
+                            alert("您的用户未绑定任何主机，请先绑定一台主机");
+                            $state.go('app.devicemanage');
+                        }
+                        //只有1台主机
+                        else if(data.result.data.length == 1){
+                            var queryResult = Enumerable.From(data.result.data)
+                                .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
+                                .ToArray();
+                                if(queryResult == null)
+                                 alert("切换主机信息请求失败");
+                            var sResData = queryResult[0];
+
+                            var expdate = new Date(sResData.expire_time);
+                            var today = new Date();
+                            if(expdate < today){
+                                alert("当前的主机套餐已经过期，请购买套餐以保证继续使用");
+                                $state.go("app.purchaseinfo");
+                            }
+                        }
+                        else{
+                            var queryResult = Enumerable.From(data.result.data)
+                                .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
+                                .ToArray();
+                                if(queryResult == null)
+                                 alert("切换主机信息请求失败");
+                            var sResData = queryResult[0];
+
+                            var expdate = new Date(sResData.expire_time);
+                            var today = new Date();
+                            if(expdate < today){
+                                alert("当前的主机套餐已经过期，请切换其他主机或购买套餐");
+                                $state.go("app.devicemanage");
+                            }
+                        }  
+                        
+                    }
+
+                }
+                else {
+                    alert("服务器数据请求失败");
+                }
+            }).error(function () {
+                alert("服务器数据请求失败");
+            });       
+
+
+
         //初始化cubiccore
         $('#cubicCore').addClass("blockLine-middle").addClass("item").addClass("cubicNormal");        
         //刷新data
@@ -293,35 +381,7 @@ angular.module('starter.controllers', ['WifiServices'])
         //更新device node alarm
         $scope.updateDeviceData();
 
-
-            // //加载TempToggle配置文件
-            // var n_versionStr = locals.get("n_version", "false");
-            // if (n_versionStr == "false")
-            //     $scope.TempToggle.notifyVersion = false;
-            // else
-            //     $scope.TempToggle.notifyVersion = true;
-
-            // var n_vibStr = locals.get("n_vib", "false");
-            // if (n_vibStr == "false")
-            //     $scope.TempToggle.notifyVib = false;
-            // else
-            //     $scope.TempToggle.notifyVib = true;
-
-            // var n_pushStr = locals.get("n_push", "false");
-            // if (n_pushStr == "false")
-            //     $scope.TempToggle.notifyPush = false;
-            // else
-            //     $scope.TempToggle.notifyPush = true;
-            //
-            $scope.OverViewViewModel.JustLogin = false;
-
-    
-
-        //九宫格css
-        //circleCss();
-        //DataReq end
-        
-
+        $scope.OverViewViewModel.JustLogin = false;
     }
     $timeout(function () {
         $ionicLoading.hide();
@@ -455,8 +515,9 @@ angular.module('starter.controllers', ['WifiServices'])
            });
     };
     $scope.qazxsw = function(){
-        alert("qazxsw");
-        console.log("qazxsw");
+        var gsf = $('ion-nav-view').css("height");
+        alert(gsf);
+        console.log(gsf);
     }
     $scope.testfunc = function(e){
         e.preventDefault(); 
@@ -489,6 +550,10 @@ angular.module('starter.controllers', ['WifiServices'])
          console.log('an alert called');
        });
      };
+
+    $scope.intBrowser = function(url){
+        window.open(url, '_blank', 'location=yes');
+    };     
     //说明modal
     $scope.openModal = function () {
         startModal($ionicLoading);
@@ -584,6 +649,7 @@ angular.module('starter.controllers', ['WifiServices'])
 
             startLoading($ionicLoading);
 
+            //xw需求，刚进入是也调一次？
             $timeout(function () {
                 var nodelisturl = '/node/list';
                 var dvcid = $scope.UsingDeviceViewModel.device.device_id;
@@ -1195,7 +1261,15 @@ angular.module('starter.controllers', ['WifiServices'])
     
   }
   $scope.currentDeviceChange = function (device) {
+    //对主机信息进行判断
+    var expdate = new Date(device.expire_time);
+    var today = new Date();
+    if(expdate < today){
+        alert("您所选的主机套餐已经过期，请购买套餐或更换其它主机");
+    }
+
       $scope.UsingDeviceViewModel.device = device;
+      console.log(device.device_id);
       //var desc = "当前主机切换至  " + device.device_name;
       //alert(desc);
   };
@@ -1221,22 +1295,29 @@ angular.module('starter.controllers', ['WifiServices'])
         $cordovaBarcodeScanner.scan().then(function (imageData) {
 
             var deviceId = imageData.text;
-            alert("主机号码: " + deviceId);
+            //$state.go("app.deviceBind");
+            // $scope.NewDeviceViewModel.deviceId = deviceId;
+
             var devicename = ""
-            var customerId = $scope.global.cust_id;
             //添加主机
             var url = '/device/binding';
-            var dvcid = $scope.UsingDeviceViewModel.device.device_id;
-            var reqd = { "cust_id": customerId, "device_id": deviceId, "device_name": devicename };
+            var reqd = { "cust_id": $scope.global.cust_id, "device_id": deviceId, "device_name": devicename };
             var req = httpReqGen(url, reqd);
 
             $http(req).success(function (data) {
                 var validData = resResult(data);
-                if (validData) {
+                if (data.result.code == "0000") {
                     //更新device node alarm
                     $scope.updateDeviceData();
+                    alert("主机添加并绑定成功");
                 }
-            }).error(function () { });
+                else{
+                    alert("主机添加并绑定失败 " + data.result.msg);
+                }
+            }).error(function () {
+                alert("主机添加并绑定失败");
+
+            });
 
 
             console.log("Barcode Format -> " + imageData.format);
@@ -1244,6 +1325,7 @@ angular.module('starter.controllers', ['WifiServices'])
             console.log("Cancelled -> d" + imageData.cancelled);
 
         }, function (error) {
+            alert("主机添加并绑定失败，扫描错误");
             console.log("An error happened -> " + error);
         });
     };
@@ -1348,21 +1430,22 @@ angular.module('starter.controllers', ['WifiServices'])
   }
 })
 //支付 app.purchaseinfo purchaseinfo.html
-.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading) {
+.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading,$http) {
   $scope.init = function(){
-                var simuloptiondata = [{"name":"套餐1", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"},
-                {"name":"套餐2", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"},
-                {"name":"套餐3", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","payment":"99.99"}];
-            // //套餐api
-            // var url = '';
-            // var reqd = { };
-            // var req = httpReqGen(url, reqd);
+                var simuloptiondata = [{"name":"套餐1", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","expenses":"99.99"},
+                {"name":"套餐2", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","expenses":"99.99"},
+                {"name":"套餐3", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","expenses":"99.99"}];
+            //套餐api
+            var url = '/trade/plan';
+            var reqd = { };
+            var req = httpReqGen(url, reqd);
 
-            // $http(req).success(function (data) {
-            //     var validData = resResult(data);
-            //     if (validData) {
-            //     }
-            // }).error(function () { });
+            $http(req).success(function (data) {
+                var validData = resResult(data);
+                if (validData) {
+                    $scope.MenuViewModel.menu = validData;
+                }
+            }).error(function () { });
             
             $scope.MenuViewModel.menu = simuloptiondata;
   }
@@ -1618,6 +1701,7 @@ angular.module('starter.controllers', ['WifiServices'])
         alert("fail");
       }
   };
+
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //注册
@@ -1810,6 +1894,8 @@ angular.module('starter.controllers', ['WifiServices'])
               $scope.TempToggle.notifyPush = (result.data.push == 1)? true:false;
               $scope.TempToggle.notifyVib = (result.data.vib == 1)? true:false;
               
+              //判断是否有主机，主机是否过期
+
               $state.go('app.dashboard.overview');
           } else {
               alert(result.msg);
@@ -1839,11 +1925,11 @@ angular.module('starter.controllers', ['WifiServices'])
                                         "title":"test1"},
                                     { "ad_img":"http://i2.pixiv.net/c/600x600/img-master/img/2016/10/04/21/33/24/59307581_p0_master1200.jpg",
                                     "stop_time":3,
-                                    "ad_href":"http://www.qq.com",
+                                    "ad_href":"http://www.baidu.com",
                                     "title":"test2"},
                                     { "ad_img":"http://i4.pixiv.net/c/600x600/img-master/img/2016/09/22/20/37/19/59114807_p0_master1200.jpg",
                                     "stop_time":3,
-                                    "ad_href":"http://www.qq.com",
+                                    "ad_href":"http://www.sina.com",
                                     "title":"test3"}];
 
             $http(srcreq).success(function (data) {
@@ -1928,48 +2014,6 @@ function httpTESTGen(url,head){
     };  
 }
 
-
-function circleCss() {
-    var cWidth = parseFloat($('.cn-wrapper li a').css('width').split('p')[0]);
-    var rate = cWidth / 366;
-
-    var ss = [-70, 14, 40];
-    var m1 = [-140, 152, 179];
-    var m2 = [-100, 55, 80];
-    var m3 = [0, 15, 45];
-    var m4 = [100, 57, 83];
-    var m5 = [146, 154, 181];
-    var m6 = [97, 254, 282];
-    var m7 = [0, 293, 323];
-    var m8 = [-101, 257, 285];
-    var mm = [m1,m2,m3,m4,m5,m6,m7,m8]
-
-    ss[0] = Math.floor(ss[0] * rate) + "px";
-    ss[1] = Math.ceil(ss[1] * rate) + "px";
-    ss[2] = Math.ceil(ss[2] * rate) + "px";
-    for (var i = 0; i < mm.length; i++) {
-        for (var j = 0; j < m1.length; j++) {
-            mm[i][j] = Math.floor(mm[i][j] * rate) + "px";
-        }
-    }
-
-
-    var eicon = $('.cn-wrapper li a i');
-    for (var i = 0; i < eicon.length; i++) {
-        eicon.eq(i).css("left", mm[i][0]);
-        eicon.eq(i).css("top", mm[i][1]);
-        eicon.eq(i).css("font-size", ss[2]);
-    }
-    var espan = $('.cn-wrapper li a span');
-    for (var i = 0; i < espan.length; i++) {
-        espan.eq(i).css("left", mm[i][0]);
-        espan.eq(i).css("top", mm[i][2]);
-        espan.eq(i).css("margin-top", ss[0]);
-        espan.eq(i).css("font-size", ss[1]);
-    }
-
-}
-
 function resResult(data) {
     if (data.result.code == "0000")
         return data.result.data;
@@ -2006,42 +2050,26 @@ function alarmCoreJudge(alarmdata) {
         $.each(alarmdata, function () {
             switch (this.node_type) {
                 case 0:
-                    //$('#item-1 use').removeClass("citemNormal").addClass("citemAlarm");
-                    // $('#eKeyDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    // $('#eKeyCore').removeClass("fontNormal").addClass("fontAlarm");
-                    // $('#eKeytxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 1:
                     if($('#item-1 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-1 use').css("fill","rgb(204, 35, 17)");
                     }
-                    // $('#megnetDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    // $('#megnetCore').removeClass("fontNormal").addClass("fontAlarm");
-                    // $('#megnettxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 2:
                     if($('#item-2 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-2 use').css("fill","rgb(204, 35, 17)");
                     }
-                    // $('#infraDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    // $('#infraCore').removeClass("fontNormal").addClass("fontAlarm");
-                    // $('#infratxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 3:
                      if($('#item-3 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-3 use').css("fill","rgb(204, 35, 17)");
                     }
-                    // $('#smokeDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    // $('#smokeCore').removeClass("fontNormal").addClass("fontAlarm");
-                    // $('#smoketxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
                 case 4:
                     if($('#item-8 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-8 use').css("fill","rgb(204, 35, 17)");
                     }
-                    // $('#tempDevices').removeClass("cubicWhite").addClass("cubicAlarm");
-                    // $('#tempCore').removeClass("fontNormal").addClass("fontAlarm");
-                    // $('#temptxt').removeClass("fontBlack").addClass("fontWhite");
                     break;
 
                 default:
@@ -2051,26 +2079,7 @@ function alarmCoreJudge(alarmdata) {
     }
     else {
         $('#trigger').css("fill","rgb(87, 165, 149)");
-        $('.citem use').css("fill","rgb(87, 165, 149)");
-        // $('#eKeyDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        // $('#eKeyCore').removeClass("fontAlarm").addClass("fontNormal");
-        // $('#eKeytxt').removeClass("fontWhite").addClass("fontBlack");         
-                  
-        // $('#megnetDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        // $('#megnetCore').removeClass("fontAlarm").addClass("fontNormal");
-        // $('#megnettxt').removeClass("fontWhite").addClass("fontBlack");    
-        
-        // $('#infraDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        // $('#infraCore').removeClass("fontAlarm").addClass("fontNormal");
-        // $('#infratxt').removeClass("fontWhite").addClass("fontBlack");   
-                
-        // $('#smokeDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        // $('#smokeCore').removeClass("fontAlarm").addClass("fontNormal");
-        // $('#smoketxt').removeClass("fontWhite").addClass("fontBlack");          
-        
-        // $('#tempDevices').removeClass("cubicAlarm").addClass("cubicWhite");
-        // $('#tempCore').removeClass("fontAlarm").addClass("fontNormal");
-        // $('#temptxt').removeClass("fontWhite").addClass("fontBlack");          
+        $('.citem use').css("fill","rgb(87, 165, 149)");        
     }
 }
 
@@ -2206,3 +2215,25 @@ function loadMoreStackmanus(currentPage, $scope, $http) {
         alert("服务器请求故障");
     });
 };
+
+Date.prototype.format = function (format) {
+     var date = {
+         "M+": this.getMonth() + 1,
+         "d+": this.getDate(),
+         "h+": this.getHours(),
+         "m+": this.getMinutes(),
+         "s+": this.getSeconds(),
+         "q+": Math.floor((this.getMonth() + 3) / 3),
+         "S+": this.getMilliseconds()
+     };
+     if (/(y+)/i.test(format)) {
+         format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+     }
+     for (var k in date) {
+         if (new RegExp("(" + k + ")").test(format)) {
+             format = format.replace(RegExp.$1, RegExp.$1.length == 1
+                             ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+         }
+     }
+     return format;
+ };

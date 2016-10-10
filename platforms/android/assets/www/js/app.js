@@ -313,6 +313,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         }
     }
 })
+  .state('app.deviceBind', {
+      url: "/deviceBind",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/deviceBind.html"
+        }
+      }
+    }) 
   .state('app.deviceinfo', {
       url: "/deviceinfo",
       views: {

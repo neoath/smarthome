@@ -118,6 +118,9 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.AdvertiseViewModel = {
       ADs:null  
     };
+    $scope.NewDeviceViewModel = {
+      deviceId:null    
+    };
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -455,8 +458,9 @@ angular.module('starter.controllers', ['WifiServices'])
            });
     };
     $scope.qazxsw = function(){
-        alert("qazxsw");
-        console.log("qazxsw");
+        var gsf = $('ion-nav-view').css("height");
+        alert(gsf);
+        console.log(gsf);
     }
     $scope.testfunc = function(e){
         e.preventDefault(); 
@@ -489,6 +493,10 @@ angular.module('starter.controllers', ['WifiServices'])
          console.log('an alert called');
        });
      };
+
+    $scope.intBrowser = function(url){
+        window.open(url, '_blank', 'location=yes');
+    };     
     //说明modal
     $scope.openModal = function () {
         startModal($ionicLoading);
@@ -1196,6 +1204,7 @@ angular.module('starter.controllers', ['WifiServices'])
   }
   $scope.currentDeviceChange = function (device) {
       $scope.UsingDeviceViewModel.device = device;
+      console.log(device.device_id);
       //var desc = "当前主机切换至  " + device.device_name;
       //alert(desc);
   };
@@ -1221,22 +1230,29 @@ angular.module('starter.controllers', ['WifiServices'])
         $cordovaBarcodeScanner.scan().then(function (imageData) {
 
             var deviceId = imageData.text;
-            alert("主机号码: " + deviceId);
+            //$state.go("app.deviceBind");
+            // $scope.NewDeviceViewModel.deviceId = deviceId;
+
             var devicename = ""
-            var customerId = $scope.global.cust_id;
             //添加主机
             var url = '/device/binding';
-            var dvcid = $scope.UsingDeviceViewModel.device.device_id;
-            var reqd = { "cust_id": customerId, "device_id": deviceId, "device_name": devicename };
+            var reqd = { "cust_id": $scope.global.cust_id, "device_id": deviceId, "device_name": devicename };
             var req = httpReqGen(url, reqd);
 
             $http(req).success(function (data) {
                 var validData = resResult(data);
-                if (validData) {
+                if (data.result.code == "0000") {
                     //更新device node alarm
                     $scope.updateDeviceData();
+                    alert("主机添加并绑定成功");
                 }
-            }).error(function () { });
+                else{
+                    alert("主机添加并绑定失败 " + data.result.msg);
+                }
+            }).error(function () {
+                alert("主机添加并绑定失败");
+
+            });
 
 
             console.log("Barcode Format -> " + imageData.format);
@@ -1244,8 +1260,32 @@ angular.module('starter.controllers', ['WifiServices'])
             console.log("Cancelled -> d" + imageData.cancelled);
 
         }, function (error) {
+            alert("主机添加并绑定失败，扫描错误");
             console.log("An error happened -> " + error);
         });
+    };
+
+    $scope.bindDevice = function(){
+            var devicename = ""
+            //添加主机
+            var url = '/device/binding';
+            var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.NewDeviceViewModel.deviceId, "device_name": devicename };
+            var req = httpReqGen(url, reqd);
+
+            $http(req).success(function (data) {
+                var validData = resResult(data);
+                if (data.result.code == "0000") {
+                    //更新device node alarm
+                    $scope.updateDeviceData();
+                    alert("主机添加并绑定成功");
+                }
+                else{
+                    alert("主机添加并绑定失败 " + data.result.msg);
+                }
+            }).error(function () {
+                alert("主机添加并绑定失败");
+
+            });
     };
 })
 .controller('DeviceDetailsCtrl', function ($scope, $state) {
@@ -1618,6 +1658,7 @@ angular.module('starter.controllers', ['WifiServices'])
         alert("fail");
       }
   };
+
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //注册
@@ -1839,11 +1880,11 @@ angular.module('starter.controllers', ['WifiServices'])
                                         "title":"test1"},
                                     { "ad_img":"http://i2.pixiv.net/c/600x600/img-master/img/2016/10/04/21/33/24/59307581_p0_master1200.jpg",
                                     "stop_time":3,
-                                    "ad_href":"http://www.qq.com",
+                                    "ad_href":"http://www.baidu.com",
                                     "title":"test2"},
                                     { "ad_img":"http://i4.pixiv.net/c/600x600/img-master/img/2016/09/22/20/37/19/59114807_p0_master1200.jpg",
                                     "stop_time":3,
-                                    "ad_href":"http://www.qq.com",
+                                    "ad_href":"http://www.sina.com",
                                     "title":"test3"}];
 
             $http(srcreq).success(function (data) {

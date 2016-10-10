@@ -61,7 +61,7 @@
     </script>
 
     <script id="templates/dashboard.html" type="text/ng-template">
-        <ion-view title="" >
+        <ion-view title="" animation="slide-right-left">
             <ion-tabs class="nav-title-slide-ios7 tabs-striped tabs-icon-top tabs-bottom tabs-background-light tabs-balanced" animation="none">
                 <ion-tab title="Alarms" icon-on="ion-ios7-star" icon-off="ion-ios7-star-outline" href="#/app/dashboard/alarms">
                     <ion-nav-view name="alarms-tab"></ion-nav-view>
@@ -109,7 +109,7 @@
         </ion-view>
     </script>
     <script id="templates/overview.html" type="text/ng-template">
-        <ion-view title="信来智家【{{UsingDeviceViewModel.device.titleText}}】" ng-controller="OverViewCtrl" ng-init="DataReq()">
+        <ion-view title="【{{UsingDeviceViewModel.device.titleText}}】" ng-controller="OverViewCtrl" ng-init="DataReq()">
             <ion-nav-buttons side="right">
                 <button class="button-clear" ><i class="icon" ng-class="UsingDeviceViewModel.device.icon" style="font-size: 22px;color: white;"></i></button>
             </ion-nav-buttons>
@@ -127,18 +127,18 @@
                             navigation: false,
                         }">
 
-                  <div class="owl-item">
+                  <div class="owl-item" ng-click="intBrowser(AdvertiseViewModel.ADs[0].ad_href)">
                         <img src="img/01.png" />
                     </div>
-                    <div class="owl-item">
+                    <div class="owl-item" ng-click="intBrowser(AdvertiseViewModel.ADs[1].ad_href)">
                         <img src="img/02.png" />
                     </div>
-                    <div class="owl-item">
+                    <div class="owl-item" ng-click="intBrowser(AdvertiseViewModel.ADs[2].ad_href)">
                         <img src="img/03.png" />
                     </div>
                 </wrap-owlcarousel>
 
-                    <div class="htmleaf-content" style="margin-top:-40px;">          
+                    <div class="htmleaf-content" style="margin-top:-6.5vh;">          
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-100 -100 700 700" id="menu">
                         <style>
                             #menu { display: block; margin: 0 auto; overflow: visible;}
@@ -192,41 +192,41 @@
                                 <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">门磁监控</text>
                              </a>
                              
-                                <a on-touch="touchEv(2)" on-release="releaseEv(2)" on-hold="nodeTypeTap(2,'app.nodeType', '我的红外监测',2)" class="citem" id="item-2" xlink:href=" " xlink:title=" " transform="matrix(0.7071,-0.7071,0.7071,0.7071,-103.55339059327378,249.99999999999997)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
-                                    <use xlink:href="#icon-2" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)"></use>
-                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">红外监控</text>
+                                <a on-tap="nodeTypeTap(2,'app.nodeType', '我的红外监测',2)" class="citem" id="item-2" xlink:href=" " xlink:title=" " transform="matrix(0.7071,-0.7071,0.7071,0.7071,-103.55339059327378,249.99999999999997)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+                                    <use xlink:href="#icon-2" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(112 414.4505615234375 181.88233947753906)"></use>
+                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(112 414.4505615234375 181.88233947753906)">红外监控</text>
                                 </a>
                                 
-                                <a on-touch="touchEv(3)" on-release="releaseEv(3)" on-hold="nodeTypeTap(3,'app.nodeType', '我的烟雾探测',3)" class="citem" id="item-3" xlink:href=" " xlink:title=" " transform="matrix(0,-1,1,0,0,500)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
-                                    <use xlink:href="#icon-3" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)"></use>
-                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">烟雾探测</text>
+                                <a on-tap="nodeTypeTap(3,'app.nodeType', '我的烟雾探测',3)" class="citem" id="item-3" xlink:href=" " xlink:title=" " transform="matrix(0,-1,1,0,0,500)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+                                    <use xlink:href="#icon-3" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(156.5 414.4505615234375 181.88233947753906)"></use>
+                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(156.5 414.4505615234375 181.88233947753906)">烟雾探测</text>
                                 </a>
                                 
-                                <a on-touch="touchEv(4)" on-release="releaseEv(4)" on-hold="clickEv(4)" class="citem" id="item-4" xlink:href=" " xlink:title=" " transform="matrix(-0.7071,-0.7071,0.7071,-0.7071,249.99999999999997,603.5533905932738)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
-                                    <use xlink:href="#icon-4" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)"></use>
-                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">视频监控</text>
-                                </a>
-                                
-                                
-                                <a on-hold="clickEv(5)" class="citem" id="item-5" xlink:href=" " xlink:title=" " transform="matrix(-1,0,0,-1,500,500)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
-                                    <use xlink:href="#icon-5" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)"></use>
-                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">智能监控</text>
-                                </a>
-                                
-                                <a on-touch="touchEv(6)" on-release="releaseEv(6)" on-hold="clickEv(6)" class="citem" id="item-6" xlink:href=" " xlink:title=" " transform="matrix(-0.7071,0.7071,-0.7071,-0.7071,603.5533905932738,250.00000000000006)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
-                                    <use xlink:href="#icon-6" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)"></use>
-                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">智能家居</text>
+                                <a on-tap="openModal()" class="citem" id="item-4" xlink:href=" " xlink:title=" " transform="matrix(-0.7071,-0.7071,0.7071,-0.7071,249.99999999999997,603.5533905932738)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+                                    <use xlink:href="#icon-4" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(201 414.4505615234375 181.88233947753906)"></use>
+                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(201 414.4505615234375 181.88233947753906)">视频监控</text>
                                 </a>
                                 
                                 
-                                <a on-touch="touchEv(7)" on-release="releaseEv(7)" on-hold="Emergency(7,'紧急报警','在特殊情况下方可点击')" class="citem" id="item-7" xlink:href=" " xlink:title=" " transform="matrix(0,1,-1,0,500.00000000000006,0)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
-                                    <use xlink:href="#icon-7" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)"></use>
-                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">紧急报警</text>
+                                <a on-tap="openModal()" class="citem" id="item-5" xlink:href=" " xlink:title=" " transform="matrix(-1,0,0,-1,500,500)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+                                    <use xlink:href="#icon-5" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(245.5 414.4505615234375 181.88233947753906)"></use>
+                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(245.5 414.4505615234375 181.88233947753906)">智能监控</text>
                                 </a>
                                 
-                                <a on-touch="touchEv(8)" on-release="releaseEv(8)" on-hold="nodeTypeTap(8,'app.nodeType', '我的温度监测', 4)" class="citem" id="item-8" xlink:href=" " xlink:title=" " transform="matrix(0.7071,0.7071,-0.7071,0.7071,250.00000000000009,-103.55339059327378)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
-                                    <use xlink:href="#icon-8" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)"></use>
-                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(67.5 414.4505615234375 181.88233947753906)">温度监测</text>
+                                <a on-tap="qazxsw()" class="citem" id="item-6" xlink:href=" " xlink:title=" " transform="matrix(-0.7071,0.7071,-0.7071,-0.7071,603.5533905932738,250.00000000000006)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+                                    <use xlink:href="#icon-6" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(291 414.4505615234375 181.88233947753906)"></use>
+                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(291 414.4505615234375 181.88233947753906)">智能家居</text>
+                                </a>
+                                
+                                
+                                <a on-tap="Emergency(7,'紧急报警','在特殊情况下方可点击')" class="citem" id="item-7" xlink:href=" " xlink:title=" " transform="matrix(0,1,-1,0,500.00000000000006,0)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+                                    <use xlink:href="#icon-7" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(336.5 414.4505615234375 181.88233947753906)"></use>
+                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(336.5 414.4505615234375 181.88233947753906)">紧急报警</text>
+                                </a>
+                                
+                                <a on-tap="nodeTypeTap(8,'app.nodeType', '我的温度监测', 4)" class="citem" id="item-8" xlink:href=" " xlink:title=" " transform="matrix(0.7071,0.7071,-0.7071,0.7071,250.00000000000009,-103.55339059327378)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+                                    <use xlink:href="#icon-8" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(21 414.4505615234375 181.88233947753906)"></use>
+                                    <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(21 414.4505615234375 181.88233947753906)">温度监测</text>
                                 </a>
                         </g>
                          <g class="trigger" style="fill:#FFF;">
@@ -240,8 +240,8 @@
                         </svg>
                     </div>
 
-                <div class="card" style="margin-top:-40px;">
-                    <div class="list">
+                <div class="card" style="margin-top:-6.5vh;">
+                    <div class="list" style="padding-top: 0px;padding-bottom: 0px;">
                         <ion-toggle ng-change="armStatusToggleChanged()" ng-model="UsingDeviceViewModel.device.alert_status">已布防</ion-toggle>
                     </div>
                 </div>

@@ -207,6 +207,10 @@
                         {
                             "xml": "<feature name=\"BarcodeScanner\"><param name=\"android-package\" value=\"com.phonegap.plugins.barcodescanner.BarcodeScanner\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -741,6 +745,9 @@
         },
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
         }
     },
     "dependent_plugins": {},
@@ -830,6 +837,14 @@
             "clobbers": [
                 "cordova.plugins.barcodeScanner"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+            "id": "cordova-plugin-inappbrowser.inappbrowser",
+            "clobbers": [
+                "cordova.InAppBrowser.open",
+                "window.open"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -847,6 +862,7 @@
         "cordova.weixin.pay": "5.3.0",
         "ionic-plugin-keyboard": "2.2.1",
         "jpush-phonegap-plugin": "2.2.4",
-        "phonegap-plugin-barcodescanner": "4.0.1"
+        "phonegap-plugin-barcodescanner": "4.0.1",
+        "cordova-plugin-inappbrowser": "1.5.0"
     }
 }
