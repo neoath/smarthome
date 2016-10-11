@@ -208,10 +208,10 @@ angular.module('starter.controllers', ['WifiServices'])
                     var alarmsdata = resResult(data);
                     
                     // //模拟数据
-                    alarmsdata = [{ "device_id": "7CEC793924B8", "node_type": 4, "node_id": 1, "alert_type": 1, "alert_time": "2011-03-09 12:23:31", "device_name": "fakename" }
-                                             , { "device_id": "7CEC793924B8", "node_type": 3, "node_id": 2, "alert_type": 2, "alert_time": "2012-03-09 12:23:31", "device_name": "fakename" },
-                                             { "device_id": "7CEC793924B8", "node_type": 1, "node_id": 3, "alert_type": 3, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" },
-                                             { "device_id": "7CEC793924B8", "node_type": 1, "node_id": 4, "alert_type": 4, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" }];
+                    // alarmsdata = [{ "device_id": "7CEC793924B8", "node_type": 4, "node_id": 1, "alert_type": 1, "alert_time": "2011-03-09 12:23:31", "device_name": "fakename" }
+                    //                          , { "device_id": "7CEC793924B8", "node_type": 3, "node_id": 2, "alert_type": 2, "alert_time": "2012-03-09 12:23:31", "device_name": "fakename" },
+                    //                          { "device_id": "7CEC793924B8", "node_type": 1, "node_id": 3, "alert_type": 3, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" },
+                    //                          { "device_id": "7CEC793924B8", "node_type": 1, "node_id": 4, "alert_type": 4, "alert_time": "2013-03-09 12:23:31", "device_name": "fakename" }];
                      //if (timespaned > 2)
                      //   alarmsdata = [];
                     //报警数据map
@@ -240,7 +240,7 @@ angular.module('starter.controllers', ['WifiServices'])
        var alertPopup = $ionicPopup.alert({
          title: alertMain,
          template: alertSub,
-         okText: '好的'
+         okText: '确定'
        });
 
        alertPopup.then(function(res) {
@@ -480,7 +480,7 @@ angular.module('starter.controllers', ['WifiServices'])
              title: alertMain,
              template: alertSub,
              cancelText: '取消',
-             okText: '好的'
+             okText: '确定'
            });
 
            confirmPopup.then(function(res) {
