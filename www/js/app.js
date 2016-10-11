@@ -27,45 +27,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     $scope.jumptoSender = function(ssid){
           $scope.NetConfigViewModel.SSID = ssid;
           $scope.NetConfigViewModel.password = ssid;
-
-
-
-          // var scClass = navigator.smartconfig;
-          // if(scClass){
-          //   alert("class linked");
-
-          //   var data = {};
-          //   scClass.gateWayIp(
-          //     data,
-          //     function(resultMsg){
-          //     alert(resultMsg);
-          //     $ionicLoading.show({
-          //       template:"成功",
-          //       noBackdrop: true,
-          //       duration: 500
-          //     });
-          //   },function(resultMsg){
-          //     alert(resultMsg);
-          //     $ionicLoading.show({
-          //       template:"失败",
-          //       noBackdrop: true,
-          //       duration: 500
-          //     });
-          //   });       
-          // }
-
-          // else{
-          //   alert("class link fail");
-          // }
-
-          // $scope.NetConfigViewModel.GatewayIP = resultMsg;
           
           $state.go('app.devicenetworkconnect');
     }
 }])
 
 .run(function($ionicPlatform, $state, $cordovaAppVersion, $http, $cordovaFileTransfer,
-     $cordovaFile, $cordovaFileOpener2, $ionicLoading, jpushService) {
+     $cordovaFile, $cordovaFileOpener2, $ionicLoading, $ionicPopup, $ionicActionSheet, jpushService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -81,7 +49,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
       StatusBar.styleDefault();
     }
 
-    //自动更新;
+    //检查更新;
     ionic.Platform.ready(function(){
     // will execute when device is ready, or immediately if the device is already ready.
     });
@@ -101,41 +69,58 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
       $http(req).success(function (data) {
           //取返回值有效data
           var versiondata = resResult(data);
-          //alert("versionData: " + versiondata.platform);
-          var serverAppVersion = versiondata.version_no;
+          var serverAppVersion = versiondata.version_no; //服务器获取的app版本号
+          var serverUpdate_Content = versiondata.update_content; //服务器获取的更新内容
+          var serverUrl = versiondata.down_addr; //服务器获取的更新app的路径
+          //alert(serverAppVersion);
           if (version != serverAppVersion) {
-              $ionicLoading.show({    
-                  template: "已经下载：0%"    
-              }); 
-
-              var url = versiondata.down_addr;     
-              var targetPath = "file:///mnt/sdcard/Download/xinlai-debug.apk";     
-              var trustHosts = true;    
-              var options = {};    
-
-              $cordovaFileTransfer.download(url, targetPath, options, trustHosts).then(function (result) {    
-                      $cordovaFileOpener2.open(targetPath, 'application/vnd.android.package-archive'    
-                      ).then(function () {    
-                          }, function (err) {    
-                          });    
-                      $ionicLoading.hide();    
-                  }, function (err) {    
-                      alert('下载失败');    
-                  }, function (progress) {                               
-                      $timeout(function () {    
-                          var downloadProgress = (progress.loaded / progress.total) * 100;    
-                          $ionicLoading.show({    
-                              template: "已经下载：" + Math.floor(downloadProgress) + "%"    
-                          });    
-                          if (downloadProgress > 99) {    
-                              $ionicLoading.hide();    
-                          }    
-                      })    
-                  });    
-        }
-      }).error(function (error) { alert(error) });
+              var confirmPopup = $ionicPopup.confirm({
+                  title: '版本升级',
+                  template: serverUpdate_Content, //从服务端获取更新的内容
+                  cancelText: '取消',
+                  okText: '升级'
+              });
+              confirmPopup.then(function (res) {
+                  if (res) {
+                      $ionicLoading.show({
+                          template: "已经下载：0%"
+                      });
+                      var url = serverUrl; //可以从服务端获取更新APP的路径
+                      var targetPath = "file:///storage/sdcard0/Download/Xinlai.apk"; //APP下载存放的路径，可以使用cordova file插件进行相关配置
+                      var trustHosts = true
+                      var options = {};
+                      $cordovaFileTransfer.download(url, targetPath, options, trustHosts).then(function (result) {
+                          // 打开下载下来的APP
+                          $cordovaFileOpener2.open(targetPath, 'application/vnd.android.package-archive'
+                          ).then(function () {
+                                  // 成功
+                              }, function (err) {
+                                  // 错误
+                              });
+                          $ionicLoading.hide();
+                      }, function (err) {
+                          alert('下载失败');
+                      }, function (progress) {
+                          //进度，这里使用文字显示下载百分比
+                          $timeout(function () {
+                              var downloadProgress = (progress.loaded / progress.total) * 100;
+                              $ionicLoading.show({
+                                  template: "已经下载：" + Math.floor(downloadProgress) + "%"
+                              });
+                              if (downloadProgress > 99) {
+                                  $ionicLoading.hide();
+                              }
+                          })
+                      });
+                  } else {
+                      // 取消更新
+                  }
+              });
+          }
+      });
     });
-    
+
+    //document.addEventListener("menubutton", onHardwareMenuKeyDown, false); 
 
     //推送初始化;
     var setTagsWithAliasCallback = function(event){
@@ -589,4 +574,109 @@ function httpReqGen(apibranch,reqData){
       url: url,
       data: reqData
     };  
+}
+
+// 菜单键
+function onHardwareMenuKeyDown() {
+    $ionicActionSheet.show({
+        titleText: '检查更新',
+        buttons: [
+            { text: '关于' }
+        ],
+        destructiveText: '检查更新',
+        cancelText: '取消',
+        cancel: function () {
+            // add cancel code..
+        },
+        destructiveButtonClicked: function () {
+            //检查更新
+            checkUpdate();
+        },
+        buttonClicked: function (index) {
+
+        }
+    });
+    $timeout(function () {
+        hideSheet();
+    }, 2000);
+};
+
+// 检查更新
+function checkUpdate() {
+
+  ionic.Platform.ready(function(){
+  // will execute when device is ready, or immediately if the device is already ready.
+  });
+  var url = '/app/upgrade';
+  var isAndroid = ionic.Platform.isAndroid;
+  var platform = isAndroid ? "Android" : "iOS";
+  //alert(platform);
+
+  if (!isAndroid)
+    return;
+
+  $cordovaAppVersion.getVersionNumber().then(function(version) {   
+
+    var reqd = { "platform": platform, "app_version": version };
+    var req = httpReqGen(url, reqd);
+
+    $http(req).success(function (data) {
+        //取返回值有效data
+        var versiondata = resResult(data);
+        var serverAppVersion = versiondata.version_no; //服务器获取的app版本号
+        var serverUpdate_Content = versiondata.update_content; //服务器获取的更新内容
+        var serverUrl = versiondata.down_addr; //服务器获取的更新app的路径
+
+        if (version != serverAppVersion) {
+          showUpdateConfirm(serverUpdate_Content, serverUrl);
+        }
+    });
+  });
+}
+
+// 显示是否更新对话框
+function showUpdateConfirm(serverUpdate_Content, serverUrl) {
+  alert("in confirm");
+  var confirmPopup = $ionicPopup.confirm({
+      title: '版本升级',
+      template: serverUpdate_Content, //从服务端获取更新的内容
+      cancelText: '取消',
+      okText: '升级'
+  });
+  confirmPopup.then(function (res) {
+      if (res) {
+          $ionicLoading.show({
+              template: "已经下载：0%"
+          });
+          var url = serverUrl; //可以从服务端获取更新APP的路径
+          var targetPath = "file:///storage/sdcard0/Download/Xinlai.apk"; //APP下载存放的路径，可以使用cordova file插件进行相关配置
+          var trustHosts = true
+          var options = {};
+          $cordovaFileTransfer.download(url, targetPath, options, trustHosts).then(function (result) {
+              // 打开下载下来的APP
+              $cordovaFileOpener2.open(targetPath, 'application/vnd.android.package-archive'
+              ).then(function () {
+                      // 成功
+                  }, function (err) {
+                      // 错误
+                  });
+              $ionicLoading.hide();
+          }, function (err) {
+              alert('下载失败');
+          }, function (progress) {
+              //进度，这里使用文字显示下载百分比
+              $timeout(function () {
+                  var downloadProgress = (progress.loaded / progress.total) * 100;
+                  $ionicLoading.show({
+                      template: "已经下载：" + Math.floor(downloadProgress) + "%"
+                  });
+                  if (downloadProgress > 99) {
+                      $ionicLoading.hide();
+                  }
+              })
+          });
+      } else {
+          // 取消更新
+      }
+  });
 }
