@@ -19,17 +19,14 @@
                 <ion-header-bar class="bar-balanced" style="border-bottom: 1px solid white;">
                     <h1 class="title">信来智家</h1>
                 </ion-header-bar>
-                <ion-content>
-                    <div style="padding: 5% 36%; background-color: #70b7a8;">
-                        <img style="width: 80px;height: 80px;" src="img/logo.png" />
-                        <div style="text-align: center; color: antiquewhite; font-size: 16px; ">Cia_Name</div>
+                <ion-content ng-controller="usersettingCtrl">
+                    <div style="padding: 5% 33%; background-color: #70b7a8;">
+                        <img style="width: 100px;height: 80px;" src="img/logo.png" />
                     </div>
                     <div class="list">
-                        <div class="item item-divider">
-                            快捷操作
-                        </div>
+                        
                         <a menu-close class="item item-icon-left" href="#/app/dashboard/overview">
-                            <i class="icon ion-eye"></i>
+                            <i class="icon ion-home"></i>
                             首页
                         </a>
                         <!--<a menu-close class="item item-icon-left" href="#/app/camera">
@@ -37,7 +34,7 @@
                             摄像头
                         </a>-->
                         <a menu-close class="item item-icon-left" href="#/app/nodes">
-                            <i class="icon ion-fork-repo"></i>
+                            <i class="icon ion-search"></i>
                             设备配对
                         </a>
                         <!--<a menu-close class="item item-icon-left" href="#/app/battery">
@@ -49,7 +46,7 @@
                             报警记录
                         </a>-->
                         <a menu-close class="item item-icon-left" href="#/app/manustack">
-                            <i class="icon ion-fork-repo"></i>
+                            <i class="icon ion-clipboard"></i>
                             操作记录
                         </a>                   
                         <a menu-close class="item item-icon-left" href="#/app/settings">
@@ -57,7 +54,7 @@
                             设置
                         </a>
                         <a menu-close class="item item-icon-left" href="#/app/version">
-                            <i class="icon ion-settings"></i>
+                            <i class="icon ion-archive"></i>
                             检查更新
                         </a>
 
@@ -67,7 +64,7 @@
                             WIFI
                         </a>   -->
                         <a menu-close class="item item-icon-left" href="#/app/vib">
-                            <i class="icon ion-flame"></i>
+                            <i class="icon ion-beer"></i>
                             interface
                         </a>      
                         <!--<a menu-close class="item item-icon-left" href="#/app/purchasemethod">
@@ -81,7 +78,15 @@
                         <a menu-close class="item item-icon-left" href="#/app/sc">
                             <i class="icon ion-flame"></i>
                             SC
-                        </a>-->                        
+                        </a>-->  
+                        <div class="item item-divider">
+                            
+                        </div>
+                        
+                        <a menu-close class="item item-icon-left" ng-click="logout()">
+                            <i class="icon ion-power"></i>
+                            安全退出
+                        </a>                        
                     </div>
                 </ion-content>
             </ion-side-menu>

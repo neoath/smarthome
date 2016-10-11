@@ -16,10 +16,25 @@
         "com.yoopoon.cordova.plugin.alipay": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
+        "cordova-plugin-app-version": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
         "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-file-opener2": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.ionicframework.xinlai"
+        },
+        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
         "cordova-plugin-splashscreen": {
@@ -48,21 +63,6 @@
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         },
         "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "cordova-plugin-app-version": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "com.ionicframework.xinlai"
-        },
-        "cordova-plugin-file-opener2": {
             "PACKAGE_NAME": "com.ionicframework.xinlai"
         }
     },

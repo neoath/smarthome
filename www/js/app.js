@@ -82,8 +82,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     }
 
     //自动更新;
+    ionic.Platform.ready(function(){
+    // will execute when device is ready, or immediately if the device is already ready.
+    });
     var url = '/app/upgrade';
-    var platform = "Android";
+    var isAndroid = ionic.Platform.isAndroid;
+    var platform = isAndroid ? "Android" : "iOS";
+    //alert(platform);
+
+    if (!isAndroid)
+      return;
 
     $cordovaAppVersion.getVersionNumber().then(function(version) {   
 
@@ -93,7 +101,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
       $http(req).success(function (data) {
           //取返回值有效data
           var versiondata = resResult(data);
-          alert("versionData: " + versiondata.platform);
+          //alert("versionData: " + versiondata.platform);
           var serverAppVersion = versiondata.version_no;
           if (version != serverAppVersion) {
               $ionicLoading.show({    
