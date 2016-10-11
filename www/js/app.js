@@ -54,14 +54,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     // will execute when device is ready, or immediately if the device is already ready.
     });
     var url = '/app/upgrade';
-    var isAndroid = ionic.Platform.isAndroid;
-    var platform = isAndroid ? "Android" : "iOS";
+    var isAndroid = ionic.Platform.isAndroid();
+    //var isIOS = ionic.Platform.isIOS();
+    //alert(isAndroid);
+    //alert(isIOS);
+    var platform = (isAndroid == true) ? "Android" : "iOS";
     //alert(platform);
 
-    if (!isAndroid)
-      return;
-
-    $cordovaAppVersion.getVersionNumber().then(function(version) {   
+    if (platform == "Android") {
+      $cordovaAppVersion.getVersionNumber().then(function(version) {   
 
       var reqd = { "platform": platform, "app_version": version };
       var req = httpReqGen(url, reqd);
@@ -117,8 +118,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
                   }
               });
           }
+        });
       });
-    });
+    }
 
     //document.addEventListener("menubutton", onHardwareMenuKeyDown, false); 
 

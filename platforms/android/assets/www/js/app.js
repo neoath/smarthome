@@ -54,14 +54,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     // will execute when device is ready, or immediately if the device is already ready.
     });
     var url = '/app/upgrade';
-    var isAndroid = ionic.Platform.isAndroid;
-    var platform = isAndroid ? "Android" : "iOS";
+    var isAndroid = ionic.Platform.isAndroid();
+    var isIOS = ionic.Platform.isIOS();
+    alert(isAndroid);
+    alert(isIOS);
+    var platform = (isAndroid == true) ? "Android" : "iOS";
     alert(platform);
 
-    if (!isAndroid)
-      return;
-
-    $cordovaAppVersion.getVersionNumber().then(function(version) {   
+    if (platform == "Android") {
+      $cordovaAppVersion.getVersionNumber().then(function(version) {   
 
       var reqd = { "platform": platform, "app_version": version };
       var req = httpReqGen(url, reqd);
@@ -72,10 +73,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
           var serverAppVersion = versiondata.version_no; //服务器获取的app版本号
           var serverUpdate_Content = versiondata.update_content; //服务器获取的更新内容
           var serverUrl = versiondata.down_addr; //服务器获取的更新app的路径
-          alert(serverAppVersion);
+          //alert(serverAppVersion);
           if (version != serverAppVersion) {
-            //showUpdateConfirm(serverUpdate_Content, serverUrl);
-              alert("in confirm");
               var confirmPopup = $ionicPopup.confirm({
                   title: '版本升级',
                   template: serverUpdate_Content, //从服务端获取更新的内容
@@ -119,8 +118,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
                   }
               });
           }
+        });
       });
-    });
+    }
 
     //document.addEventListener("menubutton", onHardwareMenuKeyDown, false); 
 
