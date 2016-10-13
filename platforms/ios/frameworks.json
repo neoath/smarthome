@@ -1,0 +1,22 @@
+{
+    "SystemConfiguration.framework": 4,
+    "libsqlite3.0.tbd": 2,
+    "libz.1.2.5.tbd": 2,
+    "CoreTelephony.framework": 3,
+    "Security.framework": 3,
+    "libstdc++.6.0.9.tbd": 2,
+    "libz.tbd": 2,
+    "libc++.tbd": 1,
+    "CoreMotion.framework": 1,
+    "CFNetwork.framework": 2,
+    "libiconv.dylib": 2,
+    "AVFoundation.framework": 2,
+    "CoreVideo.framework": 2,
+    "QuartzCore.framework": 2,
+    "CoreImage.framework": 2,
+    "AudioToolbox.framework": 2,
+    "CoreFoundation.framework": 1,
+    "Foundation.framework": 1,
+    "UIKit.framework": 1,
+    "AdSupport.framework": 1
+}

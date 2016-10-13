@@ -9,3 +9,5 @@ TODO：
 3. smartconfig debug
 
 4. debug version launch
+
+5. git ios version

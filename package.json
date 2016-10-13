@@ -1,7 +1,7 @@
 {
-  "name": "ionic-project",
+  "name": "demo",
   "version": "1.1.1",
-  "description": "An Ionic project",
+  "description": "Demo: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^2.0.4",
@@ -18,30 +18,16 @@
     "cordova-plugin-device",
     "cordova-plugin-console",
     "cordova-plugin-whitelist",
-    "cordova-plugin-statusbar",
-    "ionic-plugin-keyboard",
-    {
-      "locator": "../cordova-weixin",
-      "id": "cordova.weixin.pay"
-    },
-    "cordova-sqlite-storage",
-    {
-      "variables": {
-        "API_KEY": "98ce269f58c86831f9ddbb5b"
-      },
-      "locator": "jpush-phonegap-plugin",
-      "id": "jpush-phonegap-plugin"
-    },
-    "C:\\Sari\\Proj\\SmartHouse\\smarthome\\plugins\\com.pylonproducts.wifiwizard",
-    "cordova-plugin-vibration",
     "cordova-plugin-splashscreen",
-    "cordova-plugin-app-version",
-    "cordova-plugin-file",
-    "cordova-plugin-file-transfer",
-    "cordova-plugin-file-opener2"
+    "cordova-plugin-statusbar",
+    "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
     "ios",
-    "android"
+    {
+      "platform": "ios",
+      "version": "",
+      "locator": "ios"
+    }
   ]
 }

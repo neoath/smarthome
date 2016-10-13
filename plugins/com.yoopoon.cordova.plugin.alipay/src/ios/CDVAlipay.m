@@ -77,7 +77,6 @@
 }
 -(void)pay1:(CDVInvokedUrlCommand *)command{
     NSDictionary *orderInfoArgs = [self checkArgs:command];
-    NSString *orderString = orderInfoArgs[@"payInfo"];
     
     // NSString *subject = orderInfoArgs[@"subject"];
     // NSString *body = orderInfoArgs[@"body"];
@@ -89,8 +88,8 @@
     // self.partner = orderInfoArgs[@"partner"];
     // self.rsa_private = orderInfoArgs[@"rsa_private"];
     // self.rsa_public = orderInfoArgs[@"rsa_public"];
-    //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
-    NSString *appScheme = @"alipaycordova";
+    // //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
+     NSString *appScheme = @"alipaycordova";
     /*
      *生成订单信息及签名
      */
@@ -120,8 +119,9 @@
     // id<DataSigner> signer = CreateRSADataSigner(self.rsa_private);
     // NSString *signedString = [signer signString:orderSpec];
     
-    // //将签名成功字符串格式化为订单字符串,请严格按照该格式
-    // NSString *orderString = nil;
+    //将签名成功字符串格式化为订单字符串,请严格按照该格式
+    NSString *orderString = orderInfoArgs[@"payInfo"];
+    //NSString *subject = orderInfoArgs[@"payInfo"];
     // if (signedString != nil) {
     //     orderString = [NSString stringWithFormat:@"%@&sign=\"%@\"&sign_type=\"%@\"",
     //                    orderSpec, signedString, @"RSA"];
