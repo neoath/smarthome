@@ -55,11 +55,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     });
     var url = '/app/upgrade';
     var isAndroid = ionic.Platform.isAndroid();
-    var isIOS = ionic.Platform.isIOS();
-    alert(isAndroid);
-    alert(isIOS);
+    //var isIOS = ionic.Platform.isIOS();
+    //alert(isAndroid);
+    //alert(isIOS);
     var platform = (isAndroid == true) ? "Android" : "iOS";
-    alert(platform);
+    //alert(platform);
 
     if (platform == "Android") {
       $cordovaAppVersion.getVersionNumber().then(function(version) {   

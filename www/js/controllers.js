@@ -257,91 +257,92 @@ angular.module('starter.controllers', ['WifiServices'])
 .controller('OverViewCtrl', function ($q, $scope, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover, $state, $timeout, $interval, $http, $ionicLoading, locals, $ionicNavBarDelegate) {
 
     //页面初始化方法
-    $scope.DataReq = function () {      
-        //预处理主机过期信息以及主机绑定信息 
+    $scope.DataReq = function () {     
+        if (!locals.get("cust_id",""))
+            $state.go("app.login"); 
+
+        //预处理主机过期信息以及主机绑定信息
         //该方法不做更新VM
-            var armurl = '/device/list';
-            var armreqd = { "cust_id": $scope.global.cust_id};
-            var armreq = httpReqGen(armurl, armreqd);
+        var armurl = '/device/list';
+        var armreqd = { "cust_id": $scope.global.cust_id};
+        var armreq = httpReqGen(armurl, armreqd);
 
-            $http(armreq).success(function (data) {
-                //返回0000
-                if (data.result.code == "0000") {
-                    //首次登入(UsingDeviceViewModel == null)
-                    if($scope.UsingDeviceViewModel.device == null){
-                        //deviceList为空 没有绑定主机
-                        if(data.result.data.length == 0){
-                            $scope.showAlert("系统提示","您的用户未绑定任何主机，请先绑定一台主机");
-                            $state.go('app.devicemanage');
-                        }
-                        //只有1台主机
-                        else if(data.result.data.length == 1){
-                            var expdate = new Date(data.result.data[0].expire_time);
-                            var today = new Date();
-                            if(expdate < today){
-                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请购买套餐以保证继续使用");
-                                $state.go("app.purchaseinfo");
-                            }
-                        }
-                        else{
-                            var expdate = new Date(data.result.data[0].expire_time);
-                            var today = new Date();
-                            if(expdate < today){
-                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请切换其他主机或购买套餐");
-                                $state.go("app.devicemanage");
-                            }
-                        }                        
+        $http(armreq).success(function (data) {
+            console.log(data.result);
+            //返回0000
+            if (data.result.code == "0000") {
+                //首次登入(UsingDeviceViewModel == null)
+                if($scope.UsingDeviceViewModel.device == null){
+                    //deviceList为空 没有绑定主机
+                    if(data.result.data.length == 0){
+                        $scope.showAlert("系统提示","您的用户未绑定任何主机，请先绑定一台主机");
+                        $state.go('app.devicemanage');
                     }
-                    //再次进入(UsingDeviceViewModel != null)
+                    //只有1台主机
+                    else if(data.result.data.length == 1){
+                        var expdate = new Date(data.result.data[0].expire_time);
+                        var today = new Date();
+                        if(expdate < today){
+                            $scope.showAlert("系统提示","当前的主机套餐已经过期，请购买套餐以保证继续使用");
+                            $state.go("app.purchaseinfo");
+                        }
+                    }
                     else{
-                        //deviceList为空 没有绑定主机
-                        if(data.result.data.length == 0){
-                            $scope.showAlert("系统提示","您的用户未绑定任何主机，请先绑定一台主机");
-                            $state.go('app.devicemanage');
+                        var expdate = new Date(data.result.data[0].expire_time);
+                        var today = new Date();
+                        if(expdate < today){
+                            $scope.showAlert("系统提示","当前的主机套餐已经过期，请切换其他主机或购买套餐");
+                            $state.go("app.devicemanage");
                         }
-                        //只有1台主机
-                        else if(data.result.data.length == 1){
-                            var queryResult = Enumerable.From(data.result.data)
-                                .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
-                                .ToArray();
-                                if(queryResult == null) 
-                                    $scope.showAlert("系统提示","切换主机信息请求失败");
-                            var sResData = queryResult[0];
-
-                            var expdate = new Date(sResData.expire_time);
-                            var today = new Date();
-                            if(expdate < today){
-                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请购买套餐以保证继续使用");
-                                $state.go("app.purchaseinfo");
-                            }
-                        }
-                        else{
-                            var queryResult = Enumerable.From(data.result.data)
-                                .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
-                                .ToArray();
-                                if(queryResult == null) 
-                                    $scope.showAlert("系统提示","切换主机信息请求失败");
-                            var sResData = queryResult[0];
-
-                            var expdate = new Date(sResData.expire_time);
-                            var today = new Date();
-                            if(expdate < today){
-                                $scope.showAlert("系统提示","当前的主机套餐已经过期，请切换其他主机或购买套餐");
-                                $state.go("app.devicemanage");
-                            }
-                        }  
-                        
+                    }                        
+                }
+                //再次进入(UsingDeviceViewModel != null)
+                else{
+                    //deviceList为空 没有绑定主机
+                    if(data.result.data.length == 0){
+                        $scope.showAlert("系统提示","您的用户未绑定任何主机，请先绑定一台主机");
+                        $state.go('app.devicemanage');
                     }
+                    //只有1台主机
+                    else if(data.result.data.length == 1){
+                        var queryResult = Enumerable.From(data.result.data)
+                            .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
+                            .ToArray();
+                            if(queryResult == null) 
+                                $scope.showAlert("系统提示","切换主机信息请求失败");
+                        var sResData = queryResult[0];
 
+                        var expdate = new Date(sResData.expire_time);
+                        var today = new Date();
+                        if(expdate < today){
+                            $scope.showAlert("系统提示","当前的主机套餐已经过期，请购买套餐以保证继续使用");
+                            $state.go("app.purchaseinfo");
+                        }
+                    }
+                    else{
+                        var queryResult = Enumerable.From(data.result.data)
+                            .Where(function (x) { return x.device_id == $scope.UsingDeviceViewModel.device.device_id })
+                            .ToArray();
+                            if(queryResult == null) 
+                                $scope.showAlert("系统提示","切换主机信息请求失败");
+                        var sResData = queryResult[0];
+
+                        var expdate = new Date(sResData.expire_time);
+                        var today = new Date();
+                        if(expdate < today){
+                            $scope.showAlert("系统提示","当前的主机套餐已经过期，请切换其他主机或购买套餐");
+                            $state.go("app.devicemanage");
+                        }
+                    }  
                 }
-                else {
-                    $scope.showAlert("服务器故障",data.result.msg);
-                }
-            }).error(function () {
-                $scope.showAlert("frame-error","OverViewCtrl-DataReq-device-expaire-time-request-error");
-            });       
-
-
+            }
+            else {
+                $state.go("app.login"); 
+                //$scope.showAlert("服务器故障",data.result.msg);
+            }
+        }).error(function () {
+            $scope.showAlert("frame-error","OverViewCtrl-DataReq-device-expaire-time-request-error");
+        });       
 
         ////初始化cubiccore 九宫格布局组件
         //$('#cubicCore').addClass("blockLine-middle").addClass("item").addClass("cubicNormal");  
@@ -694,7 +695,7 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //用户 app.usersetting usersetting.html
-.controller('usersettingCtrl', function ($scope, $state, locals, $ionicSideMenuDelegate, $interval) {
+.controller('usersettingCtrl', function ($scope, $state, locals, $ionicSideMenuDelegate, $interval, $ionicPopup) {
   if (!locals.get("cust_id",""))
     $state.go("app.login"); 
 
@@ -709,7 +710,20 @@ angular.module('starter.controllers', ['WifiServices'])
     locals.set("cust_id", "0");
     console.log('cust_id: ' + locals.get("cust_id", ""));
     $ionicSideMenuDelegate.canDragContent(false);
-    $state.go('app.login');
+
+    var confirmPopup = $ionicPopup.confirm({
+          title: '退出',
+          template: "确定退出登录吗？", 
+          cancelText: '取消',
+          okText: '确定'
+      });
+    confirmPopup.then(function (res) {
+          if (res) {
+            $state.go('app.login');
+          } else {
+            // 取消退出
+          }
+      });
   }
 })
 .controller('MaintananceCtrl', function ($scope, $state, locals,$http) {
@@ -798,7 +812,7 @@ angular.module('starter.controllers', ['WifiServices'])
     }
 
     $scope.loadMoreAlarms = function () {
-        currentPage++;
+        currentPage ++;
         if (currentPage > totalPages)
             alert("No more alarms");
         else
