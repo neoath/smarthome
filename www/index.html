@@ -273,11 +273,21 @@
                         <li class="item " on-tap="pageJump('app.purchaseinfo')">
                             <i class="icon ion-card blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>支付业务</span>
                         </li>
+                        <li class="item " on-tap="pageJump('app.changepassword')">
+                            <i class="icon ion-card blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>密码修改</span>
+                        </li>  
                         <li class="item " on-tap="pageJump('app.about')">
                             <i class="icon ion-aperture blockLine-Icon" style="font-size: 26px; padding-right:15px;"></i><span>关于</span>
                         </li>                   
                     </div>
 
+                    <div class="item item-divider">
+                    </div>
+                    
+                    <a menu-close class="item item-icon-left" ng-click="logout()">
+                        <i class="icon ion-power"></i>
+                        安全退出
+                    </a>  
             </ion-content>
         </ion-view>
     </script>
