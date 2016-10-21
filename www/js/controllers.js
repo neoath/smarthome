@@ -431,6 +431,7 @@ angular.module('starter.controllers', ['WifiServices'])
         }
     };
     $scope.armStatusToggleChanged = function () {
+        $scope.UsingDeviceViewModel.device.alert_status = !$scope.UsingDeviceViewModel.device.alert_status;
         //若当前撤防状态则布防
         if ($scope.UsingDeviceViewModel.device.alert_status) {
             var armurl = '/device/arming';
@@ -612,7 +613,7 @@ angular.module('starter.controllers', ['WifiServices'])
             //获取当前节点list
             var beforeLength = $scope.NodesViewModel.nodes.length;
 
-            startLoading($ionicLoading);
+            startNodePairing($ionicLoading);
 
             //xw需求，刚进入是也调一次？
             $timeout(function () {
@@ -761,7 +762,7 @@ angular.module('starter.controllers', ['WifiServices'])
     }
 })
 
-.controller('AlarmsCtrl', function ($scope, $state, locals, $http,$ionicActionSheet,$timeout) {
+.controller('AlarmsCtrl', function ($scope, $state, locals, $http,$ionicActionSheet, $ionicPopup, $timeout) {
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
     
@@ -846,67 +847,130 @@ angular.module('starter.controllers', ['WifiServices'])
 
     }    
     $scope.sendAck = function(alarm){
-        var hideSheet = $ionicActionSheet.show({
-                    buttons: [
-                        { text: 'Send Ack' }
-                    ],
-                    titleText: 'operations',
-                    cancelText: 'Cancel',
-                    cancel: function() {
-                    },
-                    buttonClicked: function(index) {
-                                 var url = '/device/alert/handle';
-                                var reqd = {"alert_id": alarm.alert_id};
-                                
-                                var req = httpReqGen(url, reqd);
 
-                                $http(req).success(function (data) {
-                                    alarm.opt_result = 1;
-                                   //取返回值有效data
-                                   if(data.result.code == "0000")
-                                        $scope.showAlert("用户信息","报警已获悉");
-                                   else
-                                       alert(data.result.msg);
-                                }).error(function () {
-                                   $scope.showAlert("frame-error","AlarmsCtrl-sendAck-request-error");
-                                });
-                        
-                            // //再次获取alarm list
-                            // //获取所有报警记录
-                            // var url = '/device/alert';
-                            // var reqd = {"cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id};
-                            // var req = httpReqGen(url, reqd);
+       var confirmPopup = $ionicPopup.confirm({
+         title: alertMain,
+         template: alertSub,
+         cancelText: '取消',
+         okText: '确定'
+       });
 
-                            // $http(req).success(function (data) {
-                            //         //获取所有报警记录
-                            //         var url = '/device/alert/record';
-                            //         var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, 
-                            //         "page": currentPage, "rows": $scope.AllAlarmsViewModel.rows };
-                            //         var req = httpReqGen(url, reqd);
+       confirmPopup.then(function(res) {
+         if(res) {
+             var url = '/device/alert/handle';
+            var reqd = {"alert_id": alarm.alert_id};
+            
+            var req = httpReqGen(url, reqd);
 
-                            //         $http(req).success(function (data) {
-                            //         //取返回值有效data
-                            //         var validData = resResult(data);
-                            //         if (validData) {
-                            //             //simul
-                            //             totalPages = validData.totalPage;
-                            //             data = validData.dataList;
-                            //                 $scope.AllAlarmsViewModel.alarms = data;
-                            //         }
-                            //         else
-                            //             alert(data.result.msg);
-                            //         }).error(function () {
-                            //         alert("服务器请求故障");
-                            //         });
-                            // }).error(function () {
-                            // alert("服务器请求故障");
-                            // });
-                            
-                        return true;
+            $http(req).success(function (data) {
+                alarm.opt_result = 1;
+               //取返回值有效data
+               if(data.result.code == "0000")
+                    $scope.showAlert("用户信息","报警已获悉");
+               else
+                   alert(data.result.msg);
+            }).error(function () {
+               $scope.showAlert("frame-error","AlarmsCtrl-sendAck-request-error");
+            });
+           console.log('yep');
+
+           // //再次获取alarm list
+            //获取所有报警记录
+            var url = '/device/alert';
+            var reqd = {"cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id};
+            var req = httpReqGen(url, reqd);
+
+            $http(req).success(function (data) {
+                    //获取所有报警记录
+                    var url = '/device/alert/record';
+                    var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, 
+                    "page": currentPage, "rows": $scope.AllAlarmsViewModel.rows };
+                    var req = httpReqGen(url, reqd);
+
+                    $http(req).success(function (data) {
+                    //取返回值有效data
+                    var validData = resResult(data);
+                    if (validData) {
+                        //simul
+                        totalPages = validData.totalPage;
+                        data = validData.dataList;
+                            $scope.AllAlarmsViewModel.alarms = data;
                     }
-                });
+                    else
+                        alert(data.result.msg);
+                    }).error(function () {
+                    alert("服务器请求故障");
+                    });
+            }).error(function () {
+            alert("服务器请求故障");
+
+            });
+         } else {
+           console.log('nope');
+         }
+       });
+        // var hideSheet = $ionicActionSheet.show({
+        //             buttons: [
+        //                 { text: 'Send Ack' }
+        //             ],
+        //             titleText: 'operations',
+        //             cancelText: 'Cancel',
+        //             cancel: function() {
+        //             },
+        //             buttonClicked: function(index) {
+        //                          var url = '/device/alert/handle';
+        //                         var reqd = {"alert_id": alarm.alert_id};
+                                
+        //                         var req = httpReqGen(url, reqd);
+
+        //                         $http(req).success(function (data) {
+        //                             alarm.opt_result = 1;
+        //                            //取返回值有效data
+        //                            if(data.result.code == "0000")
+        //                                 $scope.showAlert("用户信息","报警已获悉");
+        //                            else
+        //                                alert(data.result.msg);
+        //                         }).error(function () {
+        //                            $scope.showAlert("frame-error","AlarmsCtrl-sendAck-request-error");
+        //                         });
+                        
+        //                     // //再次获取alarm list
+        //                     // //获取所有报警记录
+        //                     // var url = '/device/alert';
+        //                     // var reqd = {"cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id};
+        //                     // var req = httpReqGen(url, reqd);
+
+        //                     // $http(req).success(function (data) {
+        //                     //         //获取所有报警记录
+        //                     //         var url = '/device/alert/record';
+        //                     //         var reqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id, 
+        //                     //         "page": currentPage, "rows": $scope.AllAlarmsViewModel.rows };
+        //                     //         var req = httpReqGen(url, reqd);
+
+        //                     //         $http(req).success(function (data) {
+        //                     //         //取返回值有效data
+        //                     //         var validData = resResult(data);
+        //                     //         if (validData) {
+        //                     //             //simul
+        //                     //             totalPages = validData.totalPage;
+        //                     //             data = validData.dataList;
+        //                     //                 $scope.AllAlarmsViewModel.alarms = data;
+        //                     //         }
+        //                     //         else
+        //                     //             alert(data.result.msg);
+        //                     //         }).error(function () {
+        //                     //         alert("服务器请求故障");
+        //                     //         });
+        //                     // }).error(function () {
+        //                     // alert("服务器请求故障");
+        //                     // });
+                            
+        //                 return true;
+        //             }
+        //         });
         //$state.go("app.alarms");
     }
+
     $scope.doRefresh = function() {  
         $timeout( function() {  
                 //获取所有报警记录
@@ -1968,6 +2032,16 @@ function startModal($ionicLoading) {
     $ionicLoading.show({
         templateUrl: "templates/modal.html",
         content: '为了您的只能居家，我们正在拼命研发中，敬请期待 !',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+    });
+}
+function startNodePairing($ionicLoading) {
+    $ionicLoading.show({
+        templateUrl: "templates/nodepairing.html",
+        content: '节点配对中。。。',
         animation: 'fade-in',
         showBackdrop: true,
         maxWidth: 200,
