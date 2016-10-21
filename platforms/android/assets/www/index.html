@@ -48,15 +48,23 @@
     <ion-nav-view animation="none"></ion-nav-view>
     
     <script id="templates/loading.html" type="text/ng-template">
-            <ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>
-            <br />
-            <span>Loading...</span>
+        <ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>
+        <br />
+        <span>Loading...</span>
     </script>
     <script id="templates/modal.html" type="text/ng-template">
         <div ng-click="closeModal()">
             <ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>
             <br />
             <span>为了您的智能居家，我们正在拼命研发中，敬请期待 !</span>
+        </div>
+    </script>
+
+     <script id="templates/nodepairing.html" type="text/ng-template">
+        <div ng-click="nodepairing()">
+            <ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>
+            <br />
+            <span>节点配对中。。。</span>
         </div>
     </script>
 
@@ -140,17 +148,17 @@
                     </div>
                 </wrap-owlcarousel>
 
-                <div class="card" style="margin-top:-6.5vh;">
+                <!-- <div class="card" style="margin-top:-6.5vh;">
                     <div class="list" style="padding-top: 0px;padding-bottom: 0px;">
                         <ion-toggle ng-change="armStatusToggleChanged()" ng-model="UsingDeviceViewModel.device.alert_status">已布防</ion-toggle>
                     </div>
                 </div>
-
+ -->
                 <div class="card" >
-                    <button class="button button-block" on-tap="pageJump('app.deviceselect')">
-                        切换主机
+                    <button class="button button-block" on-tap="armStatusToggleChanged()">
+                        {{UsingDeviceViewModel.device.alert_status}}
                     </button>
-                </div>
+                </div> 
 
                 <div class="htmleaf-content" style="margin-top:-6.5vh;">          
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-100 -100 700 700" id="menu">
@@ -220,13 +228,12 @@
                             <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(201 414.4505615234375 181.88233947753906)">视频监控</text>
                         </a>
                             
-                            
                         <a on-tap="openModal()" class="citem" id="item-5" xlink:href=" " xlink:title=" " transform="matrix(-1,0,0,-1,500,500)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
                             <use xlink:href="#icon-5" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(245.5 414.4505615234375 181.88233947753906)"></use>
                             <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(245.5 414.4505615234375 181.88233947753906)">智能监控</text>
                         </a>
-                            
-                        <a on-tap="logandalert()" class="citem" id="item-6" xlink:href=" " xlink:title=" " transform="matrix(-0.7071,0.7071,-0.7071,-0.7071,603.5533905932738,250.00000000000006)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
+
+                        <a on-tap="openModal()" class="citem" id="item-6" xlink:href=" " xlink:title=" " transform="matrix(-0.7071,0.7071,-0.7071,-0.7071,603.5533905932738,250.00000000000006)" data-svg-origin="250 250" style=""><path fill="none" stroke="#111" d="M350,250 l150,0 A250,250 0 0,0 426.7766952966369,73.22330470336314 l-106.06601717798213,106.0660171779821 A100,100 0 0,1 350,250" class="sector"></path>
                             <use xlink:href="#icon-6" width="75" height="75" x="384.4505615234375" y="136.88233947753906" transform="rotate(291 414.4505615234375 181.88233947753906)"></use>
                             <text width="40" height="40" x="384.4505615234375" y="220.88233947753906" transform="rotate(291 414.4505615234375 181.88233947753906)">智能家居</text>
                         </a>
@@ -244,7 +251,7 @@
                      <g class="trigger" style="fill:#FFF;">
                         <circle cx="250" cy="250" r="70"></circle>
                     </g>
-                    <g id="trigger" class="trigger" style="fill:#57a595;">
+                    <g id="trigger" class="trigger" style="fill:#57a595;" on-tap="nodeTypeTap(9,'app.nodeType', '我的温度监测', 1)">
                         <circle cx="250" cy="250" r="50"></circle>
                         <text id="label" text-anchor="middle" x="250" y="240" fill="#fff" style="font-size:20px;">信 来</text>
                         <text id="label" text-anchor="middle" x="250" y="270" fill="#fff" style="font-size:20px;">主 机</text>
