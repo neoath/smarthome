@@ -2,7 +2,7 @@ angular.module('starter.controllers', ['WifiServices'])
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //数据
-.controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicPopover, $state, $timeout,$http,$ionicPopup) {
+.controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicSlideBoxDelegate, $ionicPopover, $state, $timeout,$http,$ionicPopup) {
     var timer;
     $scope.global = { cust_id : 0 };
 
@@ -13,11 +13,11 @@ angular.module('starter.controllers', ['WifiServices'])
         nodeType: null,
         nodes: null,
         nodeList: [
-                        { id: '0', name: '电子钥匙', icon: 'ion-locked', nodeType: '0' },
-                        { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '1' },
-                        { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '2' },
-                        { id: '3', name: '烟雾报警器', icon: 'ion-flame', nodeType: '3' },
-                        { id: '4', name: '温度传感器', icon: 'ion-bonfire', nodeType: '4' }
+                        { id: '0', name: '电子钥匙', icon: 'ion-locked', nodeType: '1' },
+                        { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '2' },
+                        { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '3' },
+                        { id: '3', name: '烟雾报警器', icon: 'ion-flame', nodeType: '4' },
+                        { id: '4', name: '温度传感器', icon: 'ion-bonfire', nodeType: '5' }
         ]
     };
     //OverView帮助用VM
@@ -39,16 +39,16 @@ angular.module('starter.controllers', ['WifiServices'])
         nodeType:"",
         nodes:null,
         nodeList:[
-                    { id: '0', name: '电子钥匙', icon: 'ion-locked',  nodeType: '0'},
-                    { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '1'},
-                    { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '2'},
-                    { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '3'},
-                    { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '4'}
+                    { id: '0', name: '电子钥匙', icon: 'ion-locked',  nodeType: '1'},
+                    { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '2'},
+                    { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '3'},
+                    { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '4'},
+                    { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '5'}
         ]
     
     }
     //所有节点
-    $scope.AllAlarmsViewModel = {
+    $scope.AllAlarmsViewModel = { 
         alarms: null,
         rows:null,
         enableMore:true
@@ -127,7 +127,8 @@ angular.module('starter.controllers', ['WifiServices'])
     $timeout(function () {
         ionic.EventController.trigger("resize", "", true, false);
     }, 1500);
-   // var timespaned = 0;
+
+    // var timespaned = 0;
     //更新device信息
     $scope.updateDeviceData = function () {
         //timespaned++;
@@ -529,6 +530,8 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
+
+    //圆盘按钮controller
     $scope.nodeTypeTap = function(idx,route, detType,detTypeId) {
         //$scope.UsingNodesViewModel.nodes = nodes;
         var xsel = "#item-" + idx + " .sector";
@@ -538,6 +541,7 @@ angular.module('starter.controllers', ['WifiServices'])
         
         $state.go(route);
     };
+
     $scope.nodeTap = function(route, node) {
         $scope.nodeViewModel.node = node;
         $state.go(route);
@@ -760,6 +764,7 @@ angular.module('starter.controllers', ['WifiServices'])
 .controller('AlarmsCtrl', function ($scope, $state, locals, $http,$ionicActionSheet,$timeout) {
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
+    
     var simuldata = {
         "totalPage": "3",
         "dataList": [{
@@ -1201,36 +1206,39 @@ angular.module('starter.controllers', ['WifiServices'])
 
 ////////////////////
 //选择主机 app.deviceselect deviceselect.html
-.controller('DeviceSelectCtrl', function($scope, $state) {
-  $scope.data = {};
-  //console.log($scope.UsingDeviceViewModel.name);
-  $scope.init = function(){
+// .controller('DeviceSelectCtrl', function($scope, $state) {
+//   $scope.data = {};
+//   //console.log($scope.UsingDeviceViewModel.name);
+//   $scope.init = function(){
     
-  }
-  $scope.currentDeviceChange = function (device) {
-    //对主机信息进行判断
-    var expdate = new Date(device.expire_time);
-    var today = new Date();
-    if(expdate < today){
-        $scope.showAlert("用户信息","您所选的主机套餐已经过期，请购买套餐或更换其它主机");
-    }
+//   }
+//   $scope.currentDeviceChange = function (device) {
+//     //对主机信息进行判断
+//     var expdate = new Date(device.expire_time);
+//     var today = new Date();
+//     if(expdate < today){
+//         $scope.showAlert("用户信息","您所选的主机套餐已经过期，请购买套餐或更换其它主机");
+//     }
 
-      $scope.UsingDeviceViewModel.device = device;
-      console.log(device.device_id);
-      //var desc = "当前主机切换至  " + device.device_name;
-      //alert(desc);
-  };
-  $scope.stateJump = function (route) {
-      $state.go(route);
-  };
-})
+//       $scope.UsingDeviceViewModel.device = device;
+//       console.log(device.device_id);
+//       //var desc = "当前主机切换至  " + device.device_name;
+//       //alert(desc);
+//   };
+//   $scope.stateJump = function (route) {
+//       $state.go(route);
+//   };
+// })
+
 //主机管理 app.devicemanage devicemanage.html
-.controller('DeviceMangeCtrl', function ($scope, $state,$http,$cordovaBarcodeScanner) {
+.controller('DeviceMangeCtrl', function ($scope, $state, $http, $cordovaBarcodeScanner) {
     $scope.data = {};
     //console.log($scope.UsingDeviceViewModel.name);
     $scope.init = function () {
-
+        if (!locals.get("cust_id", ""))
+            $state.go("app.login");
     }
+
     $scope.deviceTap = function (route, device) {
         $scope.Temp.EditingDevice = device;
         $state.go(route);
@@ -1275,7 +1283,25 @@ angular.module('starter.controllers', ['WifiServices'])
             console.log("An error happened -> " + error);
         });
     };
+
+    //选择当前主机
+    $scope.currentDeviceChange = function (device) {
+        //对主机信息进行判断
+        var expdate = new Date(device.expire_time);
+        var today = new Date();
+        if(expdate < today){
+            $scope.showAlert("用户信息","您所选的主机套餐已经过期，请购买套餐或更换其它主机");
+        } else {
+            $scope.showAlert("用户信息","切换成功!");
+        }
+
+        $scope.UsingDeviceViewModel.device = device;
+        console.log(device.device_id);
+        //var desc = "当前主机切换至  " + device.device_name;
+        //alert(desc);
+    };
 })
+
 .controller('DeviceDetailsCtrl', function ($scope, $state) {
     $scope.temp = { name: $scope.Temp.EditingDevice.device_name, id: $scope.Temp.EditingDevice.device_id };
     $scope.updateDeviceInfo = function () {

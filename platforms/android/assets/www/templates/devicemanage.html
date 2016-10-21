@@ -1,28 +1,44 @@
-        <ion-view title="我的主机" ng-controller="DeviceMangeCtrl">
-            <ion-nav-buttons side="right">
-                <a class="button button-icon icon ion-plus-round" ng-click='addDevicebyBarcode()'></a>
-        </ion-nav-buttons>
+<ion-view title="我的主机" ng-controller="DeviceMangeCtrl">
+    <!--QR扫描，添加主机-->
+    <ion-nav-buttons side="right">
+        <a class="button button-icon icon ion-plus-round" ng-click='addDevicebyBarcode()'></a>
+    </ion-nav-buttons>
+
+    <!--主机列表-->
     <ion-content class="padding-vertical">
+
+        <div class="list card">
+
+              <div class="item item-avatar">
+                <img src="img/doormagnet.jpg">
+                <h2>当前主机</h2>
+                <p>{{UsingDeviceViewModel.device.device_name}}</p>
+              </div>
+        </div>
+
         <div class="item item-divider">
             所有主机
         </div>
+
         <div ng-repeat="device in DevicesViewModel.devices">
             <div class="item" style="line-height: 2;">
-                <div class="item-content" style="float: left;">
+                <!-- <div class="item-content" style="float: left;"> 
                     {{device.device_name}}<span ng-hide="device.device_name != UsingDeviceViewModel.device.device_name">【当前主机】</span>
-                </div>
+                </div> -->
+                <label class="item item-radio" style="float: left;">
+                    <input type="radio" name="group" ng-model="data.currentDevice"  ng-value="device.device_name" ng-change="currentDeviceChange(device)">
+                    <div class="item-content">
+                        {{device.device_name}}
+                    </div>
+                    <i class="radio-icon ion-checkmark-circled"></i>
+                </label>
+
                 <button class="item-note button button-balanced button-small" on-tap="deviceTap('app.deviceedit', device)" style="float: right;border-color: #57a595;background-color: #57a595;">
                     主机详情
                 </button>
             </div>
-
-
-            <!--<label class="item item-radio">
-                <input type="radio" name="group" ng-model="data.currentDevice" ng-value="device.device_name" ng-change="deviceTap('app.devicedetails',device)">
-                <div class="item-content">
-                    {{device.device_name}}<span ng-hide="device.device_name != UsingDeviceViewModel.device.device_name">【当前主机】</span>
-                </div>
-            </label>-->
         </div>
+
     </ion-content>
+
 </ion-view>
