@@ -13,11 +13,11 @@ angular.module('starter.controllers', ['WifiServices'])
         nodeType: null,
         nodes: null,
         nodeList: [
-                        { id: '0', name: '电子钥匙', icon: 'ion-locked', nodeType: '1' },
-                        { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '2' },
-                        { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '3' },
-                        { id: '3', name: '烟雾报警器', icon: 'ion-flame', nodeType: '4' },
-                        { id: '4', name: '温度传感器', icon: 'ion-bonfire', nodeType: '5' }
+                        { id: '1', name: '电子钥匙', icon: 'ion-locked', nodeType: '1' },
+                        { id: '2', name: '门磁', icon: 'ion-magnet', nodeType: '2' },
+                        { id: '3', name: '红外感应 ', icon: 'ion-wifi', nodeType: '3' },
+                        { id: '4', name: '烟雾报警器', icon: 'ion-flame', nodeType: '4' },
+                        { id: '5', name: '温度传感器', icon: 'ion-bonfire', nodeType: '5' }
         ]
     };
     //OverView帮助用VM
@@ -39,11 +39,11 @@ angular.module('starter.controllers', ['WifiServices'])
         nodeType:"",
         nodes:null,
         nodeList:[
-                    { id: '0', name: '电子钥匙', icon: 'ion-locked',  nodeType: '1'},
-                    { id: '1', name: '门磁', icon: 'ion-magnet', nodeType: '2'},
-                    { id: '2', name: '红外感应 ', icon: 'ion-wifi', nodeType: '3'},
-                    { id: '3', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '4'},
-                    { id: '4', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '5'}
+                    { id: '1', name: '电子钥匙', icon: 'ion-locked',  nodeType: '1'},
+                    { id: '2', name: '门磁', icon: 'ion-magnet', nodeType: '2'},
+                    { id: '3', name: '红外感应 ', icon: 'ion-wifi', nodeType: '3'},
+                    { id: '4', name: '烟雾报警器', icon: 'ion-flame',  nodeType: '4'},
+                    { id: '5', name: '温度传感器', icon: 'ion-bonfire',  nodeType: '5'}
         ]
     
     }
@@ -160,6 +160,7 @@ angular.module('starter.controllers', ['WifiServices'])
             //UsingDeviceViewModel.device 当前使用主机
             if (sResData)
             {
+                $scope.UsingDeviceViewModel.device = sResData;
                 //布防状态alert_status 1布防 0撤防
                 if (sResData.alert_status == 0) {
                     $scope.UsingDeviceViewModel.device.alert_status = false;
@@ -173,13 +174,13 @@ angular.module('starter.controllers', ['WifiServices'])
                 if (sResData.status == 1) {
                   $scope.UsingDeviceViewModel.device.status = true;    
                   $scope.OverViewViewModel.Status = "您当前的主机正在正常运行";
-                  $scope.UsingDeviceViewModel.device.icon = "ion-connection-bars";
+                  $scope.UsingDeviceViewModel.device.icon = "ion-link";
                 }
 
                 else {
                     $scope.UsingDeviceViewModel.device.status = false;    
                     $scope.OverViewViewModel.Status = "您当前的主机已经失联";
-                    $scope.UsingDeviceViewModel.device.icon = "ion-alert";
+                    $scope.UsingDeviceViewModel.device.icon = "ion-alert-circled";
                 }
             }
 
@@ -193,6 +194,11 @@ angular.module('starter.controllers', ['WifiServices'])
                 //取返回值有效data
                 var nodesdata = resResult(data);
                 //NodesViewModel.nodes 当前主机下所有节点
+                if(nodesdata.length != 0){
+                    for(var i = 0; i < nodesdata.length; i++){
+                        nodesdata[i].alert_status = (nodesdata[i].alert_status == 0) ? false : true;
+                    }
+                }
                 $scope.NodesViewModel.nodes = nodesdata;
                 //UsingNodesViewModel.nodes 正在使用的当前主机下所有节点
                 $scope.UsingNodesViewModel.nodes = nodesdata;
@@ -248,6 +254,7 @@ angular.module('starter.controllers', ['WifiServices'])
          console.log('an alert called');
        });
     };    
+    
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -431,7 +438,7 @@ angular.module('starter.controllers', ['WifiServices'])
         }
     };
     $scope.armStatusToggleChanged = function () {
-        $scope.UsingDeviceViewModel.device.alert_status = !$scope.UsingDeviceViewModel.device.alert_status;
+        // $scope.UsingDeviceViewModel.device.alert_status = !$scope.UsingDeviceViewModel.device.alert_status;
         //若当前撤防状态则布防
         if ($scope.UsingDeviceViewModel.device.alert_status) {
             var armurl = '/device/arming';
@@ -540,6 +547,12 @@ angular.module('starter.controllers', ['WifiServices'])
         $scope.UsingNodesViewModel.nodeType = detType;
         $scope.UsingNodesViewModel.nodeTypeId = detTypeId;
         
+        $state.go(route);
+    };
+    $scope.nodeTypeTapAll = function(idx,route) {
+        //$scope.UsingNodesViewModel.nodes = nodes;
+        var xsel = "#item-" + idx + " .sector";
+        $(xsel).css("fill","#c5c3c3");     
         $state.go(route);
     };
 
@@ -849,8 +862,8 @@ angular.module('starter.controllers', ['WifiServices'])
     $scope.sendAck = function(alarm){
 
        var confirmPopup = $ionicPopup.confirm({
-         title: alertMain,
-         template: alertSub,
+         title: "确定知悉此条报警",
+         template: "发送确认",
          cancelText: '取消',
          okText: '确定'
        });
@@ -858,7 +871,7 @@ angular.module('starter.controllers', ['WifiServices'])
        confirmPopup.then(function(res) {
          if(res) {
              var url = '/device/alert/handle';
-            var reqd = {"alert_id": alarm.alert_id};
+            var reqd = {"alert_id": alarm.alert_id,"node_id":alarm.node_id};
             
             var req = httpReqGen(url, reqd);
 
@@ -909,6 +922,10 @@ angular.module('starter.controllers', ['WifiServices'])
            console.log('nope');
          }
        });
+       
+       
+       
+       
         // var hideSheet = $ionicActionSheet.show({
         //             buttons: [
         //                 { text: 'Send Ack' }
@@ -968,9 +985,72 @@ angular.module('starter.controllers', ['WifiServices'])
         //                 return true;
         //             }
         //         });
-        //$state.go("app.alarms");
+        // $state.go("app.alarms");
     }
+    $scope.acknowledgeTypeAlarms = function(nodetypeid){
+       var confirmPopup = $ionicPopup.confirm({
+         title: "确定知悉此条报警",
+         template: "发送确认",
+         cancelText: '取消',
+         okText: '确定'
+       });
 
+       confirmPopup.then(function(res) {
+         if(res) {
+             var url = 'asdasdsadasdasdsa';
+            var reqd = {"type_id": nodetypeid,"device_id":$scope.UsingDeviceViewModel.device.device_id};
+            
+            var req = httpReqGen(url, reqd);
+
+            $http(req).success(function (data) {
+                alarm.opt_result = 1;
+               //取返回值有效data
+               if(data.result.code == "0000")
+                    $scope.showAlert("用户信息","报警已获悉");
+               else
+                   alert(data.result.msg);
+            }).error(function () {
+               $scope.showAlert("frame-error","AlarmsCtrl-acknowledgeTypeAlarms-request-error");
+            });
+
+            $scope.updateDeviceData();
+         } else {
+           console.log('nope');
+         }
+       });
+    }
+    $scope.acknowledgeAllAlarms = function(){
+        var confirmPopup = $ionicPopup.confirm({
+         title: "确定知悉此条报警",
+         template: "发送确认",
+         cancelText: '取消',
+         okText: '确定'
+       });
+
+       confirmPopup.then(function(res) {
+         if(res) {
+             var url = 'asdasdsadasdasdsa';
+            var reqd = {"device_id":$scope.UsingDeviceViewModel.device.device_id};
+            
+            var req = httpReqGen(url, reqd);
+
+            $http(req).success(function (data) {
+                alarm.opt_result = 1;
+               //取返回值有效data
+               if(data.result.code == "0000")
+                    $scope.showAlert("用户信息","报警已获悉");
+               else
+                   alert(data.result.msg);
+            }).error(function () {
+               $scope.showAlert("frame-error","AlarmsCtrl-acknowledgeTypeAlarms-request-error");
+            });
+
+            $scope.updateDeviceData();
+         } else {
+           console.log('nope');
+         }
+       });
+    }
     $scope.doRefresh = function() {  
         $timeout( function() {  
                 //获取所有报警记录
@@ -1364,6 +1444,9 @@ angular.module('starter.controllers', ['WifiServices'])
         //var desc = "当前主机切换至  " + device.device_name;
         //alert(desc);
     };
+      $scope.stateJump = function (route) {
+         $state.go(route);
+         };
 })
 
 .controller('DeviceDetailsCtrl', function ($scope, $state) {
@@ -2057,24 +2140,24 @@ function alarmCoreJudge(alarmdata) {
                     }
         $.each(alarmdata, function () {
             switch (this.node_type) {
-                case 0:
-                    break;
                 case 1:
+                    break;
+                case 2:
                     if($('#item-1 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-1 use').css("fill","rgb(204, 35, 17)");
                     }
                     break;
-                case 2:
+                case 3:
                     if($('#item-2 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-2 use').css("fill","rgb(204, 35, 17)");
                     }
                     break;
-                case 3:
+                case 4:
                      if($('#item-3 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-3 use').css("fill","rgb(204, 35, 17)");
                     }
                     break;
-                case 4:
+                case 5:
                     if($('#item-8 use').css("fill") != "rgb(204, 35, 17)"){
                         $('#item-8 use').css("fill","rgb(204, 35, 17)");
                     }
@@ -2106,19 +2189,19 @@ function alarmCoreJudge(alarmdata) {
 function alarmDataMap(alarmsdata) {
     $.each(alarmsdata, function () {
         switch (this.node_type) {
-            case 0:
+            case 1:
                 this.node_type_cn = "电子钥匙";
                 break;
-            case 1:
+            case 2:
                 this.node_type_cn = "门磁";
                 break;
-            case 2:
+            case 3:
                 this.node_type_cn = "红外感应";
                 break;
-            case 3:
+            case 4:
                 this.node_type_cn = "烟雾报警器";
                 break;
-            case 4:
+            case 5:
                 this.node_type_cn = "温度传感器";
                 break;
             default:
