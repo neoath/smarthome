@@ -253,6 +253,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
         }
       }
     })  
+  .state('app.nodeTypeAll', {
+      url: "/nodeTypeAll",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/nodeTypeAll.html"
+        }
+      }
+    })  
 	.state('app.node', {
       url: "/node",
       views: {

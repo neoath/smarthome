@@ -4,7 +4,7 @@
                     <h5 class="text-center">未绑定相应设备</h5>
                 </div>
 
-                <div ng-if="UsingNodesViewModel.nodes.length != 0" ng-repeat="node in UsingNodesViewModel.nodes | filter: { type: UsingNodesViewModel.nodeTypeId}">
+                <div ng-if="UsingNodesViewModel.nodes.length != 0" ng-repeat="node in UsingNodesViewModel.nodes">
                     <div ng-if="node.node_id != null">
                         <!--<div class="list">
                             <div class="item item-icon-left">
@@ -35,12 +35,12 @@
                 <div ng-if="AlarmingViewModel.alarms.length === 0 || AlarmingViewModel.alarms == null">
                     <h5 class="text-center">设备正常运行</h5>
                 </div>
-                <div class="padding">
-                    <button class="button button-balanced button-block" ng-click="acknowledgeTypeAlarms(UsingNodesViewModel.nodeTypeId)" ng-show="AlarmingViewModel.alarms.length != 0" style="border-color: #57a595;background-color: #57a595;">
+                 <div class="padding">
+                    <button class="button button-balanced button-block" ng-click="acknowledgeAllAlarms()" ng-show="AlarmingViewModel.alarms.length != 0" style="border-color: #57a595;background-color: #57a595;">
                         清除所有报警
                     </button>
                 </div>
-                <div ng-if="AlarmingViewModel.alarms.length != 0" ng-repeat="alarm in AlarmingViewModel.alarms | filter: { node_type: UsingNodesViewModel.nodeTypeId, device_id:UsingDeviceViewModel.device.device_id}">
+                <div ng-if="AlarmingViewModel.alarms.length != 0" ng-repeat="alarm in AlarmingViewModel.alarms">
                     <div class="col-lg-33 disable-user-behavior" ng-click="sendAck(alarm)">
 
                         <div class="card">
