@@ -2,7 +2,8 @@ angular.module('starter.controllers', ['WifiServices'])
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //数据
-.controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicSlideBoxDelegate, $ionicPopover, $state, $timeout,$http,$ionicPopup) {
+.controller('MainCtrl', function($scope, $ionicSideMenuDelegate, $ionicSlideBoxDelegate, $ionicPopover, $state, $timeout,$http,$ionicPopup,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     var timer;
     $scope.global = { cust_id : 0 };
 
@@ -260,13 +261,29 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+.controller('NaviviCtrl', function ($scope, $state,$ionicSlideBoxDelegate,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
+    $scope.tinit = function(){
+        window.localStorage.setItem("firstLoad", "entered");
+    }
+    $scope.getin = function(){
+        $state.go("app.login");
+    }
+})
 //首页 app.overview overview.html
 .controller('OverViewCtrl', function ($q, $scope, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover, $state, $timeout, $interval, $http, $ionicLoading, locals, $ionicNavBarDelegate) {
-
+    $ionicSideMenuDelegate.canDragContent(false);
     //页面初始化方法
     $scope.DataReq = function () {     
-        if (!locals.get("cust_id",""))
+        
+        var firstload = window.localStorage.getItem("firstLoad");
+        if(firstload != "entered"){
+            $state.go("app.anavigate");
+            return;
+        }
+            
+        
+        if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
             $state.go("app.login"); 
 
         //预处理主机过期信息以及主机绑定信息
@@ -366,7 +383,7 @@ angular.module('starter.controllers', ['WifiServices'])
         if (locals.get("cust_id","0") == "0")
             $state.go("app.login"); 
        
-        $ionicSideMenuDelegate.canDragContent(true);
+        
 
         //更新device node alarm
         $scope.updateDeviceData();
@@ -482,7 +499,51 @@ angular.module('starter.controllers', ['WifiServices'])
             });
         }
     };
+    $scope.armStatusToggleClicked = function () {
+        $scope.UsingDeviceViewModel.device.alert_status = !$scope.UsingDeviceViewModel.device.alert_status;
+        //若当前撤防状态则布防
+        if (!$scope.UsingDeviceViewModel.device.alert_status) {
+            var armurl = '/device/arming';
+            var armreqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id };
+            var armreq = httpReqGen(armurl, armreqd);
 
+            $http(armreq).success(function (data) {
+                //返回0000
+                if (data.result.code == "0000") {
+                    //更新device node alarm
+                    $scope.updateDeviceData();
+                }
+                    //布防失败
+                else
+                    $scope.showAlert("用户信息",data.result.msg);
+                //显示文字和锁图标
+                $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
+            }).error(function () {
+                $scope.showAlert("frame-error","OverViewCtrl-armStatusBtnChange-request-error");
+            });
+        }
+            //若当前布防状态则撤防
+        else {
+            var armurl = '/device/unarming';
+            var armreqd = { "cust_id": $scope.global.cust_id, "device_id": $scope.UsingDeviceViewModel.device.device_id };
+            var armreq = httpReqGen(armurl, armreqd);
+
+            $http(armreq).success(function (data) {
+                //返回0000
+                if (data.result.code == "0000") {
+                    //更新device node alarm
+                    $scope.updateDeviceData();
+                }
+                    //布防失败
+                else
+                    $scope.showAlert("用户信息",data.result.msg);
+                //显示文字和锁图标
+                $scope.UsingDeviceViewModel.device.titleText = $scope.UsingDeviceViewModel.device.alert_status ? "布防" : "撤防";
+            }).error(function () {
+                $scope.showAlert("frame-error","OverViewCtrl-armStatusBtnChange-request-error");
+            });
+        }
+    };
     $scope.Emergency = function (idx,alertMain,alertSub) {
         var xsel = "#item-" + idx + " .sector";
         $(xsel).css("fill","#fff");
@@ -582,14 +643,16 @@ angular.module('starter.controllers', ['WifiServices'])
     }, 1500);
 })
 //布防 app.arm arm.html
-.controller('ArmCtrl', function($scope, $state, locals) {
-    if (!locals.get("cust_id",""))
+.controller('ArmCtrl', function($scope, $state, locals,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
+    if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
         $state.go("app.login"); 
 })
 
 //摄像头 app.camera camera.html
-.controller('CameraCtrl', function($scope, $http, $state, locals){ 
-    if (!locals.get("cust_id",""))
+.controller('CameraCtrl', function($scope, $http, $state, locals,$ionicSideMenuDelegate){ 
+    $ionicSideMenuDelegate.canDragContent(false);
+    if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
         $state.go("app.login"); 
 
     $scope.init = function() {
@@ -601,8 +664,9 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
     //节点配对
-.controller('NodesCtrl', function ($scope,$http, locals,$ionicLoading, $timeout, $state) {
-        if (!locals.get("cust_id",""))
+.controller('NodesCtrl', function ($scope,$http, locals,$ionicLoading, $timeout, $state,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
+        if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
             $state.go("app.login"); 
 
         $scope.init = function () {
@@ -684,8 +748,9 @@ angular.module('starter.controllers', ['WifiServices'])
 
     })
 //添加设备 app.addNode add-node.html
-.controller('NodeEditCtrl', function ($scope, $state, locals,$http) {
-  if (!locals.get("cust_id",""))
+.controller('NodeEditCtrl', function ($scope, $state, locals,$http,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
+  if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
     $state.go("app.login"); 
 
   $scope.submitEdit = function () {
@@ -714,7 +779,8 @@ angular.module('starter.controllers', ['WifiServices'])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //用户 app.usersetting usersetting.html
 .controller('usersettingCtrl', function ($scope, $state, locals, $ionicSideMenuDelegate, $interval, $ionicPopup) {
-  if (!locals.get("cust_id",""))
+    $ionicSideMenuDelegate.canDragContent(false);
+  if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
     $state.go("app.login"); 
 
   $scope.logout = function () {
@@ -744,7 +810,8 @@ angular.module('starter.controllers', ['WifiServices'])
       });
   }
 })
-.controller('MaintananceCtrl', function ($scope, $state, locals,$http) {
+.controller('MaintananceCtrl', function ($scope, $state, locals,$http,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
 
@@ -775,7 +842,8 @@ angular.module('starter.controllers', ['WifiServices'])
     }
 })
 
-.controller('AlarmsCtrl', function ($scope, $state, locals, $http,$ionicActionSheet, $ionicPopup, $timeout) {
+.controller('AlarmsCtrl', function ($scope, $state, locals, $http,$ionicActionSheet, $ionicPopup, $timeout,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
     
@@ -1082,8 +1150,9 @@ angular.module('starter.controllers', ['WifiServices'])
 
 /////////////////////////////////////////////////       
 //个人信息 app.userinfo userinfo.html
-.controller('updateUser', function($scope, $q, $http, $state, locals) {
-  if (!locals.get("cust_id",""))
+.controller('updateUser', function($scope, $q, $http, $state, locals,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
+  if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
     $state.go("app.login"); 
 
 
@@ -1123,7 +1192,8 @@ angular.module('starter.controllers', ['WifiServices'])
 })
 /////////////////////////////////////////////////
 ///
-.controller('findPasswordCtrl', function ($scope, $q, $http, $state, locals, $ionicNavBarDelegate) {
+.controller('findPasswordCtrl', function ($scope, $q, $http, $state, locals, $ionicNavBarDelegate,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     
   $scope.changePW2 = function () {
       if (!$scope.ValidInfoViewModel.newPW) {
@@ -1189,8 +1259,9 @@ angular.module('starter.controllers', ['WifiServices'])
 })
 /////////////////////////////////////////////////
 //更改密码 app.changepassword changepassword.html
-.controller('PasswordCtrl', function($scope,$q,$http,$state, locals) {
-  if (!locals.get("cust_id",""))
+.controller('PasswordCtrl', function($scope,$q,$http,$state, locals,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
+  if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
     $state.go("app.login"); 
   
   $scope.setFormScope = function(scope){
@@ -1244,8 +1315,9 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 /////////////////////////////////////////////////
 //版本控制 app.version version.html
-.controller('VersionCtrl', function($scope,$http,$q, locals){
-  if (!locals.get("cust_id",""))
+.controller('VersionCtrl', function($scope,$http,$q, locals,$ionicSideMenuDelegate){
+    $ionicSideMenuDelegate.canDragContent(false);
+  if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
     $state.go("app.login"); 
    
   $scope.VersionViewModel = { version: null, currentVersion: {"version":"2.0.0"} };
@@ -1283,9 +1355,10 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //设置 app.settings settings.html
-.controller('settingsCtrl', function($scope, $state, locals) {
+.controller('settingsCtrl', function($scope, $state, locals,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     ///account/setting push vib
-  if (!locals.get("cust_id",""))
+  if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
       $state.go("app.login");
 
   $scope.versionToggleChanged = function () {
@@ -1295,7 +1368,8 @@ angular.module('starter.controllers', ['WifiServices'])
   }
 
 })
-.controller('MessageSettingCtrl', function ($scope, $state, locals,$http) {
+.controller('MessageSettingCtrl', function ($scope, $state, locals,$http,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
     $scope.vibToggleChanged = function () {
@@ -1375,7 +1449,8 @@ angular.module('starter.controllers', ['WifiServices'])
 // })
 
 //主机管理 app.devicemanage devicemanage.html
-.controller('DeviceMangeCtrl', function ($scope, $state, $http, $cordovaBarcodeScanner) {
+.controller('DeviceMangeCtrl', function ($scope, $state, $http, $cordovaBarcodeScanner,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     $scope.data = {};
     //console.log($scope.UsingDeviceViewModel.name);
     $scope.init = function () {
@@ -1449,7 +1524,8 @@ angular.module('starter.controllers', ['WifiServices'])
          };
 })
 
-.controller('DeviceDetailsCtrl', function ($scope, $state) {
+.controller('DeviceDetailsCtrl', function ($scope, $state,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     $scope.temp = { name: $scope.Temp.EditingDevice.device_name, id: $scope.Temp.EditingDevice.device_id };
     $scope.updateDeviceInfo = function () {
         var datata = $scope.temp;
@@ -1457,7 +1533,8 @@ angular.module('starter.controllers', ['WifiServices'])
 })
 
 //编辑主机 app.deviceedit deviceedit.html
-.controller('DeviceEditCtrl', function ($scope, $state, locals, $http) {
+.controller('DeviceEditCtrl', function ($scope, $state, locals, $http,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     if (!locals.get("cust_id", ""))
         $state.go("app.login");
     $scope.thidEditModel = { device: null };
@@ -1505,7 +1582,8 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 /////////////////////////////////////////////////
 //主机网络连接管理 app.devicenetwork devicenetwork.html
-.controller('DeviceNetworkCtrl', function($scope){ 
+.controller('DeviceNetworkCtrl', function($scope,$ionicSideMenuDelegate){ 
+    $ionicSideMenuDelegate.canDragContent(false);
   $scope.init = function(){
   }
 })
@@ -1514,7 +1592,8 @@ angular.module('starter.controllers', ['WifiServices'])
 
 /////////////////////////////////////////////////
 //支付 app.purchaseinfo purchaseinfo.html
-.controller('PurchaseDevicesCtrl', function($scope,$state) {
+.controller('PurchaseDevicesCtrl', function($scope,$state,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
   $scope.init = function(){
     // alert("支付接口尚未提供");
   }
@@ -1529,7 +1608,8 @@ angular.module('starter.controllers', ['WifiServices'])
   }
 })
 //支付 app.purchaseinfo purchaseinfo.html
-.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading,$http) {
+.controller('PurchaseCtrl', function($scope,$state,$ionicActionSheet,$ionicLoading,$http,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
   $scope.init = function(){
                 var simuloptiondata = [{"name":"套餐1", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","expenses":"99.99"},
                 {"name":"套餐2", "desc":"ionicActionSheet state account","account":"Linda Smith","licencetime":"2015-04-09", "time":"2014-04-10 12:23:23","expenses":"99.99"},
@@ -1640,7 +1720,8 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 /////////////////////////////////////////////////
 //操作栈 app.manustack manustack.html
-.controller('ManuStackCtrl', function ($scope, $state,$http) {
+.controller('ManuStackCtrl', function ($scope, $state,$http,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     var simuloptiondata = [{"opt_id":"Ac8749Ids", "opt_time":"2015-04-09 12:23:23","opt_desc":"my device"},
     {"opt_id":"Ac8749Ids", "opt_time":"2015-04-09 12:23:23","opt_desc":"my device"},
     {"opt_id":"Ac8749Ids", "opt_time":"2015-04-09 12:23:23","opt_desc":"my device"},
@@ -1693,8 +1774,9 @@ angular.module('starter.controllers', ['WifiServices'])
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //测试用功能 app.vib vib.html
-.controller('VibrationCtrl', function($scope, $cordovaVibration, $cordovaBarcodeScanner, $state, locals, $ionicLoading){ 
- if (!locals.get("cust_id",""))
+.controller('VibrationCtrl', function($scope, $cordovaVibration, $cordovaBarcodeScanner, $state, locals, $ionicLoading,$ionicSideMenuDelegate){ 
+    $ionicSideMenuDelegate.canDragContent(false);
+ if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
     $state.go("app.login"); 
 
   $scope.startVib=function(){ 
@@ -1784,10 +1866,32 @@ angular.module('starter.controllers', ['WifiServices'])
       }
   };
 
+
+  $scope.audiostart = function(){
+        if( window.plugins && window.plugins.NativeAudio ) {
+
+            // Preload audio resources
+            window.plugins.NativeAudio.preloadComplex( 'music', 'audio/music.mp3', 1, 1, 0, function(msg){
+            }, function(msg){
+                console.log( 'error: ' + msg );
+            });
+
+            // Play
+            window.plugins.NativeAudio.loop( 'music' );
+        }
+  };
+
+  $scope.audiostop = function(){
+        if( window.plugins && window.plugins.NativeAudio ) {
+            window.plugins.NativeAudio.stop( 'music' );
+            window.plugins.NativeAudio.unload( 'music' );
+        }
+  };  
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //注册
 .controller('register', function($q, $scope, $ionicSideMenuDelegate, $ionicPopover, $state, $http, locals) {
+    $ionicSideMenuDelegate.canDragContent(false);
 
   //$scope.setFormScope = function(scope){
   //  this.formScope = scope;

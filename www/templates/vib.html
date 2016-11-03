@@ -1,3 +1,7 @@
+             <ion-nav-bar class="bar-light" animation="nav-title-slide-ios7" ></ion-nav-bar> 
+                <ion-nav-buttons side="left">
+                    <button class="button button-icon ion-navicon" ng-click="toggleLeft()" ng-hide="$exposeAside.active"></button>
+                </ion-nav-buttons>
          <ion-view title="interface" ng-controller="VibrationCtrl">
              <ion-content class="padding" >
              <!--<a href="tel:10086" class="button button-block padding-top">紧急呼叫</a>
@@ -7,5 +11,10 @@
              <button ng-click='sendNetInfo()' class="button button-block padding-top">smartconfig connect</button>
 
              <button ng-click='gIP()' class="button button-block padding-top">get GateWay Ip</button>
+
+             <button ng-click='audiostart()' class="button button-block padding-top">audio</button>
+
+             <button ng-click='audiostop()' class="button button-block padding-top">stop audio</button>
+             
 
          </ion-view>

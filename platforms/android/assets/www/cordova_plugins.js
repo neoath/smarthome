@@ -272,6 +272,13 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.barcodeScanner"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-nativeaudio/www/nativeaudio.js",
+        "id": "cordova-plugin-nativeaudio.nativeaudio",
+        "clobbers": [
+            "window.plugins.NativeAudio"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -296,7 +303,8 @@ module.exports.metadata =
     "cordova.weixin.pay": "5.3.0",
     "ionic-plugin-keyboard": "2.2.1",
     "jpush-phonegap-plugin": "2.2.4",
-    "phonegap-plugin-barcodescanner": "4.0.1"
+    "phonegap-plugin-barcodescanner": "4.0.1",
+    "cordova-plugin-nativeaudio": "3.0.7"
 };
 // BOTTOM OF METADATA
 });

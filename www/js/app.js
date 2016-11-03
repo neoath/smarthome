@@ -7,8 +7,8 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova',
  'WifiServices'])
 
-.controller('WifiController', ['$scope', 'WifiService','$state', function ($scope, WifiService,$state) {
-
+.controller('WifiController', ['$scope', 'WifiService','$state', function ($scope, WifiService,$state,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     $scope.wifiList = [];
 
     window.setTimeout(function () {
@@ -33,7 +33,46 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
 }])
 
 .run(function($ionicPlatform, $state, $cordovaAppVersion, $http, $cordovaFileTransfer,
-     $cordovaFile, $cordovaFileOpener2, $ionicLoading, $ionicPopup, $ionicActionSheet, jpushService) {
+     $cordovaFile, $cordovaFileOpener2, $ionicLoading, $ionicPopup,$rootScope, $location, $ionicActionSheet, jpushService,$ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
+
+  //主页面显示退出提示框  
+        $ionicPlatform.registerBackButtonAction(function (e) {  
+  
+            e.preventDefault();  
+  
+            function showConfirm() {  
+                var confirmPopup = $ionicPopup.confirm({  
+                    title: '<strong>退出</strong>',  
+                    template: '退出后您将不会受到任何报警信息',  
+                    okText: '退出',  
+                    cancelText: '取消'  
+                });  
+  
+                confirmPopup.then(function (res) {  
+                    if (res) {  
+                        ionic.Platform.exitApp();  
+                    } else {  
+                        // Don't close  
+                    }  
+                });  
+            }  
+  
+            // Is there a page to go back to?  
+            if ($location.path() == '/dashboard/overview' ) {  
+                showConfirm();  
+            } else if ($rootScope.$viewHistory.backView ) {  
+                console.log('currentView:', $rootScope.$viewHistory.currentView);  
+                // Go back in history  
+                $rootScope.$viewHistory.backView.go();  
+            } else {  
+                // This is the last page: Show confirmation popup  
+                showConfirm();  
+            }  
+  
+            return false;  
+        }, 101);  
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -137,6 +176,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
       var id=json.extras['cn.jpush.android.EXTRA'].id;
       window.alert(id);
       $state.go('alarm');
+        //     if( window.plugins && window.plugins.NativeAudio ) {
+
+        //     // Preload audio resources
+        //     window.plugins.NativeAudio.preloadComplex( 'music', 'audio/music.mp3', 1, 1, 0, function(msg){
+        //     }, function(msg){
+        //         console.log( 'error: ' + msg );
+        //     });
+
+        //     // Play
+        //     window.plugins.NativeAudio.loop( 'music' );
+
+        //     //stop
+        //     window.setTimeout(function(){
+        //       window.plugins.NativeAudio.stop( 'music' );
+        //       window.plugins.NativeAudio.unload( 'music' );
+        //     },1000*20);
+        // }
       // $state.go('detail',{id:id});
     }
     var config={
@@ -145,6 +201,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     };
     
     jpushService.init(config);
+
   });
 
   window.onerror = function(msg, url, line) {  
@@ -545,6 +602,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
             }
         }
     })
+    .state('app.anavigate', {
+        url: '/anavigate',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/anavigate.html',
+            }
+        }
+    })    
   ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/dashboard/overview');

@@ -1,4 +1,8 @@
-﻿        <ion-view title="{{UsingNodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
+﻿        <ion-nav-bar class="bar-light" animation="nav-title-slide-ios7"></ion-nav-bar> 
+        <ion-nav-buttons side="left">
+            <a class="button button-icon ion-arrow-left-c" ng-click="pageJump('app.dashboard.overview')" ></a>
+        </ion-nav-buttons> 
+        <ion-view title="{{UsingNodesViewModel.nodeType}}"  ng-controller="OverViewCtrl">
             <ion-content class="padding">
                 <div ng-if="UsingNodesViewModel.nodes.length === 0 || UsingNodesViewModel.nodes === null">
                     <h5 class="text-center">未绑定相应设备</h5>
@@ -16,15 +20,12 @@
                             </div>
                         </div>-->
 
-                            <div class="col-lg-33" on-hold="userHold(user)">
+                            <div class="col-lg-33">
                                 <div class="card">
                                     <div class="item item-avatar">
                                         <img src="img/doormagnet.jpg">
                                         <h2>{{node.name}}{{node.type_name}}</h2>        
                                         <p>节点状态: <span class="balanced" ng-show="{{!node.alert_status}}">该节点运行正常</span><span class="assertive" ng-show="{{node.alert_status}}">该节点正在报警</span></p>                             
-                                    </div>
-                                    <div class="item item-image">
-                                        <img src="img/doormagnet.jpg" style="height:150px;">
                                     </div>
                                 </div>
                             </div>

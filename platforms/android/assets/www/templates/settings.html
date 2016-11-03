@@ -1,10 +1,11 @@
+            <ion-nav-bar class="bar-light" animation="nav-title-slide-ios7" ></ion-nav-bar> 
+                <ion-nav-buttons side="left">
+                    <button class="button button-icon ion-navicon" ng-click="toggleLeft()" ng-hide="$exposeAside.active"></button>
+                </ion-nav-buttons>
         <ion-view title="设置" ng-controller="settingsCtrl">
             <ion-content>
                 
                     <div class="list">                        
-                        <li class="item" on-tap="pageJump('app.devicemanage')">
-                            主机管理
-                        </li>
                         <li class="item " on-tap="pageJump('app.devicenetwork')">
                             主机网络设置
                         </li>    

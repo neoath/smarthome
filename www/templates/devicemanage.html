@@ -1,3 +1,7 @@
+             <ion-nav-bar class="bar-light" animation="nav-title-slide-ios7" ></ion-nav-bar> 
+                <ion-nav-buttons side="left">
+                    <button class="button button-icon ion-navicon" ng-click="toggleLeft()" ng-hide="$exposeAside.active"></button>
+                </ion-nav-buttons>
 <ion-view title="我的主机" ng-controller="DeviceMangeCtrl">
     <!--QR扫描，添加主机-->
     <ion-nav-buttons side="right">
@@ -33,8 +37,8 @@
                     <i class="radio-icon ion-checkmark-circled"></i>
                 </label>
 
-                <button class="item-note button button-balanced button-small" on-tap="deviceTap('app.deviceedit', device)" style="float: right;border-color: #57a595;background-color: #57a595;">
-                    主机详情
+                <button class="item-note button button-balanced" on-tap="deviceTap('app.deviceedit', device)" style="float: right;border-color: #57a595;background-color: #57a595;">
+                    编辑主机
                 </button>
             </div>
         </div>
