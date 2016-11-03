@@ -7,8 +7,8 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordova',
  'WifiServices'])
 
-.controller('WifiController', ['$scope', 'WifiService','$state', function ($scope, WifiService,$state,$ionicSideMenuDelegate) {
-    $ionicSideMenuDelegate.canDragContent(false);
+.controller('WifiController', ['$scope', 'WifiService','$state', function ($scope, WifiService,$state) {
+
     $scope.wifiList = [];
 
     window.setTimeout(function () {

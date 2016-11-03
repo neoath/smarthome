@@ -1065,8 +1065,8 @@ angular.module('starter.controllers', ['WifiServices'])
 
        confirmPopup.then(function(res) {
          if(res) {
-             var url = 'asdasdsadasdasdsa';
-            var reqd = {"type_id": nodetypeid,"device_id":$scope.UsingDeviceViewModel.device.device_id};
+             var url = '/device/opt/alert/delete/type';
+            var reqd = {"node_type": nodetypeid,"device_id":$scope.UsingDeviceViewModel.device.device_id};
             
             var req = httpReqGen(url, reqd);
 
@@ -1097,7 +1097,7 @@ angular.module('starter.controllers', ['WifiServices'])
 
        confirmPopup.then(function(res) {
          if(res) {
-             var url = 'asdasdsadasdasdsa';
+             var url = '/device/opt/alert/deleteall';
             var reqd = {"device_id":$scope.UsingDeviceViewModel.device.device_id};
             
             var req = httpReqGen(url, reqd);
