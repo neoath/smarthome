@@ -38,5 +38,23 @@ module.exports = {
         console.log(err);
       };
       exec(success,error,'SmartConfig','cordovaStopSendingData',[]);   
+    },
+    
+    gateWayIp: function(formdata,successCallback,errorCallback){
+      console.log("Request sent to SmartConfig Plugin");
+      console.log(formdata);
+
+        if (typeof errorCallback != "function")  {
+            console.log("failure parameter not a function");
+            return
+        }
+    
+        if (typeof successCallback != "function") {
+            console.log("success callback parameter must be a function");
+            return
+        }      
+
+      exec(successCallback,errorCallback,'SmartConfig','getGatewayIp',[formdata]);        
     }
+
 };
