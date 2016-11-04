@@ -64,7 +64,7 @@
         </receiver>
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default" />
-        <meta-data android:name="JPUSH_APPKEY" android:value="98ce269f58c86831f9ddbb5b" />
+        <meta-data android:name="JPUSH_APPKEY" android:value="2fd1f0a6b5ff61bf7118961f" />
         <activity android:clearTaskOnLaunch="true" android:configChanges="orientation|keyboardHidden" android:exported="false" android:name="com.google.zxing.client.android.CaptureActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="com.google.zxing.client.android.SCAN" />

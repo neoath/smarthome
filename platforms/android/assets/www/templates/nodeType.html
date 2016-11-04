@@ -23,7 +23,7 @@
                             <div class="col-lg-33">
                                 <div class="card">
                                     <div class="item item-avatar">
-                                        <img src="img/doormagnet.jpg">
+                                        <img src="img/nodetype{{node.type}}.jpg">
                                         <h2>{{node.name}}{{node.type_name}}</h2>        
                                         <p>节点状态: <span class="balanced" ng-show="{{!node.alert_status}}">该节点运行正常</span><span class="assertive" ng-show="{{node.alert_status}}">该节点正在报警</span></p>                             
                                     </div>

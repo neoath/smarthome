@@ -32,7 +32,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     }
 }])
 
-.run(function($ionicPlatform, $state, $cordovaAppVersion, $http, $cordovaFileTransfer,
+.run(function($ionicPlatform, $state, $cordovaAppVersion, $http, $cordovaFileTransfer,$window,
      $cordovaFile, $cordovaFileOpener2, $ionicLoading, $ionicPopup,$rootScope, $location, $ionicActionSheet, jpushService,$ionicSideMenuDelegate) {
     $ionicSideMenuDelegate.canDragContent(false);
 
@@ -41,26 +41,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
   
             e.preventDefault();  
   
-            function showConfirm() {  
-                var confirmPopup = $ionicPopup.confirm({  
-                    title: '<strong>退出</strong>',  
-                    template: '退出后您将不会受到任何报警信息',  
-                    okText: '退出',  
-                    cancelText: '取消'  
-                });  
+            // function showConfirm() {  
+            //     var confirmPopup = $ionicPopup.confirm({  
+            //         title: '<strong>退出</strong>',  
+            //         template: '退出后您将不会受到任何报警信息',  
+            //         okText: '退出',  
+            //         cancelText: '取消'  
+            //     });  
   
-                confirmPopup.then(function (res) {  
-                    if (res) {  
-                        ionic.Platform.exitApp();  
-                    } else {  
-                        // Don't close  
-                    }  
-                });  
-            }  
+            //     confirmPopup.then(function (res) {  
+            //         if (res) {  
+            //             ionic.Platform.exitApp();  
+            //         } else {  
+            //             // Don't close  
+            //         }  
+            //     });  
+            // }  
   
             // Is there a page to go back to?  
-            if ($location.path() == '/dashboard/overview' ) {  
-                showConfirm();  
+            if ($location.path() == '/app/login' ) {  
+                // showConfirm();  
+                ionic.Platform.exitApp(); 
             } else if ($rootScope.$viewHistory.backView ) {  
                 console.log('currentView:', $rootScope.$viewHistory.currentView);  
                 // Go back in history  
@@ -88,10 +89,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
       StatusBar.styleDefault();
     }
 
+    //slide
+    var state = "app.login";  // whatever, the main page of your app
+
+     if (($window.localStorage["initialRun"] || "true") == "true") {
+           $window.localStorage["initialRun"] = "false";
+           state = "app.anavigate";
+     }
+
+     //$state.go(state);
+
     //检查更新;
-    ionic.Platform.ready(function(){
-    // will execute when device is ready, or immediately if the device is already ready.
-    });
+    // ionic.Platform.ready(function(){
+    // // will execute when device is ready, or immediately if the device is already ready.
+    // });
     var url = '/app/upgrade';
     var isAndroid = ionic.Platform.isAndroid();
     //var isIOS = ionic.Platform.isIOS();
@@ -202,6 +213,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     
     jpushService.init(config);
 
+
+
   });
 
   window.onerror = function(msg, url, line) {  
@@ -219,7 +232,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
 
     .state('app', {
     url: '/app',
-    abstract: true,
+    abstract: false,
     templateUrl: 'templates/side-menu-left.html'
     // controller: 'AppCtrl'
   })
@@ -227,7 +240,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
 
  .state('app.dashboard', {
       url: "/dashboard",
-    abstract: true,
+    abstract: false,
       views: {
         'menuContent' :{
           templateUrl: "templates/dashboard.html"
@@ -612,7 +625,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'chart.js', 'ngCordov
     })    
   ;
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/dashboard/overview');
+  $urlRouterProvider.otherwise('/app/login');
   $httpProvider.defaults.headers.post['Content-Type'] = 'text/plain;charset=UTF-8';
 });
 

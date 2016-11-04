@@ -276,11 +276,7 @@ angular.module('starter.controllers', ['WifiServices'])
     //页面初始化方法
     $scope.DataReq = function () {     
         
-        var firstload = window.localStorage.getItem("firstLoad");
-        if(firstload != "entered"){
-            $state.go("app.anavigate");
-            return;
-        }
+
             
         
         if (!locals.get("cust_id","") || (locals.get("cust_id","") == 0))
@@ -787,6 +783,7 @@ angular.module('starter.controllers', ['WifiServices'])
     ////取消刷新
         if("undefined" != typeof(timer)){
             $interval.cancel(timer);
+            timer = null;
         }
     //alert(locals.get("cust_id",""));
     //存储数据
@@ -796,8 +793,8 @@ angular.module('starter.controllers', ['WifiServices'])
     $ionicSideMenuDelegate.canDragContent(false);
 
     var confirmPopup = $ionicPopup.confirm({
-          title: '退出',
-          template: "确定退出登录吗？", 
+          title: '退出后将收不到报警通知',
+          template: "是否确认退出", 
           cancelText: '取消',
           okText: '确定'
       });
@@ -1278,37 +1275,30 @@ angular.module('starter.controllers', ['WifiServices'])
         $scope.showAlert("用户信息","新密码输入不一致");
         return;
     }    
-    var apibranch = '/account/updatepwd';
 
     var oldpw = hex_md5($scope.codeform.oldPW).toUpperCase();
     var newpw = hex_md5($scope.codeform.newPW).toUpperCase();
     var id = $scope.global.cust_id;
-    var reqobj = {
-      "cust_id":id,
-      "old_pwd":oldpw,
-      "new_pwd":newpw
-    };
-    var req = httpReqGen(apibranch,reqobj);
 
-    var deferred = $q.defer();
-    $http(req).then(function(response) {
-      var resData = "";
-      if(response.status == 200){
-        var resData = $.parseJSON(response.data.result);
-        if(resData.code == "0000"){
-            $scope.showAlert("用户信息","密码已修改");
-            $state.go("app.usersetting");           
-        }
-        else{
-            $scope.showAlert("用户信息",response.data.msg);
-        }
-      }
-      else
-        $scope.showAlert("用户信息","PasswordCtrl-changePW-request-error");
-      deferred.resolve();
-    }, function(error) {
-        $scope.showAlert("frame-error","PasswordCtrl-changePW-request-error");
-    });
+
+                //获取所有报警记录
+            var url = '/account/updatepwd';
+            var reqd = {"cust_id":id,"old_pwd":oldpw,"new_pwd":newpw};
+            var req = httpReqGen(url, reqd);
+
+            $http(req).success(function (data) {
+            //取返回值有效data
+            var validData = resResult(data);
+            if (validData || data.result.code == "0000") {
+
+                $scope.showAlert("用户信息",data.result.msg);
+                $state.go("app.dashboard.usersetting");
+            }
+            else
+                $scope.showAlert("用户信息",data.result.msg);
+            }).error(function () {
+                $scope.showAlert("frame-error","PasswordCtrl-changePW-request-error");
+            });
   };
 })  
 /////////////////////////////////////////////////
@@ -1974,7 +1964,6 @@ angular.module('starter.controllers', ['WifiServices'])
         }
       }
   }])
-
 //极光推送===========================================
 .factory('jpushService',['$http','$window','$document',function($http,$window,$document){
     var jpushServiceFactory={};
@@ -2033,7 +2022,14 @@ angular.module('starter.controllers', ['WifiServices'])
 }])
 
 //登录
-.controller('login', function ($scope, $ionicSlideBoxDelegate, $ionicPopup, $http, $state, locals, $ionicSideMenuDelegate) {
+.controller('LoginCtrl', function ($scope, $ionicSlideBoxDelegate, $ionicPopup, $http, $state, locals, $ionicSideMenuDelegate) {
+
+        // var firstload = window.localStorage.getItem("firstLoad");
+        // if(firstload != "entered"){
+        //     $state.go("app.anavigate");
+        //     return;
+        // }
+
     $ionicSideMenuDelegate.canDragContent(false);
     var name = "";
     var pw = "";
@@ -2043,51 +2039,81 @@ angular.module('starter.controllers', ['WifiServices'])
         pw = locals.get("password", "");
 
     $scope.loginData = { "username": name , "password":pw};
-  $scope.login = function () {
-      if (!$scope.loginData.username) {
-          $scope.showAlert("用户信息","请输入用户名");
-          return;
-      }
-      if (!$scope.loginData.password) {
-          $scope.showAlert("用户信息","请输入密码");
-          return;
-      }
-      var requestData = {
-          phone: $scope.loginData.username,
-          login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
-      };
 
-      var apibranch = '/account/login';
-      var request = httpReqGen(apibranch, requestData);
+  $scope.logout = function () {
+    ////取消刷新
+        if("undefined" != typeof(timer)){
+            $interval.cancel(timer);
+            timer = null;
+        }
+    //alert(locals.get("cust_id",""));
+    //存储数据
+    //locals.set("username","0");
+    locals.set("cust_id", "0");
+    console.log('cust_id: ' + locals.get("cust_id", ""));
+    $ionicSideMenuDelegate.canDragContent(false);
 
-      $http(request).then(function (response) {
-          console.log(response);
-          var result = response.data.result;
-          if (result.code == 0000) {
-              $scope.global.cust_id = result.data.cust_id;
-              $scope.LoginUserViewModel.loginuser = result.data;
-              //存储数据
-              locals.set("username", requestData.phone);
-              locals.set("password", $scope.loginData.password);
-              locals.set("cust_id", result.data.cust_id);
-              //读取数据
-              //console.log(locals.get("username", ""));
-              //console.log(locals.get("cust_id", ""));
-              $scope.OverViewViewModel.JustLogin = true;
-              
-              
-              $scope.TempToggle.notifyPush = (result.data.push == 1)? true:false;
-              $scope.TempToggle.notifyVib = (result.data.vib == 1)? true:false;
-              
-              //判断是否有主机，主机是否过期
-
-              $state.go('app.dashboard.overview');
-          } else {
-              $scope.showAlert("用户信息",result.msg);
-          }
-      }, function (error) {
-          $scope.showAlert("frame-error","login-login-request-error");
+    var confirmPopup = $ionicPopup.confirm({
+          title: '退出后将收不到报警通知',
+          template: "是否确认退出", 
+          cancelText: '取消',
+          okText: '确定'
       });
+    confirmPopup.then(function (res) {
+          if (res) {
+            $state.go('app.login');
+          } else {
+            // 取消退出
+          }
+      });
+  }
+
+  $scope.login = function () {
+              if (!$scope.loginData.username) {
+                  $scope.showAlert("用户信息","请输入用户名");
+                  return;
+              }
+              if (!$scope.loginData.password) {
+                  $scope.showAlert("用户信息","请输入密码");
+                  return;
+              }
+              var requestData = {
+                  phone: $scope.loginData.username,
+                  login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase(),
+              };
+            var url = '/account/login';
+            var reqd = {phone: $scope.loginData.username, login_pwd: hex_md5($scope.loginData.password).toLocaleUpperCase()};
+            var req = httpReqGen(url, reqd);
+
+            $http(req).success(function (data) {
+                var validData = resResult(data);
+                if (validData || data.result.code == 0000) {
+                      $scope.global.cust_id = validData.cust_id;
+                      $scope.LoginUserViewModel.loginuser = validData;
+                      //存储数据
+                      locals.set("username", requestData.phone);
+                      locals.set("password", $scope.loginData.password);
+                      locals.set("cust_id", validData.cust_id);
+                      //读取数据
+                      //console.log(locals.get("username", ""));
+                      //console.log(locals.get("cust_id", ""));
+                      $scope.OverViewViewModel.JustLogin = true;
+                      
+                      
+                      $scope.TempToggle.notifyPush = (validData.push == 1)? true:false;
+                      $scope.TempToggle.notifyVib = (validData.vib == 1)? true:false;
+                      
+                      //判断是否有主机，主机是否过期
+
+                      $state.go('app.dashboard.overview');
+                }
+                else{
+                    $scope.showAlert("用户信息",data.result.msg);
+                }
+            }).error(function () { 
+                $scope.showAlert("网络信息","请连接网络");
+            });
+
   }
   $scope.nextSlide = function() {
     $ionicSlideBoxDelegate.next();
